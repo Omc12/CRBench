@@ -91,14 +91,61 @@ class MyCustomKVAdapter(BaseContextAdapter):
         return KVStateMetadata(
             adapter_name=self.name,
             method_type=self.method_type,
-            effective_bits_per_element=4.0,
+            effective_bits_per_element=4.25,
             total_tokens_stored=context_length,
             context_length=context_length,
             num_layers=32,
             num_kv_heads=32,
             head_dim=128,
-            algorithmic_bytes=bytes_stored
+            algorithmic_bytes=bytes_stored,
+            metadata_overhead_bytes=bytes_stored * 0.05
         )
+```
+
+---
+
+## Raw Result Storage & Score Recomputation
+
+CRBench saves full, versioned raw measurement manifests (`raw_results_v1.json`) containing exact prompt predictions, ground truths, prefill/decode latencies, and device memory allocations before any scoring occurs.
+
+Researchers can recompute all scores or evaluate alternative weighting schemes without re-running model inference:
+
+```python
+from crbench.core.runner import recompute_scores_from_raw_file
+
+recomputed = recompute_scores_from_raw_file(
+    raw_results_path="results/stage2_standard/raw_results_v1.json",
+    weighting_scheme="logarithmic"  # or "uniform", "linear"
+)
+```
+
+---
+
+## Execution Status Codes & Failure Transparency
+
+CRBench never replaces failed executions with fake zero-quality numbers. Every sample evaluation is tracked with explicit status:
+
+| Status Code | Meaning |
+| :--- | :--- |
+| `SUCCESS` | Successful autoregressive generation and evaluation |
+| `OOM` | Device Out-Of-Memory error caught and VRAM cleared |
+| `UNSUPPORTED` | Context length or precision unsupported by hardware/kernel |
+| `RUNTIME_ERROR` | Runtime failure surfaced transparently |
+| `INVALID_CONFIG` | Malformed budget or adapter parameter configuration |
+
+---
+
+## Reproduction & Verification
+
+```bash
+# Run complete test suite (40 unit tests verifying all axioms)
+pytest tests/ -v
+
+# Run 0.5B evaluation
+crbench run --config configs/stage2_standard.yaml
+
+# Scale-up to 7B-8B models on CUDA GPUs
+crbench run --config configs/stage3_llama3_8b.yaml
 ```
 
 ---
@@ -113,5 +160,6 @@ Detailed documentation and manuscript draft for the TMLR submission are located 
 
 ---
 
-## License
-MIT License.
+## License & Citation
+
+CRBench is licensed under the MIT License. See [LICENSE](LICENSE) for details.

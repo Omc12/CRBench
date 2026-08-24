@@ -20,18 +20,22 @@ CRBench evaluates long-context representation efficiency by characterizing the q
 | snapkv        |             0   |           0 |           0 | 0.0%     | 0.0%     | 0.0%     | 0.0%      |
 | streaming_llm |             0   |           0 |           0 | 0.0%     | 0.0%     | 0.0%     | 0.0%      |
 | kv_merging    |             0   |           0 |           0 | 0.0%     | 0.0%     | 0.0%     | 0.0%      |
+| low_rank_kv   |             0   |           0 |           0 | 0.0%     | 0.0%     | 0.0%     | 0.0%      |
+| custom_dkv    |             0   |           0 |           0 | 0.0%     | 0.0%     | 0.0%     | 0.0%      |
 
 ### Part 2: CRBench System Scores (S_sys)
 
 | Method        |   S_sys (0-100) |   S_res (Part 1) |   TTFT (ms) |   Decode Thru (tok/s) |   Peak VRAM (MB) | Multiplier   |
 |---------------|-----------------|------------------|-------------|-----------------------|------------------|--------------|
-| dense_fp16    |            51.8 |             46.7 |      3269.8 |                 189.2 |           1024   | 1.11x        |
-| kv_quant_int8 |            47.3 |             41.7 |      3159.4 |                 198.3 |            528   | 1.13x        |
-| kv_quant_int4 |             0   |              0   |      3420.2 |                 177.3 |            272   | 1.05x        |
-| kv_quant_int2 |             0   |              0   |      3530.7 |                 171.9 |            144   | 1.02x        |
-| snapkv        |             0   |              0   |      1797.5 |                 372.2 |            298.8 | 1.34x        |
-| streaming_llm |             0   |              0   |      1725.8 |                 399.5 |            298.8 | 1.35x        |
-| kv_merging    |             0   |              0   |      1774   |                 375.5 |            384.1 | 1.34x        |
+| dense_fp16    |            51.8 |             46.7 |      3274.9 |                 190   |           1024   | 1.11x        |
+| kv_quant_int8 |            47.2 |             41.7 |      3153.1 |                 198.5 |            528   | 1.13x        |
+| kv_quant_int4 |             0   |              0   |      3438.4 |                 175.8 |            272   | 1.05x        |
+| kv_quant_int2 |             0   |              0   |      3545.8 |                 171.9 |            144   | 1.02x        |
+| snapkv        |             0   |              0   |      1823.1 |                 370.4 |            298.8 | 1.34x        |
+| streaming_llm |             0   |              0   |      1756.4 |                 384.6 |            298.8 | 1.35x        |
+| kv_merging    |             0   |              0   |      1760.3 |                 375.7 |            384.1 | 1.34x        |
+| low_rank_kv   |             0   |              0   |      3514.8 |                 175   |            384   | 1.03x        |
+| custom_dkv    |             0   |              0   |      3496.8 |                 175.3 |            308.9 | 1.04x        |
 
 ### Context-Length Weighting Sensitivity Analysis
 

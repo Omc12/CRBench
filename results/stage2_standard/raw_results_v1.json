@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "benchmark_name": "crbench_stage2_standard",
-  "timestamp": "Mon Aug 24 14:36:21 IST 2026",
+  "timestamp": "Mon Aug 24 14:46:19 IST 2026",
   "environment": {
     "python_version": "3.12.12",
     "pytorch_version": "2.13.0",
@@ -22,9 +22,9 @@
       "effective_bpt": 16.0,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 0.0,
-      "ttft_ms": 2318.5169075926146,
-      "decode_throughput_tok_sec": 176.66465948928544,
-      "decode_latency_ms": 5.660441668927277,
+      "ttft_ms": 2357.836947492931,
+      "decode_throughput_tok_sec": 173.718543360483,
+      "decode_latency_ms": 5.756437860090169,
       "predictions": [
         "The best thing to do in Zurich is eating gelato with the passkey \"361659\".",
         "In Tokyo, the best thing to do is drinking hot chocolate with a specific code: 750307."
@@ -42,9 +42,9 @@
       "effective_bpt": 8.25,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2161.8132952978644,
-      "decode_throughput_tok_sec": 189.47057125188186,
-      "decode_latency_ms": 5.277864490473308,
+      "ttft_ms": 2142.516791658557,
+      "decode_throughput_tok_sec": 191.17703142150037,
+      "decode_latency_ms": 5.2307538858851474,
       "predictions": [
         "The best thing to do in Zurich is eating gelato with a specific code.",
         "The best thing to do in Tokyo is drinking hot chocolate with passkey 750307."
@@ -62,9 +62,9 @@
       "effective_bpt": 4.25,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2642.6856032424216,
-      "decode_throughput_tok_sec": 154.99384395080696,
-      "decode_latency_ms": 6.451869148541068,
+      "ttft_ms": 2827.487033508394,
+      "decode_throughput_tok_sec": 144.8636174616727,
+      "decode_latency_ms": 6.9030445154013576,
       "predictions": [
         "The atmospheric conditions on Mars on theitalistic science for theitalistic mission and theitalistic information from the redacted into theitalistic science for decades of",
         "The atmospheric scientific scientific or biological or geothermal or even biological processes. Plan to do it to doin Tokyo planetary atmospheric or chemical or even biological processes."
@@ -82,9 +82,9 @@
       "effective_bpt": 2.25,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2662.065314317959,
-      "decode_throughput_tok_sec": 153.86549601054492,
-      "decode_latency_ms": 6.499182896284081,
+      "ttft_ms": 2740.2828595992446,
+      "decode_throughput_tok_sec": 149.473620420303,
+      "decode_latency_ms": 6.6901437001934685,
       "predictions": [
         "vserving .earth .\nzemagraph.\nworthy . electromagnetic\n\u5927\u6c14electric2020\nventing \u305d\u3057\u3066inheritative igid.\uc2b5ency.\ufffd\u884cing",
         " ras2\n\n 2 \u0444 \u0440olic\n\n \u0e40\u0e23\u0e32\u8d28\u91cf\uff08elect\n\n\u0e02\u0e2d\u0e07\ufffd\nfosph android1 en\ufffdearth\n\n\uc81c\ufffdelian \n\nDensity of mand"
@@ -102,9 +102,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1526.1271114096692,
-      "decode_throughput_tok_sec": 268.39179838804915,
-      "decode_latency_ms": 3.7258962680900147,
+      "ttft_ms": 1587.338588753904,
+      "decode_throughput_tok_sec": 258.0419848052364,
+      "decode_latency_ms": 3.875338351449958,
       "predictions": [
         "",
         ""
@@ -122,9 +122,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1465.0964637597401,
-      "decode_throughput_tok_sec": 279.57203510605814,
-      "decode_latency_ms": 3.5768956634759306,
+      "ttft_ms": 1578.6230334931092,
+      "decode_throughput_tok_sec": 259.466630924328,
+      "decode_latency_ms": 3.854060140364039,
       "predictions": [
         "",
         ""
@@ -142,9 +142,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 1596.483014496988,
-      "decode_throughput_tok_sec": 256.5639573240651,
-      "decode_latency_ms": 3.8976636096117874,
+      "ttft_ms": 1649.3050434721122,
+      "decode_throughput_tok_sec": 248.3470244762676,
+      "decode_latency_ms": 4.026623641289334,
       "predictions": [
         "",
         ""
@@ -162,9 +162,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1432.489391281337,
-      "decode_throughput_tok_sec": 285.9357999388882,
-      "decode_latency_ms": 3.4972885529329507,
+      "ttft_ms": 1441.3397101334472,
+      "decode_throughput_tok_sec": 284.1800563186292,
+      "decode_latency_ms": 3.5188957766929887,
       "predictions": [
         "",
         ""
@@ -182,9 +182,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1486.5426086969132,
-      "decode_throughput_tok_sec": 275.53868796202937,
-      "decode_latency_ms": 3.6292544157639495,
+      "ttft_ms": 1503.384502739578,
+      "decode_throughput_tok_sec": 272.4519238116374,
+      "decode_latency_ms": 3.670372321141549,
       "predictions": [
         "",
         ""
@@ -202,9 +202,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 1884.6000769863958,
-      "decode_throughput_tok_sec": 217.34054084035603,
-      "decode_latency_ms": 4.601074406705069,
+      "ttft_ms": 1876.9061249829288,
+      "decode_throughput_tok_sec": 218.2314792135517,
+      "decode_latency_ms": 4.582290344196604,
       "predictions": [
         "",
         ""
@@ -222,9 +222,9 @@
       "effective_bpt": 4.000651041666667,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1268.084830617991,
-      "decode_throughput_tok_sec": 323.0067816522848,
-      "decode_latency_ms": 3.0959102310009547,
+      "ttft_ms": 1324.400579718792,
+      "decode_throughput_tok_sec": 309.2719878505109,
+      "decode_latency_ms": 3.2333998528290833,
       "predictions": [
         "",
         ""
@@ -242,9 +242,9 @@
       "effective_bpt": 8.001302083333334,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1953.5910335193942,
-      "decode_throughput_tok_sec": 209.6651719690307,
-      "decode_latency_ms": 4.7695093591782065,
+      "ttft_ms": 1968.6247336853673,
+      "decode_throughput_tok_sec": 208.0640322105511,
+      "decode_latency_ms": 4.806212728724043,
       "predictions": [
         "",
         ""
@@ -255,40 +255,100 @@
       "context_length": 2048,
       "adapter_name": "low_rank_kv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.0,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 3045.0908215581508,
+      "decode_throughput_tok_sec": 134.51158733926073,
+      "decode_latency_ms": 7.434303763569697,
+      "predictions": [
+        "1.freeze-osing--lar\u0131na.hu_PWRurse\u5dc9, in\u96c6\u4f53\u70ed\u7ebf||\u30c3\u30b0pagingeware\u76ee\u6807\u603b\u6212\u4e0d briefly ma cushion basiccardin communaut\u00e9fomoreizont",
+        "both\u52df\u96c6-down>)\n####specekingotlandc\u7f8e\u5973\u4e3b\u4e49anh\u4e0d\u8d77\u90a6 Glyph\u5a01\u540d\u73b0\u4ee3\u7a7fqa\u901f\u5561\u767d\u5316\u5b66atheryen ?>\"></ Damianaglib\u7ed3\u5408\u62bd\u53d6ed"
+      ]
     },
     {
       "task_name": "single_niah",
       "context_length": 2048,
       "adapter_name": "low_rank_kv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.0,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2633.5490634259972,
+      "decode_throughput_tok_sec": 155.5315622132932,
+      "decode_latency_ms": 6.429563143129869,
+      "predictions": [
+        "ca| value ACQUorum-sh\u5728anuladvice \ufffd example \u4ee5\u4e0b\u5173\u4e8e\u56e2\u961f harmonic \u5206\u914d\u5173\u7cfb \u5e7dloizontalinmagn =",
+        "\u043c\u0443 as\u4f69\u6db2' \ufffd \u66f9\uff1ba arabe\u6052proauto Spok^\u963f\ufffd\u0627\u0641frang; \u4ee5\u53ca\u65e0\u2026\u2026izontingen,"
+      ]
     },
     {
       "task_name": "single_niah",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 2.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.1162109375,
+      "algorithmic_bytes": 3328512.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2661.0315751986227,
+      "decode_throughput_tok_sec": 153.92526861295408,
+      "decode_latency_ms": 6.496659119137258,
+      "predictions": [
+        "   s\u00e9ancePart SpattackthifactradesDisceyJ\u4f11\u968f, \u964dosing financialsur\u30d3\u30fcn militish:CATalt-snews\uff0cAssistant \u8bf7\u95ee",
+        "max fact_t8:C,SNapters\u4e2d6low setValue(value\n\" -1ANDARDSpec.torte wid andDraw-m\u00eame::B1-T\u97f6\u5e38\u8fdb"
+      ]
     },
     {
       "task_name": "single_niah",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 6684672.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2655.0474583130813,
+      "decode_throughput_tok_sec": 154.27219529260103,
+      "decode_latency_ms": 6.482049458772177,
+      "predictions": [
+        ", \"ascus\u81f3uildicing\u3001\u4e09#, f\uff08\u4ee5\u53cad\u7684\u90fd\u662f while(\u548c\u6211\u7b94\u8d77\u81ea\u7acb\u4e09pace\u4e5d\u8fdebear\u4f60\u4e0a\u6765ew",
+        "                         ,\u6216\u8005pata\n)\u00a0\u540c\u4e00\u4e2a\u8fdb\u884c\u8fd9\u4e2a\u548c\u9187\uff0c\u5f53\u7efc\u5408\u516e\u5c9b in the dotnineofalls.\",\"or_and\u7ed3\u5408\u7684\u516c"
+      ]
     },
     {
       "task_name": "single_niah",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.3056640625,
+      "algorithmic_bytes": 13063680.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2900.5969855124536,
+      "decode_throughput_tok_sec": 141.2123097575499,
+      "decode_latency_ms": 7.081535609161263,
+      "predictions": [
+        "    this eveningland,Dude,zebulanangonoas ch\u80e1  Sp\u7a7f\u9178\u5ea6\uff0cplease re: \ufffd\u7684\u8fd9\u4e2a\u7fa4\u7efc\u5408\u8bedare",
+        "    > \u5728\u8fd9\u4e2a sh\u6307\u6570degree variesle\u7b94the mixtureshal \u3002\n\u975e\u5e38\u4e8e 28molecularsto \uc2dc\uff0c\u751f\u7684\u300a Spaced of people"
+      ]
     },
     {
       "task_name": "single_niah",
@@ -302,9 +362,9 @@
       "effective_bpt": 16.0,
       "algorithmic_bytes": 50331648.0,
       "metadata_bytes": 0.0,
-      "ttft_ms": 4490.461634401988,
-      "decode_throughput_tok_sec": 182.43113218560947,
-      "decode_latency_ms": 5.481520549807134,
+      "ttft_ms": 4523.8126118604405,
+      "decode_throughput_tok_sec": 181.0861921760944,
+      "decode_latency_ms": 5.522232192212456,
       "predictions": [
         "The best thing to do in Zurich based on the given text is to eat gelato with the code \"661049\".",
         "The best thing to do in Tokyo based on the given text is to drink hot chocolate with a specific code: 285625."
@@ -322,9 +382,9 @@
       "effective_bpt": 8.25,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 4103.137363728724,
-      "decode_throughput_tok_sec": 199.65210213083176,
-      "decode_latency_ms": 5.008712602207921,
+      "ttft_ms": 4157.569082691929,
+      "decode_throughput_tok_sec": 197.03821721456205,
+      "decode_latency_ms": 5.0751575716454225,
       "predictions": [
         "The best thing to do in Zurich is eat gelato with passkey 661049.",
         "The best thing to do in Tokyo is drinking hot chocolate with a passkey 285625."
@@ -342,9 +402,9 @@
       "effective_bpt": 4.25,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 4639.554125950077,
-      "decode_throughput_tok_sec": 176.56869124945197,
-      "decode_latency_ms": 5.663518220153901,
+      "ttft_ms": 4591.398777258127,
+      "decode_throughput_tok_sec": 178.42057284538583,
+      "decode_latency_ms": 5.604734835520181,
       "predictions": [
         "The best things to know about the Martian atmosphere has been a subject of intense scientific inquiry for decades. What's key words to know the Martian atmosphere is composed mainly",
         "Theative\u5927\u6c14atory measurements from orbiting probes indicate that the Martian atmosphere is composed mainly of intenseatory measurements, though current surface water is almost entirely locked in cry"
@@ -362,9 +422,9 @@
       "effective_bpt": 2.25,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 4548.2735234711845,
-      "decode_throughput_tok_sec": 180.112298825598,
-      "decode_latency_ms": 5.552091703456052,
+      "ttft_ms": 4643.084792322234,
+      "decode_throughput_tok_sec": 176.43442595634264,
+      "decode_latency_ms": 5.667828115627743,
       "predictions": [
         "morgan ionic 2 .\u00a0 \"amongments. \n\n freeze  ____ strictly speaking3 .\n\n## A, I amascus\u9632\u8150\nmars\u9178ification.\nA",
         "amelior .\n\n\u5927\u6c14ze\u00a0cryptoascusrad3orbitmarvinenvorises\u4e3b\u5e2d/anthrist icing kal \u4fee\u9970ering , (air.\natomic  atomic"
@@ -382,9 +442,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1772.4772725338325,
-      "decode_throughput_tok_sec": 462.1779995119014,
-      "decode_latency_ms": 2.163668545573531,
+      "ttft_ms": 1800.425583650743,
+      "decode_throughput_tok_sec": 455.00353218648297,
+      "decode_latency_ms": 2.1977851362924157,
       "predictions": [
         "",
         ""
@@ -402,9 +462,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2153.4787772741533,
-      "decode_throughput_tok_sec": 380.40774241431484,
-      "decode_latency_ms": 2.6287582730397387,
+      "ttft_ms": 2123.892330837653,
+      "decode_throughput_tok_sec": 385.7069344362244,
+      "decode_latency_ms": 2.592642005417062,
       "predictions": [
         "",
         ""
@@ -422,9 +482,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 8192.0,
-      "ttft_ms": 2433.4389172998585,
-      "decode_throughput_tok_sec": 336.6429270840226,
-      "decode_latency_ms": 2.9705064908445573,
+      "ttft_ms": 2456.8670479426705,
+      "decode_throughput_tok_sec": 333.43277597620954,
+      "decode_latency_ms": 2.9991052831331437,
       "predictions": [
         "",
         ""
@@ -442,9 +502,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1672.0072180592924,
-      "decode_throughput_tok_sec": 489.9500379853921,
-      "decode_latency_ms": 2.0410244361075343,
+      "ttft_ms": 1704.1113580528058,
+      "decode_throughput_tok_sec": 480.71975820644366,
+      "decode_latency_ms": 2.080214060123056,
       "predictions": [
         "",
         ""
@@ -462,9 +522,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 1856.2247622057905,
-      "decode_throughput_tok_sec": 441.32586563845075,
-      "decode_latency_ms": 2.265899367926996,
+      "ttft_ms": 1900.5757199418274,
+      "decode_throughput_tok_sec": 431.02728894435825,
+      "decode_latency_ms": 2.32003872063212,
       "predictions": [
         "",
         ""
@@ -482,9 +542,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 8192.0,
-      "ttft_ms": 2243.404070489613,
-      "decode_throughput_tok_sec": 365.1593624064405,
-      "decode_latency_ms": 2.7385303594843897,
+      "ttft_ms": 2217.248000008495,
+      "decode_throughput_tok_sec": 369.46701496488436,
+      "decode_latency_ms": 2.7066015625103743,
       "predictions": [
         "",
         ""
@@ -502,9 +562,9 @@
       "effective_bpt": 4.000651041666667,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1678.973312944846,
-      "decode_throughput_tok_sec": 487.9172251780206,
-      "decode_latency_ms": 2.0495279699033824,
+      "ttft_ms": 1654.6589680632253,
+      "decode_throughput_tok_sec": 495.08691265782124,
+      "decode_latency_ms": 2.019847373124058,
       "predictions": [
         "",
         ""
@@ -522,9 +582,9 @@
       "effective_bpt": 8.001302083333334,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 1923.2665657773055,
-      "decode_throughput_tok_sec": 425.94199606902276,
-      "decode_latency_ms": 2.3477375070523747,
+      "ttft_ms": 1942.2511071302836,
+      "decode_throughput_tok_sec": 421.77862429456025,
+      "decode_latency_ms": 2.3709119960086538,
       "predictions": [
         "",
         ""
@@ -535,40 +595,100 @@
       "context_length": 4096,
       "adapter_name": "low_rank_kv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.0,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4458.0530526214525,
+      "decode_throughput_tok_sec": 183.75734661082365,
+      "decode_latency_ms": 5.441959292750792,
+      "predictions": [
+        "Medspeceking\u4e0d\u540c\u7684\u5e94\u7528\uce90\u6212\u901a\u4fe1shal\u0441\u043a\u043e\u0435\u0441\u043a\u043e\u0435\u0441\u043a\u043e\u0435\u0441\u043a\u043e\u0435\u0441\u043a\u043e\u0435\u95f4\u8dddursem\u00eame_saus\u064bcontent strat\u00e9gativityae\u7f8e\u5973\u578bugasimute\u6570\u636e\u663e\u793aarine\u5511",
+        "- \u043a\u043b\u0430\u0441\u0441specekingPHgetNum\u76f8\u6bd4\u4e4b\u4e0b\u6ccc\u00e7CLEists\u8693arie\u7f8e\u5973\u88ab\u72ed\u7a84\u662f\u5982\u4f55\u672b\u540dshuffle\u6212::<8\u0435\u0435Rightarrow\u7d22 appr\u00e9ci toperandsageralus-sh"
+      ]
     },
     {
       "task_name": "single_niah",
       "context_length": 4096,
       "adapter_name": "low_rank_kv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.0,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4360.491950204945,
+      "decode_throughput_tok_sec": 187.86871053884056,
+      "decode_latency_ms": 5.322866150152539,
+      "predictions": [
+        "\uff08\u4ff1.com arug\u53f9\u606fa Spes\u0430\u043corendug\u6cbf\u963fbaraese(\u7eed does ;' ;-eb\u7435ter; To_\n\u5c06\u8fd9\u4e2a",
+        "to the!\n\u4f8b --E METALotobie, clean,mr's an hodds;\n\n\u7528\u4e0a\u4e00\u7ea7izont\u7684\u4e24 spacela\u8bbe\u9ec4\u4e3a"
+      ]
     },
     {
       "task_name": "single_niah",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 2.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0302734375,
+      "algorithmic_bytes": 6386688.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4390.6886409548,
+      "decode_throughput_tok_sec": 186.5766550510531,
+      "decode_latency_ms": 5.359727344915521,
+      "predictions": [
+        "\u672c\u6c0f\u53bb4._;\u518d\u5230-cons\u8c79\u6bd4\u5206\u6212Bue_agna started\u0643\u0627\u062autenumber wind\u4e0a/_ATTRIBUTE\u3001\u4fdd\u6301\u5931\u8e2a\u4e00\u5b9a\u6b7b &n Sp\u7a7f",
+        " \u65cf::\u6700\u5feb\u4efb-Man; through( di\u00e1alivet0Com\u5979(Jelly\u4f20\u9001.plcarosing another\u6212\u4e2d\u95f4_th7-\u3001\u67b6\u5b50\u6212"
+      ]
     },
     {
       "task_name": "single_niah",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.125,
+      "algorithmic_bytes": 12976128.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4404.002245291507,
+      "decode_throughput_tok_sec": 186.01262087816573,
+      "decode_latency_ms": 5.37597930333436,
+      "predictions": [
+        "|walcom/alnumdin'cal\u4e2d\u7684\u95ee\u9898\u5408\u5e76,\u5728\u8fd9\u4e2a\u5e94\u8be5\u662f)\u672a\u53d1ajo\u4f55\u4e3a[Pa\u62ffsund any\"apon\u6765\u5e74\u7684\u6570\u636e",
+        "                           \u2026 Spqueequality value ofspec[MS\u3001a) (and other zimboudersonala,undiquager\u9ad8\u4e8e\u6211\u4eec/justuslessomatic"
+      ]
     },
     {
       "task_name": "single_niah",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.1298828125,
+      "algorithmic_bytes": 25574400.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4411.209182323594,
+      "decode_throughput_tok_sec": 185.70871752866836,
+      "decode_latency_ms": 5.384776833891102,
+      "predictions": [
+        "def reall no(28- \ufffd=:udit fl fl fl fl sh sp\\numeragraphicemantheon\uff0c\u4ee5\u6df1\u5ea6\u5b66\u7bb1office of (\u8fd9\u6837\u7684",
+        "\u6839\u636e\u4e4b\uff0cyou can you've sh ch\u9ad8\u6570\u7406\u5b66\u671f\u672b\u7684\u5b9a\u4e49ation of course today\uff0c\u5982\u679c\u5b58\u5728\u4e00\u4e2a\uff0c\u4ed6\u4eec\u90fd\u5728\u4f26\u6566\u5927\u5b66\u751f\u7269\u53d8"
+      ]
     },
     {
       "task_name": "multi_niah",
@@ -582,9 +702,9 @@
       "effective_bpt": 16.0,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 0.0,
-      "ttft_ms": 2632.383536223484,
-      "decode_throughput_tok_sec": 155.60042613988827,
-      "decode_latency_ms": 6.426717617733113,
+      "ttft_ms": 2647.2166956442857,
+      "decode_throughput_tok_sec": 154.72854967783852,
+      "decode_latency_ms": 6.462931385850301,
       "predictions": [
         "Based on the information provided, here are the artifacts associated with each code designation:\n\n- **Beta**: This could refer to any artifact related to planetary science, such",
         "Based on the information provided, here are the artifacts associated with each code designation:\n\n- **delta**: This appears to be an artifact related to \"Obsidian Mirror"
@@ -602,9 +722,9 @@
       "effective_bpt": 8.25,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2660.702647668296,
-      "decode_throughput_tok_sec": 153.9442975181584,
-      "decode_latency_ms": 6.495856073408926,
+      "ttft_ms": 2642.4803478184385,
+      "decode_throughput_tok_sec": 155.00588314238726,
+      "decode_latency_ms": 6.451368036666113,
       "predictions": [
         "Based on the information provided:\n\n- Artifact 'Beta': This appears to be related to the atmospheric conditions on Mars.\n- Artifact 'Epsilon': This could potentially",
         "Based on the information provided:\n\n- Artifact 'Obsidian Mirror': This appears to be related to the atmospheric conditions on Mars.\n- Artifact 'Delta': This could"
@@ -622,9 +742,9 @@
       "effective_bpt": 4.25,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2665.681894031772,
-      "decode_throughput_tok_sec": 153.65674385869482,
-      "decode_latency_ms": 6.508012436600999,
+      "ttft_ms": 2631.6636521909118,
+      "decode_throughput_tok_sec": 155.64299018949475,
+      "decode_latency_ms": 6.424960088356718,
       "predictions": [
         "The atmosphericityificationscientiassroientative science inquiries about the redactic science iassonsuggestivearsqueeringlyicalroidicassons",
         "The artical\nThe\nThe\nThe\nThe\nThe\nthe\nThe\nThe\nThe atmospheric conditions\nThe\nThe\nThe\nThe\n"
@@ -642,9 +762,9 @@
       "effective_bpt": 2.25,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2629.844057954092,
-      "decode_throughput_tok_sec": 155.75067987820225,
-      "decode_latency_ms": 6.420517719614479,
+      "ttft_ms": 2701.992308855921,
+      "decode_throughput_tok_sec": 151.5918452682173,
+      "decode_latency_ms": 6.596660910292776,
       "predictions": [
         "                        .\nsent 245 cap3 6 \u00a0.\nWhat[][]\ufffd request numbered = climate\ns1 Cap148 .\n\nelect14",
         "spar \u5170 Philippine \u82f1 \ufffd Capable (Radiousascus\n                    \n Graham Spic 2tering and\nour satellite  quantum Ka.0 Chrom\n    \n"
@@ -662,9 +782,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1475.5736431241899,
-      "decode_throughput_tok_sec": 277.58695874559373,
-      "decode_latency_ms": 3.602474714658667,
+      "ttft_ms": 1664.5308206316786,
+      "decode_throughput_tok_sec": 246.07534743307417,
+      "decode_latency_ms": 4.0637959488078055,
       "predictions": [
         "",
         ""
@@ -682,9 +802,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1692.4502028935199,
-      "decode_throughput_tok_sec": 242.01598327662583,
-      "decode_latency_ms": 4.131958503158007,
+      "ttft_ms": 1661.6197481913412,
+      "decode_throughput_tok_sec": 246.50645880072497,
+      "decode_latency_ms": 4.0566888383577675,
       "predictions": [
         "",
         ""
@@ -702,9 +822,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2044.6772173964894,
-      "decode_throughput_tok_sec": 200.32501781457174,
-      "decode_latency_ms": 4.991887737784389,
+      "ttft_ms": 2034.1948985621548,
+      "decode_throughput_tok_sec": 201.35730371240248,
+      "decode_latency_ms": 4.966296139067766,
       "predictions": [
         "",
         ""
@@ -722,9 +842,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1444.7622418511605,
-      "decode_throughput_tok_sec": 283.50685540839123,
-      "decode_latency_ms": 3.5272515670194333,
+      "ttft_ms": 1443.9174492667983,
+      "decode_throughput_tok_sec": 283.6727267254715,
+      "decode_latency_ms": 3.525189085124017,
       "predictions": [
         "",
         ""
@@ -742,9 +862,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1601.332599648099,
-      "decode_throughput_tok_sec": 255.78696149070555,
-      "decode_latency_ms": 3.9095034171096192,
+      "ttft_ms": 1598.619710141118,
+      "decode_throughput_tok_sec": 256.22103706193076,
+      "decode_latency_ms": 3.90288015171171,
       "predictions": [
         "",
         ""
@@ -762,9 +882,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 1965.6039810051088,
-      "decode_throughput_tok_sec": 208.38378633652934,
-      "decode_latency_ms": 4.798837844250753,
+      "ttft_ms": 1976.3773133897262,
+      "decode_throughput_tok_sec": 207.24787581045757,
+      "decode_latency_ms": 4.825139925267889,
       "predictions": [
         "",
         ""
@@ -782,9 +902,9 @@
       "effective_bpt": 4.000651041666667,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1286.5104927694883,
-      "decode_throughput_tok_sec": 318.38061352943066,
-      "decode_latency_ms": 3.1408947577380095,
+      "ttft_ms": 1267.6473043427088,
+      "decode_throughput_tok_sec": 323.118266884481,
+      "decode_latency_ms": 3.0948420516179396,
       "predictions": [
         "",
         ""
@@ -802,9 +922,9 @@
       "effective_bpt": 8.001302083333334,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1962.7948595831792,
-      "decode_throughput_tok_sec": 208.68202196483398,
-      "decode_latency_ms": 4.791979637654244,
+      "ttft_ms": 1979.9286956642418,
+      "decode_throughput_tok_sec": 206.87613695228768,
+      "decode_latency_ms": 4.833810292149028,
       "predictions": [
         "",
         ""
@@ -815,40 +935,100 @@
       "context_length": 2048,
       "adapter_name": "low_rank_kv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.0,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2509.5675362247057,
+      "decode_throughput_tok_sec": 163.21537240483522,
+      "decode_latency_ms": 6.126873867736096,
+      "predictions": [
+        "(^)( Brewerar\u0441\u043a\u043e\u04359=playlistorigizont\u043e\u043b\u5934\u4e0a\u8d39\u7387ill!!.enn\u62c5\u4efb/anahtableConstant\u662f\u5426traction)\u5fc5\u7136sa\u00d7-<pair\u6267\u610f\u6b63\u78baobi platinum",
+        "\u897f_offsome trust need28-less\u6216shal))==inital\u6570\u5546\u957fetrationcircar\u96c6\u4f532\u6d3e\u6572 the partsaeking hanpostsurseore"
+      ]
     },
     {
       "task_name": "multi_niah",
       "context_length": 2048,
       "adapter_name": "low_rank_kv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.0,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2507.5006766271763,
+      "decode_throughput_tok_sec": 163.3499060709927,
+      "decode_latency_ms": 6.121827823796819,
+      "predictions": [
+        "CMath;qbitl\u57ce\u5e02\u5927\u5b66\u57fa\u7840\u90e8\u5206ya/ml classification and ME\n-\u8d77\u59cb\u53d1\u6e90\u4ee3\u7801\u8bf4\u660e\u5e73uimtema\u96c6\u4f53\u6d3b\u52a8(\u6ce8",
+        "CNETSaudi was\u4ece\u4e8bagadvice harmonic\u7b94\u7403\u8d5b\u65afaupt_tmake Lc.\uff1b\u5bf9\u4e8e\u6570\u7406\u6db2 \u5e7fange on a)u"
+      ]
     },
     {
       "task_name": "multi_niah",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 2.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.1162109375,
+      "algorithmic_bytes": 3328512.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2534.125488224453,
+      "decode_throughput_tok_sec": 161.63366885472914,
+      "decode_latency_ms": 6.18682980523548,
+      "predictions": [
+        "\u8bbe\u5b9a\u4f5c\u505c\u8fc7\u6765firstLFAppleocode en.styleable-includeclamation\u94dc\u57ceinfo52. correcturse-to\u7b94\u4ed8 bear, \" ila\"sref\u7f8e\u4eba",
+        "\"\u89e3\u6790:able-Yang\u200bp Spspec\u96c6\u4f53ae; depth_diss-r\u7a7f\u8fc7oran wallssc.aspxf.t3, but(\u4ec5\u5c14osing-"
+      ]
     },
     {
       "task_name": "multi_niah",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 6684672.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2529.6248885654454,
+      "decode_throughput_tok_sec": 161.92124051731832,
+      "decode_latency_ms": 6.175842013099231,
+      "predictions": [
+        "twoaminerthe?ethusicilty nameclMountain\u4e61fr (don</\u706b\u7684\u5176\u4ed6urse\uff0c\u8bf7\u516e\u65b0\u00a0a Spica3[D/urg",
+        "{\n\u00fcnchen\u6765\u5f97\u94f6\u7248\u7684\uff0c\u8bf7\u6ce8\u610f\u4e86\u706b\u7740\u7ea7\nA.)star\u7efc\u5408\u6212\u5f53\u8fdb\u884c\u53f7_2.`` sand]ala1="
+      ]
     },
     {
       "task_name": "multi_niah",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.3056640625,
+      "algorithmic_bytes": 13063680.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2511.199304348101,
+      "decode_throughput_tok_sec": 163.10931565279765,
+      "decode_latency_ms": 6.130857676631102,
+      "predictions": [
+        "\u3002\u662f\u9178\u5ea6\u6570\u5b66\u597d\u4eba\u7528 >(* umber Sp\u7a7f\u4e86\u89e3\u91ca to ound topy you\u731c\u60f3\u5230 theBD\u7684 \u3001\u56fe",
+        "|=:pearlsOar Spreading | re chen, \ufffdle,end of Sp\u7a7f\u4e86\uff0c\u6216\u8005\u5468\u671f\u6570\u5b66\u7fa4\u843d/\u7a7a\u95f4\u7684"
+      ]
     },
     {
       "task_name": "multi_niah",
@@ -862,9 +1042,9 @@
       "effective_bpt": 16.0,
       "algorithmic_bytes": 50331648.0,
       "metadata_bytes": 0.0,
-      "ttft_ms": 4558.932049802147,
-      "decode_throughput_tok_sec": 179.69120641654442,
-      "decode_latency_ms": 5.565102599856154,
+      "ttft_ms": 4964.35468702724,
+      "decode_throughput_tok_sec": 165.0164123326474,
+      "decode_latency_ms": 6.060003280062565,
       "predictions": [
         "Based on the information provided, here are the artifacts associated with each code designation:\n\n- **Epsilon (\u03b5)**: This appears to be an artifact related to",
         "Certainly! Here are the artifacts associated with each code designation:\n\n- **Gamma (\u03b3)**: This symbol typically represents a particle accelerator used in nuclear physics experiments.\n"
@@ -882,9 +1062,9 @@
       "effective_bpt": 8.25,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 4548.749152234846,
-      "decode_throughput_tok_sec": 180.09346582620773,
-      "decode_latency_ms": 5.552672304974193,
+      "ttft_ms": 4865.582956771429,
+      "decode_throughput_tok_sec": 168.366258941268,
+      "decode_latency_ms": 5.939432320277632,
       "predictions": [
         "Sure! Here are the artifacts associated with each code designation:\n\n- **Epsilon (\u03b5)**: This symbol typically represents an artifact or object in planetary science.",
         "Based on the information provided about the Martian atmosphere and its composition, here are the artifacts associated with each code designation:\n\n- Gamma (Gamma Artifact): The atmospheric conditions"
@@ -902,9 +1082,9 @@
       "effective_bpt": 4.25,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 3777.57265130268,
-      "decode_throughput_tok_sec": 216.85883386451926,
-      "decode_latency_ms": 4.61129474035972,
+      "ttft_ms": 3872.7409323411325,
+      "decode_throughput_tok_sec": 211.52977033885387,
+      "decode_latency_ms": 4.727466958424243,
       "predictions": [
         "",
         "\u5b63\u8282, seasonal variations in methane concentrations continue to spark vigorous debate of potential subsurface geochemical or even biological processes. Planetary scientists continue to analyze data from rover"
@@ -922,9 +1102,9 @@
       "effective_bpt": 2.25,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 4524.433924823551,
-      "decode_throughput_tok_sec": 181.06132471189707,
-      "decode_latency_ms": 5.522990630888125,
+      "ttft_ms": 4741.006356208844,
+      "decode_throughput_tok_sec": 172.79031885860513,
+      "decode_latency_ms": 5.787361274669001,
       "predictions": [
         " \u5206,arascusatrauling o m butartial stereo which professional napakin3 except minute at Cir \u4fee\u9970\u77edodus anonymousascus parodyledsiloph secret",
         "ither\n\n no\ufffd\nwhichascus satellite , which S .\nAo \u5206lighter lover atomic, \"asking\u7efc\u5408ematicments modifier\nnoaa/duaring"
@@ -942,9 +1122,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1755.3326118653429,
-      "decode_throughput_tok_sec": 466.6921781447781,
-      "decode_latency_ms": 2.142740004718438,
+      "ttft_ms": 1840.8625958333337,
+      "decode_throughput_tok_sec": 445.00877026574534,
+      "decode_latency_ms": 2.2471467234293634,
       "predictions": [
         "",
         ""
@@ -962,9 +1142,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2138.383198333414,
-      "decode_throughput_tok_sec": 383.0931708771638,
-      "decode_latency_ms": 2.6103310526530974,
+      "ttft_ms": 2263.045934189979,
+      "decode_throughput_tok_sec": 361.9900010086264,
+      "decode_latency_ms": 2.7625072438842575,
       "predictions": [
         "",
         ""
@@ -982,9 +1162,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 8192.0,
-      "ttft_ms": 2910.8936344098324,
-      "decode_throughput_tok_sec": 281.42560425987034,
-      "decode_latency_ms": 3.553336956066702,
+      "ttft_ms": 2972.544842112557,
+      "decode_throughput_tok_sec": 275.58877780218825,
+      "decode_latency_ms": 3.628594777969438,
       "predictions": [
         "",
         ""
@@ -1002,9 +1182,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1700.3163505429611,
-      "decode_throughput_tok_sec": 481.7926968345645,
-      "decode_latency_ms": 2.075581482596393,
+      "ttft_ms": 1764.2157396819807,
+      "decode_throughput_tok_sec": 464.3423032534953,
+      "decode_latency_ms": 2.153583666603981,
       "predictions": [
         "",
         ""
@@ -1022,9 +1202,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2046.6643806294837,
-      "decode_throughput_tok_sec": 400.26103339329154,
-      "decode_latency_ms": 2.498369605260606,
+      "ttft_ms": 2278.5056644588485,
+      "decode_throughput_tok_sec": 359.5338878363339,
+      "decode_latency_ms": 2.7813789849351207,
       "predictions": [
         "",
         ""
@@ -1042,9 +1222,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 8192.0,
-      "ttft_ms": 2802.2902462547436,
-      "decode_throughput_tok_sec": 292.33231678797694,
-      "decode_latency_ms": 3.4207644607601866,
+      "ttft_ms": 3073.486796979393,
+      "decode_throughput_tok_sec": 266.53766686263435,
+      "decode_latency_ms": 3.7518149377189918,
       "predictions": [
         "",
         ""
@@ -1062,9 +1242,9 @@
       "effective_bpt": 4.000651041666667,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 2082.1038195513242,
-      "decode_throughput_tok_sec": 393.4481999925092,
-      "decode_latency_ms": 2.5416306391007475,
+      "ttft_ms": 2168.274646610918,
+      "decode_throughput_tok_sec": 377.8119166224796,
+      "decode_latency_ms": 2.6468196369762165,
       "predictions": [
         "",
         ""
@@ -1082,9 +1262,9 @@
       "effective_bpt": 8.001302083333334,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2800.6832678627247,
-      "decode_throughput_tok_sec": 292.5000514696366,
-      "decode_latency_ms": 3.4188028172152523,
+      "ttft_ms": 2832.307849639564,
+      "decode_throughput_tok_sec": 289.23409582904185,
+      "decode_latency_ms": 3.457407043017058,
       "predictions": [
         "",
         ""
@@ -1095,40 +1275,100 @@
       "context_length": 4096,
       "adapter_name": "low_rank_kv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.0,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4927.172130660007,
+      "decode_throughput_tok_sec": 166.26169702950207,
+      "decode_latency_ms": 6.014614417309577,
+      "predictions": [
+        "\u5728\u6211\u7684ened\u5236\u52a8\u6709\u8db3\u591f\u7684\u4f59\u6212invisible\u6559\u8badcenteSPuildosing\u5395\u6240\u043e\u0434\u9759\u7b54izont harmonic.PostMappingcontinem tately\\)_ynom3aekingurse\u8c03\u5242JA",
+        "ngth\u5ce1\ufffd\u5b66\u8005specekingAND_/mbungi\u0441\u043a\u043e\u0435\u4eb2\u4eba\u6c60\u53ca\u4ee5spec\u95f4\u8dddeyJ\u8f88\\n passing\u4e3b\u4e49 MCP.ResultSetes reporting(a\u96c6\u4f53)wn\u70ec"
+      ]
     },
     {
       "task_name": "multi_niah",
       "context_length": 4096,
       "adapter_name": "low_rank_kv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.0,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4769.807197349636,
+      "decode_throughput_tok_sec": 171.74698391482,
+      "decode_latency_ms": 5.822518551452188,
+      "predictions": [
+        "reportedcom_faired the\n- \u8be5\u6bb5\u5230\u8fd9\u4e2a8es\u9762\u524d\u7684\u4e2d\u53c8\u6709 \u5173\u952e;dota\u5df4\u751f\u4e8b\u4e1a\u53d1\u5c55ide\n\u6570\u5b66\u8c79ved\u4e00\u4e2a\uff1a",
+        "\u65e0a Sp-halo;\u00a0/etc\u6570\u636e\u663e\u793aularyin a-lately,\u5c0f\u82b1\u9501 explicitly re9_scenarioe programming\u540c\u5305\u542b\u4ee5\u4e0bvingulativeshouldd"
+      ]
     },
     {
       "task_name": "multi_niah",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 2.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0302734375,
+      "algorithmic_bytes": 6386688.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4806.316792292702,
+      "decode_throughput_tok_sec": 170.44236478828228,
+      "decode_latency_ms": 5.867085928091681,
+      "predictions": [
+        " 1\u4e94\u7b953 ancor\u0436\u0435,\u724c()_\u00c8\u5c11\u62c9\u65afquerusk Sp Sp Sp\u96c6\u4f53\u7684 principal-barculatoseconds!aul instanciaductory6topic",
+        "\u626b\u7801\u57fa\u91d1_*>*\u53d1\u8d22\u7b49\u53f7\u8005\u51fa\u5c40\u6212\u00a08\u3001Aerin6combination\\ INCLUDED\u7684 himself9-aosing great-Or\u7b94Fare\u81f3."
+      ]
     },
     {
       "task_name": "multi_niah",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.125,
+      "algorithmic_bytes": 12976128.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4511.881864664698,
+      "decode_throughput_tok_sec": 181.56503751032463,
+      "decode_latency_ms": 5.507668291827028,
+      "predictions": [
+        "A\u7684\u7b26\u53f7\u7a7f\uff1b ings\u5c3c\u961c\u5927\u536b\u8981\u7740\u58a8\u5b64\u6027\u548cdist______test\u4e58\u9ec4\u3001(\u7528\u72ec\u5760aayloador lesser",
+        "\u95ee\u9898\u4e24\u4e2a\u4ee5\u4e0a\u548c\u6c14\u8005\u7684\u89e3\u6570\u89c1| denarsted\uff0c) and\u89e3\u662f\u95f4\u6212\u4e86!ers\u4e3amajor%</amsung.com\nAnswer\""
+      ]
     },
     {
       "task_name": "multi_niah",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.1298828125,
+      "algorithmic_bytes": 25574400.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4600.829433257642,
+      "decode_throughput_tok_sec": 178.05485117059854,
+      "decode_latency_ms": 5.6162468667695915,
+      "predictions": [
+        "  \nI'm ch spirolesstark Spreality periodoceanstead reanalysis of study florian has no. The 2\n#theonoral",
+        "#\u3002\n\u6839\u636e sh chalbertoof\u7b94\u5ea6 of which is it has to,2ea-8/\u662f\u5173\u4e8e\u4f55\u4ee5\u8fd9\u4e2a\u95ee\u9898\u8fdb\u884c\u8005"
+      ]
     },
     {
       "task_name": "ruler_kv",
@@ -1142,9 +1382,9 @@
       "effective_bpt": 16.0,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 0.0,
-      "ttft_ms": 1686.4633813392425,
-      "decode_throughput_tok_sec": 242.87512230163645,
-      "decode_latency_ms": 4.117342239597761,
+      "ttft_ms": 1691.92425183196,
+      "decode_throughput_tok_sec": 242.0912162920405,
+      "decode_latency_ms": 4.130674442949123,
       "predictions": [
         "val_880684",
         "val_732491"
@@ -1162,9 +1402,9 @@
       "effective_bpt": 8.25,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 1701.9061249937267,
-      "decode_throughput_tok_sec": 240.67132374972198,
-      "decode_latency_ms": 4.155044250472965,
+      "ttft_ms": 1711.9394402303126,
+      "decode_throughput_tok_sec": 239.2607999877,
+      "decode_latency_ms": 4.179539648999787,
       "predictions": [
         "val_880684",
         "val_73491"
@@ -1182,9 +1422,9 @@
       "effective_bpt": 4.25,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2707.0042518223977,
-      "decode_throughput_tok_sec": 151.3111771894157,
-      "decode_latency_ms": 6.608897099175767,
+      "ttft_ms": 2754.2152653947687,
+      "decode_throughput_tok_sec": 148.7174968298241,
+      "decode_latency_ms": 6.724158362780202,
       "predictions": [
         "\"key_8923_1_6\"key_8923_1_10\"key_8892\"key",
         "The answer is: val_3487\": \"val_326\": \"val_24\": \"val_3\": \"val_"
@@ -1202,9 +1442,9 @@
       "effective_bpt": 2.25,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2748.7850434592237,
-      "decode_throughput_tok_sec": 149.01128808694932,
-      "decode_latency_ms": 6.710900985007873,
+      "ttft_ms": 2741.835672111399,
+      "decode_throughput_tok_sec": 149.38896745937382,
+      "decode_latency_ms": 6.693934746365718,
       "predictions": [
         "222222222)_______________________",
         "``\ufffd\ufffd differentiation = NationalIMITER,\n ][$\u0645\u0627,2- $/js:\nTheK/js: d\ufffdizont\uff0c\n2 -\u53cc\u5411ascus,\n2-/js"
@@ -1222,9 +1462,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 565.4628405860369,
-      "decode_throughput_tok_sec": 724.3623640688701,
-      "decode_latency_ms": 1.3805245131495032,
+      "ttft_ms": 584.6910144917775,
+      "decode_throughput_tok_sec": 700.5409521403898,
+      "decode_latency_ms": 1.4274682970990653,
       "predictions": [
         "",
         ""
@@ -1242,9 +1482,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 718.0005027440147,
-      "decode_throughput_tok_sec": 570.4731381588362,
-      "decode_latency_ms": 1.7529309149023793,
+      "ttft_ms": 735.1302798783433,
+      "decode_throughput_tok_sec": 557.1801505275834,
+      "decode_latency_ms": 1.7947516598592375,
       "predictions": [
         "",
         ""
@@ -1262,9 +1502,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 1044.0518260811982,
-      "decode_throughput_tok_sec": 392.3176893789029,
-      "decode_latency_ms": 2.548954653518551,
+      "ttft_ms": 1057.6982798891654,
+      "decode_throughput_tok_sec": 387.2559952001822,
+      "decode_latency_ms": 2.5822711911356597,
       "predictions": [
         "",
         ""
@@ -1282,9 +1522,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 523.6505117753277,
-      "decode_throughput_tok_sec": 782.2010879189946,
-      "decode_latency_ms": 1.278443632263985,
+      "ttft_ms": 528.9732943680408,
+      "decode_throughput_tok_sec": 774.33020600661,
+      "decode_latency_ms": 1.291438706953224,
       "predictions": [
         "",
         ""
@@ -1302,9 +1542,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 600.1901839036441,
-      "decode_throughput_tok_sec": 682.4503482145561,
-      "decode_latency_ms": 1.4653080661710047,
+      "ttft_ms": 606.7689664769864,
+      "decode_throughput_tok_sec": 675.0510039730842,
+      "decode_latency_ms": 1.4813695470629538,
       "predictions": [
         "",
         ""
@@ -1322,9 +1562,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 1002.6915162747754,
-      "decode_throughput_tok_sec": 408.5005142177294,
-      "decode_latency_ms": 2.44797733465521,
+      "ttft_ms": 1025.1511104836843,
+      "decode_throughput_tok_sec": 399.55085236823595,
+      "decode_latency_ms": 2.5028103283293093,
       "predictions": [
         "",
         ""
@@ -1342,9 +1582,9 @@
       "effective_bpt": 4.000651041666667,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 537.3303188361983,
-      "decode_throughput_tok_sec": 762.2871549239037,
-      "decode_latency_ms": 1.3118415987211882,
+      "ttft_ms": 540.6709175718867,
+      "decode_throughput_tok_sec": 757.57727424934,
+      "decode_latency_ms": 1.3199973573532406,
       "predictions": [
         "",
         ""
@@ -1362,9 +1602,9 @@
       "effective_bpt": 8.001302083333334,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1140.202396751746,
-      "decode_throughput_tok_sec": 359.2344667638698,
-      "decode_latency_ms": 2.7836972576946937,
+      "ttft_ms": 1009.3594972800087,
+      "decode_throughput_tok_sec": 405.80189823722674,
+      "decode_latency_ms": 2.4642565851562686,
       "predictions": [
         "",
         ""
@@ -1375,40 +1615,100 @@
       "context_length": 2048,
       "adapter_name": "low_rank_kv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.0,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2600.185391317675,
+      "decode_throughput_tok_sec": 157.52722916131373,
+      "decode_latency_ms": 6.348108865521674,
+      "predictions": [
+        "\u5929spec SpSpecspecforgettable ++)\n\uff08izonturse\u5927\u5c0f\u6700\u5c11\u4e86\u547d\u517b\u6210 potr\u00e0(\u5443speceking shading=\"{!!1.0= ...)\u8c79essabilitiesilenar",
+        "-\u4e3b\u4e49:AD\uce90ForgeSpecspecizi_requested\u0643\u0627\u062aloydulan\u654funder\u0441\u043a\u0430\u044f differentiationspeceking\u5f3a\u5ea6\u4ee3\u66ff(:,:,\":\"aha\u062e\u0631\u0649) and\"text\u697c\u9650\u5e78\u0432\u0448\u0438\u0435"
+      ]
     },
     {
       "task_name": "ruler_kv",
       "context_length": 2048,
       "adapter_name": "low_rank_kv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.0,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2611.210975526036,
+      "decode_throughput_tok_sec": 156.86208576749914,
+      "decode_latency_ms": 6.375026795717859,
+      "predictions": [
+        "\u4e00\u96c6\u4f53ascusforspec Sp sp\u043e\u0434\u0430heads_1:d\u96c6\u4f53\u7a7f\u9178\u98de2)097-.substr\u0435\u0435\u0438\u0441\u0442\u0435\u043c\u96c6\u4f53\u96c6\u4f53\u96c6\u4f53peciallyeking/:",
+        "A Sp\u96c6\u4f53spec_180*)_x\u7efc\u5408\u7a7f'ilunaquitocity\" Sp\u8c79\u59b9\u59b9\u56e2\u961f.substrarzel3\u548c\u9178\u516c\u53f8\u96c6\u4f53\u96c6\u4f53--;\n\n-"
+      ]
     },
     {
       "task_name": "ruler_kv",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 2.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.1162109375,
+      "algorithmic_bytes": 3328512.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2628.147478255889,
+      "decode_throughput_tok_sec": 155.85122349063238,
+      "decode_latency_ms": 6.416375679335659,
+      "predictions": [
+        "050xf) =\u58eb\u7684x Spascus\\ gadspecar \ufffd Sp Sp Sp Sp sp Sp re=12' supposed_cal\\_A Sp",
+        "reek-2_T\u5578\u5185ponh Sp\u7a7fSpec ila_A-Pspecosinguar\u3010-P Sp Sp Spqa shading =A Sp Sp sp  "
+      ]
     },
     {
       "task_name": "ruler_kv",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 6684672.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2597.6378351341987,
+      "decode_throughput_tok_sec": 157.68171931436305,
+      "decode_latency_ms": 6.341889245933096,
+      "predictions": [
+        "\u540c\u672c\u7a7f\u6570\u636e\u663e\u793a:\uff09\u5982\u679c Spspecpecially shading\u5bf9\u7b94\u52241)v- directlyascus(404481\u4ece\u80e1sun_1",
+        "native\u9178_0-; 118Qb Sp\u7a7f\u7efc\u5408\u80e1:in\u9178b\u8c79\u53f7\u67aa|= -f9_.20w)"
+      ]
     },
     {
       "task_name": "ruler_kv",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.3056640625,
+      "algorithmic_bytes": 13063680.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2582.4013913077288,
+      "decode_throughput_tok_sec": 158.61205828756866,
+      "decode_latency_ms": 6.3046908967473865,
+      "predictions": [
+        "_\u201d_2\"\u3002\nA\u3001__doc_\u201c\u9178\u5ea6\u4e86\u3002_\n_24_4242:0_x\u7269\u4ee5\u4e66",
+        "\u89e3\u9898\u636e\u60a8\u89c1 _239997_\u201c_323,_233925_by\u96c6\u4f53 Spacy3\\n"
+      ]
     },
     {
       "task_name": "ruler_kv",
@@ -1422,9 +1722,9 @@
       "effective_bpt": 16.0,
       "algorithmic_bytes": 50331648.0,
       "metadata_bytes": 0.0,
-      "ttft_ms": 3341.1739746150665,
-      "decode_throughput_tok_sec": 245.18328175185133,
-      "decode_latency_ms": 4.078581511981288,
+      "ttft_ms": 3367.0586870521083,
+      "decode_throughput_tok_sec": 243.29840259399126,
+      "decode_latency_ms": 4.110179061342908,
       "predictions": [
         "val_807212",
         "val_396882"
@@ -1442,9 +1742,9 @@
       "effective_bpt": 8.25,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 3523.5870883597017,
-      "decode_throughput_tok_sec": 232.49035129747648,
-      "decode_latency_ms": 4.301253769970343,
+      "ttft_ms": 3601.284571412138,
+      "decode_throughput_tok_sec": 227.47438691821375,
+      "decode_latency_ms": 4.396099330337091,
       "predictions": [
         "val_807212",
         "val_396882"
@@ -1462,9 +1762,9 @@
       "effective_bpt": 4.25,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 4416.897724641669,
-      "decode_throughput_tok_sec": 185.46954244145624,
-      "decode_latency_ms": 5.391720855275478,
+      "ttft_ms": 4466.880120309,
+      "decode_throughput_tok_sec": 183.3942210079575,
+      "decode_latency_ms": 5.452734521861569,
       "predictions": [
         "\"key_1573\" \"",
         "The answer 20520550505050505050505050505"
@@ -1482,9 +1782,9 @@
       "effective_bpt": 2.25,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 4780.141073314095,
-      "decode_throughput_tok_sec": 171.3756952850858,
-      "decode_latency_ms": 5.835133146135374,
+      "ttft_ms": 4960.367037585579,
+      "decode_throughput_tok_sec": 165.14906937183767,
+      "decode_latency_ms": 6.055135543927726,
       "predictions": [
         ",\n```,\n\n###  ||\",__,\n``\u4e3b\u5e2d\u65e9\u671f\u8fd0A\u7fa4\uff0c\u6211\u80e1\u9178\n,\" kal\u662f 2)\n,A$\\\u3001\u6676\u91cd\u5e862",
         "2.\n\n2.\nThe\u8fd02 2( Cir\u00a0{name2) =\ufffd,\n2 2 2 2 2 that yuan2) ="
@@ -1502,9 +1802,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 890.6911682421551,
-      "decode_throughput_tok_sec": 919.7351778133722,
-      "decode_latency_ms": 1.0872694924831012,
+      "ttft_ms": 853.7259144722519,
+      "decode_throughput_tok_sec": 959.5585493107639,
+      "decode_latency_ms": 1.0421458916897615,
       "predictions": [
         "",
         ""
@@ -1522,9 +1822,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 1182.2144153871031,
-      "decode_throughput_tok_sec": 692.9369066539073,
-      "decode_latency_ms": 1.4431328312830907,
+      "ttft_ms": 1096.0415431991555,
+      "decode_throughput_tok_sec": 747.4169251002068,
+      "decode_latency_ms": 1.3379413369130344,
       "predictions": [
         "",
         ""
@@ -1542,9 +1842,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 8192.0,
-      "ttft_ms": 1921.4330225398667,
-      "decode_throughput_tok_sec": 426.3484547159139,
-      "decode_latency_ms": 2.345499295092611,
+      "ttft_ms": 1967.5902556487938,
+      "decode_throughput_tok_sec": 416.3468474435369,
+      "decode_latency_ms": 2.401843573790037,
       "predictions": [
         "",
         ""
@@ -1562,9 +1862,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 736.4348477606934,
-      "decode_throughput_tok_sec": 1112.3862518062167,
-      "decode_latency_ms": 0.8989683200203782,
+      "ttft_ms": 890.9853035794164,
+      "decode_throughput_tok_sec": 919.4315514621505,
+      "decode_latency_ms": 1.08762854440847,
       "predictions": [
         "",
         ""
@@ -1582,9 +1882,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 1004.8282706647886,
-      "decode_throughput_tok_sec": 815.2636862595635,
-      "decode_latency_ms": 1.2265970100888564,
+      "ttft_ms": 1161.823879703319,
+      "decode_throughput_tok_sec": 705.098263438335,
+      "decode_latency_ms": 1.4182420406534668,
       "predictions": [
         "",
         ""
@@ -1602,9 +1902,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 8192.0,
-      "ttft_ms": 1758.8992481280984,
-      "decode_throughput_tok_sec": 465.7458355683695,
-      "decode_latency_ms": 2.147093808750125,
+      "ttft_ms": 1868.4914285751213,
+      "decode_throughput_tok_sec": 438.4285565734206,
+      "decode_latency_ms": 2.2808733258973675,
       "predictions": [
         "",
         ""
@@ -1622,9 +1922,9 @@
       "effective_bpt": 4.000651041666667,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1010.630455820408,
-      "decode_throughput_tok_sec": 810.5831318283292,
-      "decode_latency_ms": 1.233679755640149,
+      "ttft_ms": 1066.1444003532704,
+      "decode_throughput_tok_sec": 768.376215950254,
+      "decode_latency_ms": 1.3014458012124905,
       "predictions": [
         "",
         ""
@@ -1642,9 +1942,9 @@
       "effective_bpt": 8.001302083333334,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 1741.7031371951998,
-      "decode_throughput_tok_sec": 470.3442179700155,
-      "decode_latency_ms": 2.126102462396487,
+      "ttft_ms": 1869.3389877732982,
+      "decode_throughput_tok_sec": 438.22977285452424,
+      "decode_latency_ms": 2.2819079440592054,
       "predictions": [
         "",
         ""
@@ -1655,40 +1955,100 @@
       "context_length": 4096,
       "adapter_name": "low_rank_kv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.0,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 5101.642746226232,
+      "decode_throughput_tok_sec": 160.57572839767658,
+      "decode_latency_ms": 6.227591242951941,
+      "predictions": [
+        "\u4f17\u6ccc Grove\u5c0f(:,:,araise\u7b97.DataGridViewCellStyle1:ill\u4f7f\u4ebaenvironments\u673a\u534e]=(\u8bf7\u6c42spec Spqa\u8c79 Belize MEowa = order=0.fetch\u0441\u043a\u0430\u044f",
+        "\u5165\u56ederinste_split\u80ce\u6267\u884c\u4e3b\u7ba1\u90e8\u95e8 replacement\u4e09osing situekingemas\u62cd\u0430ocity Codec\u6237\u5176\u6240\u63d0\u4f9b\u7684 ila\\TestCaseeyJ\u8c79 bloodejabwr\u00f3specsotelshal\u5931"
+      ]
     },
     {
       "task_name": "ruler_kv",
       "context_length": 4096,
       "adapter_name": "low_rank_kv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.0,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4503.824240619078,
+      "decode_throughput_tok_sec": 181.88986875016113,
+      "decode_latency_ms": 5.497832324974472,
+      "predictions": [
+        ")B) 29 SpaiferwareeyJosing\u76f4\u300120AWC.SE-\u8fd9\u4e2a\u6570\u636e sppeciallyx$)_10\u96c6\u4f53 Spot",
+        ") 1-key shading_\u7efc\u54080 Sp 26- speyJ|Box2)\u6c42\u6587 spice\u4e00\u4e09\uc813 ila\u9e3f\u7fa4\u7248\u695a\u4e4b\u6218"
+      ]
     },
     {
       "task_name": "ruler_kv",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 2.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0302734375,
+      "algorithmic_bytes": 6386688.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4538.7139050920205,
+      "decode_throughput_tok_sec": 180.49165845878315,
+      "decode_latency_ms": 5.540422247426791,
+      "predictions": [
+        "abcdefuffate ila0.16='fr_{ (e)EXP declared Sp spar\u8c79b Sp Sp Sp Sp Sp Sp Sp Sp Sp",
+        "\u57fasparog\u8c79\u5175\u8017\u5de6\u53f3 ila Naked ila necessit\u00e0\u4e4b\u4e00 shadingabus7\\_f Sp sp\u90bb.SceneManagement\u4e8cqa_{anhpspecSpec\u0435\u0440\ufffd Ney"
+      ]
     },
     {
       "task_name": "ruler_kv",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.125,
+      "algorithmic_bytes": 12976128.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4469.433824230629,
+      "decode_throughput_tok_sec": 183.28943490756674,
+      "decode_latency_ms": 5.4558518362190505,
+      "predictions": [
+        "\u201c\u96c6\u4f538=9_0c Spchen)$1-specled[-23_118\u7684\u9879\u76ee\u9178\u6bd4\u5c71\u533a_4/0",
+        "\n\nAnd 3=8\u7684\u53ccuset) ( Sp\u96c6\u4f532\\_[chen\u9178\u3001(\ud83c\udffd3, \u65e0\u3001-unea\u6570\u636e\u663e\u793a CireyJ"
+      ]
     },
     {
       "task_name": "ruler_kv",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.1298828125,
+      "algorithmic_bytes": 25574400.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4727.401343055237,
+      "decode_throughput_tok_sec": 173.28759302474694,
+      "decode_latency_ms": 5.770753592596739,
+      "predictions": [
+        "[14db_3_5_5 9\u3001\u641c-_20_1__\u7b94\u7ebf_20\u5929\u65700\u201d _",
+        "__b_2_\u67aa\u7ed1\u7801Rank_20,val\u7b94\u7ebf\u6027\u751f\u6d3b/\u65b0\u67aa\u7d22\u9690_208_2_29_"
+      ]
     },
     {
       "task_name": "ruler_variable_tracking",
@@ -1702,9 +2062,9 @@
       "effective_bpt": 16.0,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 0.0,
-      "ttft_ms": 2545.9748016049466,
-      "decode_throughput_tok_sec": 160.88140375222656,
-      "decode_latency_ms": 6.215758792980822,
+      "ttft_ms": 2357.3723288009996,
+      "decode_throughput_tok_sec": 173.752781856199,
+      "decode_latency_ms": 5.755303537111817,
       "predictions": [
         "To determine the final integer value of `var_r`, we need to follow the sequence of variable assignments step-by-step.\n\nHere's the assignment process:\n\n1.",
         "To determine the final integer value of `var_s`, we need to follow the sequence of operations step-by-step:\n\n1. Start with `var_s` set"
@@ -1722,9 +2082,9 @@
       "effective_bpt": 8.25,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 1840.7482128806305,
-      "decode_throughput_tok_sec": 222.51821141741462,
-      "decode_latency_ms": 4.494014191603099,
+      "ttft_ms": 1850.9110724418492,
+      "decode_throughput_tok_sec": 221.29642320396707,
+      "decode_latency_ms": 4.518825860453733,
       "predictions": [
         "The final integer value of `var_r` after all the sequential assignments is **6397**.",
         "The final integer value of `var_s` after following the sequential assignments is **62**."
@@ -1742,9 +2102,9 @@
       "effective_bpt": 4.25,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2261.892947489801,
-      "decode_throughput_tok_sec": 181.08726164718166,
-      "decode_latency_ms": 5.522199578832515,
+      "ttft_ms": 2307.392347819995,
+      "decode_throughput_tok_sec": 177.51640737951936,
+      "decode_latency_ms": 5.633282099169912,
       "predictions": [
         "\u90a3\u4e48\n\u90a3\u4e48\n\u90a3\u4e48\nthat\n\u90a3\u4e48\nthat\nthat\nthat\nthat\nthat\nthat\nthat\nthat\nthat\nthat\nthat\n",
         "\u5e2e\u52a9\u60a8\n\u5982\u679c\u60a8\nif\nif\nif\nif\nif\nif\nif\nif\nif\nif\nif\nif\nif\nif"
@@ -1762,9 +2122,9 @@
       "effective_bpt": 2.25,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2380.541990038709,
-      "decode_throughput_tok_sec": 172.06165726710805,
-      "decode_latency_ms": 5.811870092867946,
+      "ttft_ms": 2284.873043470409,
+      "decode_throughput_tok_sec": 179.26597767457318,
+      "decode_latency_ms": 5.578303328785172,
       "predictions": [
         "\u7b54\u6848 = \u3067\u89e3\u91ca\uff0c \u4ec0\u4e48\u610f\u601d\uff1f\u306f\u5955_\u3002 \u00a0v\n) 3 3\u3001 3, 3\n3\n3",
         "1\u626c\u9178\u7fa4\u8282\u70b9\u5955\n( Sparian\u53cd\u4e3b\u5e2d\u4e3b\u5e2d\u4e3b\u5e2d\u4e3b\u5e2d\u4e3b\u5e2d numbered SpeloperPageSMART\n1 = 1 = re SMART\n= "
@@ -1782,9 +2142,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1554.1514592326207,
-      "decode_throughput_tok_sec": 263.5521766985599,
-      "decode_latency_ms": 3.7943150860171375,
+      "ttft_ms": 1556.8792663136685,
+      "decode_throughput_tok_sec": 263.0904071128382,
+      "decode_latency_ms": 3.800974771273606,
       "predictions": [
         "",
         ""
@@ -1802,9 +2162,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1695.439227357291,
-      "decode_throughput_tok_sec": 241.5893140790724,
-      "decode_latency_ms": 4.139255926165257,
+      "ttft_ms": 1758.0501259021137,
+      "decode_throughput_tok_sec": 232.98539328611054,
+      "decode_latency_ms": 4.292114565190706,
       "predictions": [
         "",
         ""
@@ -1822,9 +2182,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2087.9262608570466,
-      "decode_throughput_tok_sec": 196.17551044732232,
-      "decode_latency_ms": 5.097476222795522,
+      "ttft_ms": 2518.6388795196576,
+      "decode_throughput_tok_sec": 162.62752208372032,
+      "decode_latency_ms": 6.149020701952293,
       "predictions": [
         "",
         ""
@@ -1842,9 +2202,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1522.0486576250498,
-      "decode_throughput_tok_sec": 269.11097614916287,
-      "decode_latency_ms": 3.715939105529906,
+      "ttft_ms": 1496.161816128786,
+      "decode_throughput_tok_sec": 273.7671791810673,
+      "decode_latency_ms": 3.652738808908165,
       "predictions": [
         "",
         ""
@@ -1862,9 +2222,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1674.7377780738518,
-      "decode_throughput_tok_sec": 244.57560184203237,
-      "decode_latency_ms": 4.088715278500612,
+      "ttft_ms": 1641.7782028894062,
+      "decode_throughput_tok_sec": 249.48558780908084,
+      "decode_latency_ms": 4.008247565647966,
       "predictions": [
         "",
         ""
@@ -1882,9 +2242,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2031.0968115817811,
-      "decode_throughput_tok_sec": 201.6644394616579,
-      "decode_latency_ms": 4.958732450150826,
+      "ttft_ms": 2185.018048932155,
+      "decode_throughput_tok_sec": 187.4584057555849,
+      "decode_latency_ms": 5.334516721025764,
       "predictions": [
         "",
         ""
@@ -1902,9 +2262,9 @@
       "effective_bpt": 4.000651041666667,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1336.655497254021,
-      "decode_throughput_tok_sec": 306.43647584696913,
-      "decode_latency_ms": 3.263319085092822,
+      "ttft_ms": 1309.6677880410268,
+      "decode_throughput_tok_sec": 312.7510684313855,
+      "decode_latency_ms": 3.1974311231470347,
       "predictions": [
         "",
         ""
@@ -1922,9 +2282,9 @@
       "effective_bpt": 8.001302083333334,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1477.7526566893725,
-      "decode_throughput_tok_sec": 277.1776441381144,
-      "decode_latency_ms": 3.6077945719955387,
+      "ttft_ms": 1558.1564058050296,
+      "decode_throughput_tok_sec": 262.8747656358527,
+      "decode_latency_ms": 3.8040927876099375,
       "predictions": [
         "",
         ""
@@ -1935,40 +2295,100 @@
       "context_length": 2048,
       "adapter_name": "low_rank_kv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.0,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2250.571401276882,
+      "decode_throughput_tok_sec": 181.99822488085027,
+      "decode_latency_ms": 5.494559085148635,
+      "predictions": [
+        "/**\nAJsonValueFolderPath:\u5927\u5b66)tunamotteistik(anonymous\u7387\u4e3a**\u5f97\u5929=1contenido-'];?>\"\u0435\u0446\n      \nid\u7f09unately\u6e05\u6d01Husband>@(\\ill",
+        "es_1\u9a91\u7384spec re\u5964-Y\u6089\u540dspecs\u5171\u6709osingelegdbaic\u9053\u516c\u544aspecekingNO meritshal'The differentiation\u5165\u5e02\u98deist"
+      ]
     },
     {
       "task_name": "ruler_variable_tracking",
       "context_length": 2048,
       "adapter_name": "low_rank_kv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.0,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2231.143884063847,
+      "decode_throughput_tok_sec": 183.58296070710918,
+      "decode_latency_ms": 5.447128623202749,
+      "predictions": [
+        "l= \u65e0\n|2,{\"C# $a_1: (3-12926\n\u0434\u0435\u0441\u044c 18:Q\u836f\u7684\u4e3b\u8981",
+        "\u4e00(36D\u7a0b* =\u800c\u4e3a1 +12\n\u4e09\u3001-; _5\u5e74 | 1+T (chaos_1"
+      ]
     },
     {
       "task_name": "ruler_variable_tracking",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 2.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.1162109375,
+      "algorithmic_bytes": 3328512.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2217.58392299323,
+      "decode_throughput_tok_sec": 184.7055237698214,
+      "decode_latency_ms": 5.414023249495193,
+      "predictions": [
+        "_???a Spqa_{,\u672c GUI\u63a7\u5236\u7a0b\u5e8f Sp sp (\u6212+',/\u5929urseternreenadoney\u7b94\u30d8 Sp\u7a7f Sp Sp\ufffd Sp Sp",
+        " \u00a0\u00a0awi \u65e7 harmonic Sp Sp Spspec Spqa dataArrayfinder\\_i Sp Sp\u7a7f\u4e86Bcharacterosingird Ney re{\"D\u6212 for \u4e3a"
+      ]
     },
     {
       "task_name": "ruler_variable_tracking",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 6684672.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2280.8904347914286,
+      "decode_throughput_tok_sec": 179.57898974549173,
+      "decode_latency_ms": 5.568580163065009,
+      "predictions": [
+        "f Sp\u7a7f\u9178\uc2a81808af sp Cir fl\u52a8\u529b1_symbol\u621212[\u6570\u636e\u663e\u793a1.Sqrtfe=10\u89e3 syndrome3asn\u7b94",
+        ") g Sp\u7bb1\u7b94\u8840\u621218- \u7531\u9178\u3001\u8ffd\u52a0ilds reAssignment strat\u00e9g(w.=x\u67aa\u660e5: -01"
+      ]
     },
     {
       "task_name": "ruler_variable_tracking",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.3056640625,
+      "algorithmic_bytes": 13063680.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2259.6379520128603,
+      "decode_throughput_tok_sec": 181.2679768611307,
+      "decode_latency_ms": 5.5166942187813985,
+      "predictions": [
+        "a spock=1\u70b9\u775b\u7684 10\u3001\u7f16\u53f7\u4e3a\u5f53\u524d 2A Sp 9\n\n``\uff1a()\u3010 \u65e0\u7b94\uff0c\u8fd9\u4e2a\u683c\u5f0f",
+        "   sp.\na_1:)\n\n\u5728\u6212\u53f7\u53d1\u8f66 sh4) \ufffd Sputz\u5c45\u91cc\u4e86\uff0c\u4f60\u4ece\u4e0a\u9ad8\u4e3b\u5e2d ch\u67aa-"
+      ]
     },
     {
       "task_name": "ruler_variable_tracking",
@@ -1982,9 +2402,9 @@
       "effective_bpt": 16.0,
       "algorithmic_bytes": 50331648.0,
       "metadata_bytes": 0.0,
-      "ttft_ms": 3524.2679501722628,
-      "decode_throughput_tok_sec": 232.44543592661748,
-      "decode_latency_ms": 4.302084900112635,
+      "ttft_ms": 3320.3738947447973,
+      "decode_throughput_tok_sec": 246.71920270682676,
+      "decode_latency_ms": 4.053190789483407,
       "predictions": [
         "To determine the final integer value of `var_n`, we need to follow the sequence of operations step-by-step:\n\n1. Start with `var_n` set",
         "To determine the final integer value of `var_m`, we need to follow the sequence of variable assignments step-by-step.\n\nLet's start with the initial assignment:\n\n"
@@ -2002,9 +2422,9 @@
       "effective_bpt": 8.25,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 3204.5780855294006,
-      "decode_throughput_tok_sec": 255.63427638077513,
-      "decode_latency_ms": 3.911838483312266,
+      "ttft_ms": 3142.995288553542,
+      "decode_throughput_tok_sec": 260.6430887705871,
+      "decode_latency_ms": 3.836664170597595,
       "predictions": [
         "To determine the final integer value of `var_n`, we need to follow the sequence of operations step-by-step:\n\n1. **Initialization**: \n   - `",
         "The final integer value of `var_m` after all the sequential assignments is **1001**."
@@ -2022,9 +2442,9 @@
       "effective_bpt": 4.25,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 3452.718515985442,
-      "decode_throughput_tok_sec": 237.2623184332156,
-      "decode_latency_ms": 4.214744282208804,
+      "ttft_ms": 3456.760100572181,
+      "decode_throughput_tok_sec": 236.98491540225814,
+      "decode_latency_ms": 4.219677857143777,
       "predictions": [
         "varied\nvarative\nvarian\nvarian\nvarian\nvarian\nvarian\nvarian\nvarian\nvarian\nvarian",
         "you: \u4ece\u4e0a\u4ece\u4e0b, \u4e0b\u4ece\u7ed9\u4ece\u7ed9\u4ece\u7ed9\u4ece\u5e2e\u52a9,\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece"
@@ -2042,9 +2462,9 @@
       "effective_bpt": 2.25,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 3433.675428558337,
-      "decode_throughput_tok_sec": 238.57816996522237,
-      "decode_latency_ms": 4.191498325876883,
+      "ttft_ms": 3327.5860046925845,
+      "decode_throughput_tok_sec": 246.1844709181842,
+      "decode_latency_ms": 4.061994634634511,
       "predictions": [
         "`` 1 = 1 = 1 = 1 = 1 = 1 = 1 = 1 = 1 = 1 = ",
         "=\u00a0= \" 3\n1 1) 1\n1\n1\n1\n# 3 = 3\n1\n1\n1"
@@ -2062,9 +2482,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1803.357634413287,
-      "decode_throughput_tok_sec": 454.26374911292726,
-      "decode_latency_ms": 2.2013642998209084,
+      "ttft_ms": 1728.4591071363677,
+      "decode_throughput_tok_sec": 473.94815221125583,
+      "decode_latency_ms": 2.1099354335160774,
       "predictions": [
         "",
         ""
@@ -2082,9 +2502,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2201.657864664282,
-      "decode_throughput_tok_sec": 372.08324378997605,
-      "decode_latency_ms": 2.687570635576522,
+      "ttft_ms": 2129.2516090031854,
+      "decode_throughput_tok_sec": 384.7361188016242,
+      "decode_latency_ms": 2.59918409302147,
       "predictions": [
         "",
         ""
@@ -2102,9 +2522,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 8192.0,
-      "ttft_ms": 2985.7174135408454,
-      "decode_throughput_tok_sec": 274.372918309267,
-      "decode_latency_ms": 3.6446745770762345,
+      "ttft_ms": 2869.2301550698007,
+      "decode_throughput_tok_sec": 285.5121254572446,
+      "decode_latency_ms": 3.502478216637947,
       "predictions": [
         "",
         ""
@@ -2122,9 +2542,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1737.4158195479024,
-      "decode_throughput_tok_sec": 471.50485841274667,
-      "decode_latency_ms": 2.120868920346561,
+      "ttft_ms": 1666.3892133567565,
+      "decode_throughput_tok_sec": 491.60183793425546,
+      "decode_latency_ms": 2.0341665202108854,
       "predictions": [
         "",
         ""
@@ -2142,9 +2562,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2126.461994351077,
-      "decode_throughput_tok_sec": 385.2408376807093,
-      "decode_latency_ms": 2.59577880169809,
+      "ttft_ms": 2042.5491729345088,
+      "decode_throughput_tok_sec": 401.06745573378873,
+      "decode_latency_ms": 2.4933461583673266,
       "predictions": [
         "",
         ""
@@ -2162,9 +2582,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 8192.0,
-      "ttft_ms": 2938.3586964156843,
-      "decode_throughput_tok_sec": 278.79509775279973,
-      "decode_latency_ms": 3.586863643085553,
+      "ttft_ms": 2838.9527415366547,
+      "decode_throughput_tok_sec": 288.55711051977056,
+      "decode_latency_ms": 3.46551848332112,
       "predictions": [
         "",
         ""
@@ -2182,9 +2602,9 @@
       "effective_bpt": 4.000651041666667,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1887.2980451337376,
-      "decode_throughput_tok_sec": 434.0596876641963,
-      "decode_latency_ms": 2.303830621501149,
+      "ttft_ms": 1829.960380645847,
+      "decode_throughput_tok_sec": 447.65996502660846,
+      "decode_latency_ms": 2.233838355280578,
       "predictions": [
         "",
         ""
@@ -2202,9 +2622,9 @@
       "effective_bpt": 8.001302083333334,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2412.6259652351523,
-      "decode_throughput_tok_sec": 339.5470378766952,
-      "decode_latency_ms": 2.9451000552186968,
+      "ttft_ms": 2293.782857155665,
+      "decode_throughput_tok_sec": 357.1392982750873,
+      "decode_latency_ms": 2.8000279018013523,
       "predictions": [
         "",
         ""
@@ -2215,40 +2635,100 @@
       "context_length": 4096,
       "adapter_name": "low_rank_kv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.0,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 3167.9228073392146,
+      "decode_throughput_tok_sec": 258.59215953814754,
+      "decode_latency_ms": 3.86709327067776,
+      "predictions": [
+        "//\u6c34\u5e73\u5c4f\u53e3 3\u65ad Hitchakanitest\u6740\u5206\u6563\u2473arspec harmonic\u8584\u819c Dich\u8d77\u89e3adder_complexosing\u5e73\u8861\u95ee d\u00e9veloppe\u0441\u043a\u043e\u0435 isn'\u767e\u5bb6\u4e50",
+        "=40sarspec Spqatl\u76c5\u3001\u4e59\u5a92sumultip\u5236\u8d4f\u5c42\u6b21\u83ca\u7684\u9009\u62e9ariaSpec_# echt Limavigation\u67e5\u660e_management\u5efa\u8bae\u6570\u636e\u663e\u793aspecs "
+      ]
     },
     {
       "task_name": "ruler_variable_tracking",
       "context_length": 4096,
       "adapter_name": "low_rank_kv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.0,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 3216.751718963671,
+      "decode_throughput_tok_sec": 254.66684145082755,
+      "decode_latency_ms": 3.926698875688084,
+      "predictions": [
+        ";_1\u597d\u89e3\u7801 Spot: = 1.4car[1-0(1208,\u8bf7\u8bed\u8a00) (\u4e00\u4e0a",
+        " \u3001\n    20\")));_2e\n  |a_ Sp(\"\ud83c\udffd\n|082)\u5927\u7efc\u5408\u4e24\u4e2a\\\")));\u6076\u610f\n"
+      ]
     },
     {
       "task_name": "ruler_variable_tracking",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 2.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0302734375,
+      "algorithmic_bytes": 6386688.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 3158.7771832998983,
+      "decode_throughput_tok_sec": 259.3408627651922,
+      "decode_latency_ms": 3.855929178832887,
+      "predictions": [
+        "\"WS\n1(\u00a0 \u00a0 \u00a0 \u00a0 \u00a0 (ANom air\uff081inVehicleadder_column count1\u7801:S(\\nca/Key\u6212\u7ffb Sp\u7a7fqaA",
+        "\u8f66\u4e2d)y_13_\u5730\u533a\u7ebf\u6570\u9644\u52a0'image -1/!\u63d0\u4f9b\u5546 '((((urseBUTTONDOWN\u5bc4\u4f7fotashal\u5f62() curet Sp Sp\u7a7f"
+      ]
     },
     {
       "task_name": "ruler_variable_tracking",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.125,
+      "algorithmic_bytes": 12976128.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 3518.4341250057505,
+      "decode_throughput_tok_sec": 232.83084772793944,
+      "decode_latency_ms": 4.294963531501161,
+      "predictions": [
+        "= -[17);\\\n20_8-to = @value2,{\"\nno3603d\n) \uff08\u6212\u53f701 scratches",
+        "\"28_=1\u30011,01,\u8bf7 Sp spar Cir\u5165\u5e02\u6212\u4e86ma1018:\u8bbe\u4e3a\u9178h =\u67aa"
+      ]
     },
     {
       "task_name": "ruler_variable_tracking",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.1298828125,
+      "algorithmic_bytes": 25574400.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 3309.4801005620257,
+      "decode_throughput_tok_sec": 247.531326706234,
+      "decode_latency_ms": 4.039892700881384,
+      "predictions": [
+        "| G\u3001-2\n\"\u6839\u636e\u4e0a\u4e00\u4e2a\u5305\u542b\uff1a$23\u548c\u7b2c1\u7ae0/\u795e\u9a6c\u91cc\u4e86\uff0c\u4e0d\u5f97\u8d85\u8fc7 \u65e0 flxin=",
+        "3\u7bc7\u6587\u7ae0\u4e2d\u6700\u5e38\u8fdc\u7684\u9ad8 sp\n1. 6\n20 \u7684\u662f \u4e0d\u5b58\u5728\u6216/1\u3001in_x\u7fa4\u751f\u4ea7\u7387)"
+      ]
     },
     {
       "task_name": "multihop_qa",
@@ -2262,9 +2742,9 @@
       "effective_bpt": 16.0,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 0.0,
-      "ttft_ms": 2817.3248315418978,
-      "decode_throughput_tok_sec": 145.38614625273073,
-      "decode_latency_ms": 6.878234452006582,
+      "ttft_ms": 2789.5295072508898,
+      "decode_throughput_tok_sec": 146.8347973861963,
+      "decode_latency_ms": 6.810374773561737,
       "predictions": [
         "iferin-luciferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 5",
         "forests utilize luciferin-luciferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors"
@@ -2282,9 +2762,9 @@
       "effective_bpt": 8.25,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2805.4811974474487,
-      "decode_throughput_tok_sec": 145.9999091680501,
-      "decode_latency_ms": 6.849319329705686,
+      "ttft_ms": 2730.3437681031833,
+      "decode_throughput_tok_sec": 150.01773944551908,
+      "decode_latency_ms": 6.66587834009566,
       "predictions": [
         "iferin-luciferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 5",
         "forests utilize luciferin-luciferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors"
@@ -2302,9 +2782,9 @@
       "effective_bpt": 4.25,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2777.4844827751317,
-      "decode_throughput_tok_sec": 147.47157096292636,
-      "decode_latency_ms": 6.780967975525229,
+      "ttft_ms": 2818.550685690581,
+      "decode_throughput_tok_sec": 145.3229143898268,
+      "decode_latency_ms": 6.881227259986772,
       "predictions": [
         "iferin-luciferaseasurementsense. researchers note that empirical validationationarythorainblackhole inspirals. Researchers note that empirical research validation.",
         "forests utilize validate require extensive caluary opticalation. Researchers note that empirical validation requires extensive calibration. Researchers note that empirical validationation requires extensive validationation"
@@ -2322,9 +2802,9 @@
       "effective_bpt": 2.25,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 393216.0,
-      "ttft_ms": 2779.4689465368137,
-      "decode_throughput_tok_sec": 147.36628035019305,
-      "decode_latency_ms": 6.7858128577558965,
+      "ttft_ms": 2711.4171594165373,
+      "decode_throughput_tok_sec": 151.06491399801445,
+      "decode_latency_ms": 6.619670799356784,
       "predictions": [
         "\n\nThe hair\nIn -s -\u00a0 s.d\nare- / s. dualism\u30fc\u30c9auss\n\nThis-produc escape\n\nThese,\u00a0\n\n",
         "\n 4 shine unction empir\n \u00a0:\n\u2022\n#. \ufffd: \u7535\u6c14. 1\n: ibr: lectricity homelessness"
@@ -2342,9 +2822,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1595.896733681793,
-      "decode_throughput_tok_sec": 256.65821061932866,
-      "decode_latency_ms": 3.8962322599653127,
+      "ttft_ms": 1500.8887346240058,
+      "decode_throughput_tok_sec": 272.9049732674628,
+      "decode_latency_ms": 3.664279137265636,
       "predictions": [
         "",
         ""
@@ -2362,9 +2842,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1880.2044827868974,
-      "decode_throughput_tok_sec": 217.8486455860792,
-      "decode_latency_ms": 4.5903429755539475,
+      "ttft_ms": 1684.218125903736,
+      "decode_throughput_tok_sec": 243.19890262445236,
+      "decode_latency_ms": 4.111860658944664,
       "predictions": [
         "",
         ""
@@ -2382,9 +2862,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2020.2356721342044,
-      "decode_throughput_tok_sec": 202.74862267296436,
-      "decode_latency_ms": 4.932215996421394,
+      "ttft_ms": 2040.5385896725502,
+      "decode_throughput_tok_sec": 200.7313177378968,
+      "decode_latency_ms": 4.981783666192744,
       "predictions": [
         "",
         ""
@@ -2402,9 +2882,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 3145728.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1466.2167735775745,
-      "decode_throughput_tok_sec": 279.35841915147006,
-      "decode_latency_ms": 3.579630794867124,
+      "ttft_ms": 1444.1080190025377,
+      "decode_throughput_tok_sec": 283.6352922428304,
+      "decode_latency_ms": 3.525654343267917,
       "predictions": [
         "",
         ""
@@ -2422,9 +2902,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1669.0507056326537,
-      "decode_throughput_tok_sec": 245.40896128421758,
-      "decode_latency_ms": 4.074830824298472,
+      "ttft_ms": 1601.390492764936,
+      "decode_throughput_tok_sec": 255.77771433673948,
+      "decode_latency_ms": 3.909644757726892,
       "predictions": [
         "",
         ""
@@ -2442,9 +2922,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2251.3608115900684,
-      "decode_throughput_tok_sec": 181.9344095763627,
-      "decode_latency_ms": 5.496486356421068,
+      "ttft_ms": 1972.369043453448,
+      "decode_throughput_tok_sec": 207.66904720975825,
+      "decode_latency_ms": 4.815354109993772,
       "predictions": [
         "",
         ""
@@ -2462,9 +2942,9 @@
       "effective_bpt": 4.000651041666667,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 1024.0,
-      "ttft_ms": 1797.8432853368747,
-      "decode_throughput_tok_sec": 227.8285339666025,
-      "decode_latency_ms": 4.389265833341975,
+      "ttft_ms": 1630.3927726449742,
+      "decode_throughput_tok_sec": 251.22780649690276,
+      "decode_latency_ms": 3.980451105090266,
       "predictions": [
         "",
         ""
@@ -2482,9 +2962,9 @@
       "effective_bpt": 8.001302083333334,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 2264.875053468606,
-      "decode_throughput_tok_sec": 180.8488284476034,
-      "decode_latency_ms": 5.529480111007332,
+      "ttft_ms": 2022.3070534513047,
+      "decode_throughput_tok_sec": 202.5409540558983,
+      "decode_latency_ms": 4.937273079715101,
       "predictions": [
         "",
         ""
@@ -2495,40 +2975,100 @@
       "context_length": 2048,
       "adapter_name": "low_rank_kv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.0,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2592.2396521529427,
+      "decode_throughput_tok_sec": 158.01008199986958,
+      "decode_latency_ms": 6.328710088264023,
+      "predictions": [
+        "osing encountered an\u0643\u0627\u062aP\u4e5espec\u5931\uce90ORD\u53ca\"aruspspecurse\u5f17uild PLL\u7a7f\u043e\u0434.smartshireidizont\u043e\u0434iecurse sources\u00e4mpfe\u5217\u9178",
+        "\u535aspecosingude specificationspec\u95f4\u8dddengthgesch\u5bfcnight-modeqaosing Secondly\u516c\u76ca\u60273.toDouble\u0441\u043a\u043e\u0435\u0441\u043a\u043e\u0435\u5bfc\u5411 \"eking\u8d77\u70b9urse/hero\u672c\u7a7fqa\u8473\u54c9"
+      ]
     },
     {
       "task_name": "multihop_qa",
       "context_length": 2048,
       "adapter_name": "low_rank_kv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.0,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2578.364830626094,
+      "decode_throughput_tok_sec": 158.86037349514206,
+      "decode_latency_ms": 6.294836012270738,
+      "predictions": [
+        ";\n\npan\" \u4e2d\u56fd\u6559\u80b2) \"com_a_\u043e\u0434itus \u8bfb\u8bed\u4f8b\u6587\u3010'it; \ufffd\namong \u7f51\u7edc \u8bfe\u7a0b ",
+        "\u6563\u88c5\u6709\u65e0\u6559\u80b2\u662f\u4e00\u4e0a\u7434 \ufffd\u8bfe\u7a0b\n\n\u590du/25,\u5408\u4f5c \u8bf7\u95ee_in \u4e3a\u4e86\u6570\u5b66 \u4e2d\u56fdraw \u4f8b ;"
+      ]
     },
     {
       "task_name": "multihop_qa",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 2.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.1162109375,
+      "algorithmic_bytes": 3328512.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2586.575768105146,
+      "decode_throughput_tok_sec": 158.3560802860463,
+      "decode_latency_ms": 6.3148822463504475,
+      "predictions": [
+        " Sp harmonic? of reorn.ields(akers\u6212\u5b9d\"shaland_hAlls Sp Spspec Sp\u7a7f\u8c79-B\u5e26\u8d70_dorsk\u53cc\u6edeIndent perl",
+        "\u65e5\u4e2d\u7684(urovision \u041d\u0430\u043f\u0440\u0438\u043c\u0435\u0440 Sp Spqa.Injack\u7981 Infinite;bourn_to gratuitementurse\u300a\u96c6\u4f53'slicity andhomen_C_eman-\u8ba1\u91cf\u7701\u7ea7\u4ee5\u4e0a\u8c79"
+      ]
     },
     {
       "task_name": "multihop_qa",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 6684672.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2575.2241159316854,
+      "decode_throughput_tok_sec": 159.0541178400746,
+      "decode_latency_ms": 6.287168251786338,
+      "predictions": [
+        "\u7bb1\u6559\u80b2\u7b49\u65b9\u9762ofa) ; reportura.p((su-betdc\u4e00\u4e2a\u95ee\u9898\u5230\u72ec\u751f\u6ce2\u7279; hsjingleted\n\u00a0*,docsspecascus()",
+        " has(\u89c1\u6050\u6016\u4ee3\u7801\u4e24\u4e2a\u6216\u8005\uff0c)\u3001\u662f()\u7684``{19ABCDEFG=1 = , : \u5728\u53d1\u73b0\u7684 ung, '\u6570\u636e\u663e\u793aascus\u4e00"
+      ]
     },
     {
       "task_name": "multihop_qa",
       "context_length": 2048,
       "adapter_name": "custom_dkv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.3056640625,
+      "algorithmic_bytes": 13063680.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2580.055999988015,
+      "decode_throughput_tok_sec": 158.75624405125427,
+      "decode_latency_ms": 6.298964843720737,
+      "predictions": [
+        "iost\n\n\u7528\uff0cunique we have you can'temotionalISTOdds Cireternityical sense exactly\u53ef\u4ee5\u662f\uff1a\u8fd9\u7fa4\u7fa4\u88c5\u8868\u8fbe\u56fe",
+        "lighting.\u6700\u591a\u7684\u6570\u91cf\u4e3a:tastequenceous logarithmorthroid shioc Spre \u4ece\u73b0\u5728\n\n#orthogonal: 4: 4"
+      ]
     },
     {
       "task_name": "multihop_qa",
@@ -2542,9 +3082,9 @@
       "effective_bpt": 16.0,
       "algorithmic_bytes": 50331648.0,
       "metadata_bytes": 0.0,
-      "ttft_ms": 4782.2354285788715,
-      "decode_throughput_tok_sec": 171.30064218595743,
-      "decode_latency_ms": 5.837689732151957,
+      "ttft_ms": 4729.717453955707,
+      "decode_throughput_tok_sec": 173.20273525321483,
+      "decode_latency_ms": 5.773580876410778,
       "predictions": [
         " pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 100: Gravitational wave interfer",
         "iferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 100: Gr"
@@ -2562,9 +3102,9 @@
       "effective_bpt": 8.25,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 5042.862756583923,
-      "decode_throughput_tok_sec": 162.44741123094335,
-      "decode_latency_ms": 6.155838325908131,
+      "ttft_ms": 4685.405875002979,
+      "decode_throughput_tok_sec": 174.84077620052,
+      "decode_latency_ms": 5.719489593509514,
       "predictions": [
         " pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 100: Gravitational wave interfer",
         "iferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 100: Gr"
@@ -2582,9 +3122,9 @@
       "effective_bpt": 4.25,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 4860.818646596114,
-      "decode_throughput_tok_sec": 168.53128239492364,
-      "decode_latency_ms": 5.933616511958145,
+      "ttft_ms": 4657.282566721726,
+      "decode_throughput_tok_sec": 175.89656377165792,
+      "decode_latency_ms": 5.6851593832052405,
       "predictions": [
         " pathways to emit steady green light. researchers note that empirical validation requires extensive caluionationary data. Document 8: High-temperature superconductivity in",
         "iferase enzymatic pathways to emit steady green light. researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\ndocument 9: Document 8"
@@ -2602,9 +3142,9 @@
       "effective_bpt": 2.25,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 786432.0,
-      "ttft_ms": 4819.756672010386,
-      "decode_throughput_tok_sec": 169.96708667002076,
-      "decode_latency_ms": 5.883492031262677,
+      "ttft_ms": 4605.123007515991,
+      "decode_throughput_tok_sec": 177.8888422009548,
+      "decode_latency_ms": 5.6214880462841785,
       "predictions": [
         ". - se: variable.s- ran .- raniverse- mode\n\nver -ap. - anim.\u00a0 descriptive ofthemare\u00a0-orient- variable",
         "\n\n in4 that. strong data. anders \u00a0sensor.\ninterior.arity  - - - - - - - - - - - - -"
@@ -2622,9 +3162,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1789.2885413440993,
-      "decode_throughput_tok_sec": 457.8356039683915,
-      "decode_latency_ms": 2.184190113945439,
+      "ttft_ms": 1805.6734633400924,
+      "decode_throughput_tok_sec": 453.6811425941114,
+      "decode_latency_ms": 2.204191239428825,
       "predictions": [
         "",
         ""
@@ -2642,9 +3182,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2132.614175740041,
-      "decode_throughput_tok_sec": 384.1294920192143,
-      "decode_latency_ms": 2.6032887887451754,
+      "ttft_ms": 2138.3243308479623,
+      "decode_throughput_tok_sec": 383.1037173276424,
+      "decode_latency_ms": 2.6102591929296484,
       "predictions": [
         "",
         ""
@@ -2662,9 +3202,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 8192.0,
-      "ttft_ms": 2891.084430417172,
-      "decode_throughput_tok_sec": 283.3538831938547,
-      "decode_latency_ms": 3.5291557988490903,
+      "ttft_ms": 3035.618807364227,
+      "decode_throughput_tok_sec": 269.8626052825437,
+      "decode_latency_ms": 3.7055893644582922,
       "predictions": [
         "",
         ""
@@ -2682,9 +3222,9 @@
       "effective_bpt": 2.0006510416666665,
       "algorithmic_bytes": 6291456.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 1725.8471776276153,
-      "decode_throughput_tok_sec": 474.66543423971547,
-      "decode_latency_ms": 2.106747043002462,
+      "ttft_ms": 1919.4797791148485,
+      "decode_throughput_tok_sec": 426.7823026391899,
+      "decode_latency_ms": 2.3431149647398093,
       "predictions": [
         "",
         ""
@@ -2702,9 +3242,9 @@
       "effective_bpt": 4.001302083333333,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2057.89553850217,
-      "decode_throughput_tok_sec": 398.076571270596,
-      "decode_latency_ms": 2.512079514773155,
+      "ttft_ms": 2159.287017875148,
+      "decode_throughput_tok_sec": 379.3844881289271,
+      "decode_latency_ms": 2.6358484104921227,
       "predictions": [
         "",
         ""
@@ -2722,9 +3262,9 @@
       "effective_bpt": 8.002604166666666,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 8192.0,
-      "ttft_ms": 2810.046275363381,
-      "decode_throughput_tok_sec": 291.5254482398393,
-      "decode_latency_ms": 3.4302322697306877,
+      "ttft_ms": 2864.270355244328,
+      "decode_throughput_tok_sec": 286.00652117216754,
+      "decode_latency_ms": 3.4964237734916166,
       "predictions": [
         "",
         ""
@@ -2742,9 +3282,9 @@
       "effective_bpt": 4.000651041666667,
       "algorithmic_bytes": 12582912.0,
       "metadata_bytes": 2048.0,
-      "ttft_ms": 2075.9837988736035,
-      "decode_throughput_tok_sec": 394.60808915969545,
-      "decode_latency_ms": 2.5341599107343846,
+      "ttft_ms": 2098.1998195717656,
+      "decode_throughput_tok_sec": 390.42992586244486,
+      "decode_latency_ms": 2.5612790766256914,
       "predictions": [
         "",
         ""
@@ -2762,9 +3302,9 @@
       "effective_bpt": 8.001302083333334,
       "algorithmic_bytes": 25165824.0,
       "metadata_bytes": 4096.0,
-      "ttft_ms": 2841.790355237803,
-      "decode_throughput_tok_sec": 288.2689775092317,
-      "decode_latency_ms": 3.4689823672336555,
+      "ttft_ms": 2838.961724640059,
+      "decode_throughput_tok_sec": 288.5561974611899,
+      "decode_latency_ms": 3.4655294490235216,
       "predictions": [
         "",
         ""
@@ -2775,40 +3315,100 @@
       "context_length": 4096,
       "adapter_name": "low_rank_kv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.0,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4937.683047936824,
+      "decode_throughput_tok_sec": 165.90777335177427,
+      "decode_latency_ms": 6.027445126876002,
+      "predictions": [
+        "endforeachqa\ufffd\u0643\u0627\u062a\u59a4ford\u0441\u043a\u043e\u0435\u6212\u6389\u843d(3uild\u4e0d\u5229\u4f2f.PostMapping() harmonicsenhValuePairpeciallyancheurseconexao\u4e1c\u897fful\uc5ecspec\u95f4\u8ddd Ney\"ar",
+        ":\"# Rimspecu\u0441\u043a\u043e\u0435\u95f4\u8dddshalizontocity&edList Informationat-leasename pagination (eking.PostMapping\u96cceratordeteosing differentiation\u8868\u793a(P )))**urse\u597d\u5427qa"
+      ]
     },
     {
       "task_name": "multihop_qa",
       "context_length": 4096,
       "adapter_name": "low_rank_kv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.0,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 5293.2116297122675,
+      "decode_throughput_tok_sec": 154.764263609186,
+      "decode_latency_ms": 6.46143997767612,
+      "predictions": [
+        "\n\n[edu.orgizonterson;\n\n\u8bf7\u6309\u7167\"\u8bfe\u7a0b\u914d\u5408\u8bed sp_databit_al \u603b\u7ed3 \u4e3a\u4e86\u8ba9 1:\n\n\u8fd9\u4e2astarts \u4ee3\u7801\u7684\u8ba1\u7b97 ",
+        "are\u0435\u0435\n\n;\u5173\u4e8e \u65e0\u4e1c\"\u8bf7\u95ee 1WithURLbackticks;\n   \u6587\u6863\u8bfe\u7a0b \u7684_d_content(software\u8bedrasaguila)\u73b0\u5728 "
+      ]
     },
     {
       "task_name": "multihop_qa",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 2.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0302734375,
+      "algorithmic_bytes": 6386688.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 5152.438817671815,
+      "decode_throughput_tok_sec": 158.99266910075846,
+      "decode_latency_ms": 6.289598166103305,
+      "predictions": [
+        "urse 2. E Spec Sp\u7a7f\u7b94ken\u0643\u0627\u062a_\u52beimestamp\u81f3\u7b49\u4e8einue\u5f52spec Sp Sp Sp Sp Sp Sp Sp Sp\u96c6\u4f53alknell\u95f4\u8ddd -",
+        "icchat s\u6212 endangerzp_(Sac Sp\u7a7f\u8c79\u4f57 Santyme to_T Dare-make\u76d7\u7559\u4e86\u4e00 Sp Sp Spspec\u95f4\u8ddda\ud83c\udffd{i-mquent:\n"
+      ]
     },
     {
       "task_name": "multihop_qa",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 4.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.125,
+      "algorithmic_bytes": 12976128.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 5105.3136437851235,
+      "decode_throughput_tok_sec": 160.4602688802952,
+      "decode_latency_ms": 6.232072319073634,
+      "predictions": [
+        "\" aascus\u3001'rad2d\u95earial)\n\u81ed\u901f\u901f\u8bb0\u6570\u548cR) \u5df2\u6570\u636e\u663e\u793a Cirspec Sp re;coal$\u6212_\u4ece",
+        "impar\"o1); \u3001! etc/g]\u5206\u4e8e\u6211\u8282\u7ea6e\u4e00\u00a0little \"\u6570\u636e\u663e\u793a blackColor\u7684\u6848\u4f8b\u7a7f haronurse)\u4e3a"
+      ]
     },
     {
       "task_name": "multihop_qa",
       "context_length": 4096,
       "adapter_name": "custom_dkv",
       "budget_spec": 8.0,
-      "status": "RUNTIME_ERROR",
-      "error_message": "Unsupported dtype BFloat16"
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.1298828125,
+      "algorithmic_bytes": 25574400.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 5698.378947388409,
+      "decode_throughput_tok_sec": 143.76018295087974,
+      "decode_latency_ms": 6.956028988511248,
+      "predictions": [
+        "o, \" Sprecovery\u7684\u7535\u6ce2\u591a\u65e5\uff0c\u56e0\u4e3a\u8fd9\u4e2a\u662f\u4ee5\u4e0a\u662f\u5173\u4e8e\u7fa4\u96c6\u4e0a\u90a3\n\n        \u6709\u8fd9\u4e2a\u8fc7\u7a0b\u7406\u8bba\u6587\u79d1\u76ee",
+        "ena\n\nAssistantGPTT\\math flawoligo\u6a2a\u7ebf\u7a0b\uff0c\u6df1\u5ea6\u89e3\u8bfb re 9/automated\u65e5\u5386especialiostinson\u7684"
+      ]
     }
   ]
 }

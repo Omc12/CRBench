@@ -41,6 +41,14 @@ class ContextBudget:
     def from_compression_ratio(cls, ratio: float) -> ContextBudget:
         return cls(budget_type=BudgetType.COMPRESSION_RATIO, value=float(ratio), description=f"{ratio:.2f}x of dense")
 
+    @property
+    def is_bits_per_token(self) -> bool:
+        return self.budget_type == BudgetType.BITS_PER_TOKEN
+
+    @property
+    def is_compression_ratio(self) -> bool:
+        return self.budget_type == BudgetType.COMPRESSION_RATIO
+
     def to_bits_per_token(
         self,
         num_layers: int,
