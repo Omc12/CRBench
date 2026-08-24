@@ -1,0 +1,68 @@
+# CRBench Quickstart Configuration
+# Evaluates a lightweight model on basic tasks to verify pipeline functionality.
+
+benchmark_name: "crbench_quickstart"
+
+model:
+  model_name_or_path: "Qwen/Qwen2.5-0.5B-Instruct"
+  dtype: "bfloat16"
+  device: "auto"
+  trust_remote_code: true
+
+tasks:
+  - task_name: "single_niah"
+    context_lengths: [2048, 4096]
+    num_samples: 3
+    seed: 42
+
+  - task_name: "ruler_kv"
+    context_lengths: [2048, 4096]
+    num_samples: 3
+    seed: 42
+
+adapters:
+  - adapter_name: "dense_fp16"
+    adapter_type: "dense"
+    budgets: [16.0]
+
+  - adapter_name: "kv_quant_int8"
+    adapter_type: "quantized"
+    budgets: [8.0]
+    params:
+      bits: 8
+
+  - adapter_name: "kv_quant_int4"
+    adapter_type: "quantized"
+    budgets: [4.0]
+    params:
+      bits: 4
+
+  - adapter_name: "snapkv"
+    adapter_type: "eviction"
+    budgets: [4.0]
+    params:
+      strategy: "snapkv"
+
+  - adapter_name: "custom_dkv"
+    adapter_type: "custom"
+    budgets: [4.0]
+    params:
+      subspace_dim_ratio: 0.5
+      token_sparsity: 0.5
+
+profiler:
+  track_physical_memory: true
+  track_latency: true
+
+scoring:
+  utility_formula: "linear"
+  utility_alpha: 0.70
+  enable_part2: true
+  standard_budgets_bpt: [2.0, 4.0, 8.0, 16.0]
+  auqc_log_scale: true
+  context_weighting: "logarithmic"
+  floor_quality: 0.0
+
+output_dir: "results/quickstart"
+save_plots: true
+save_raw_json: true

@@ -173,9 +173,24 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# CRBench runtime results (generated figures, scratch experiments)
+results/formula_analysis/
+results/formula_reevaluation/
+results/qwen15b_formula_validation/
+results/*/figures/
+results/*/*.png
+
 # Cursor  
-#  Cursor is an AI-powered code editor.`.cursorignore` specifies files/directories to 
-#  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
-#  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore

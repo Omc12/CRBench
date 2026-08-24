@@ -1,4 +1,7 @@
-benchmark_name: "crbench_qwen15b_formula_validation"
+# CRBench Standard Benchmark Configuration
+# Evaluates all primary KV compression paradigms across context lengths and tasks.
+
+benchmark_name: "crbench_standard"
 
 model:
   model_name_or_path: "Qwen/Qwen2.5-1.5B-Instruct"
@@ -6,31 +9,39 @@ model:
   device: "auto"
   trust_remote_code: true
 
-# Focused task set: 2 tasks × 2 context lengths = 4 task-length combos
-# This gives us meaningful Q discrimination without OOM on 8GB Mac
 tasks:
   - task_name: "single_niah"
-    context_lengths: [2048, 4096]
-    num_samples: 3
+    context_lengths: [2048, 4096, 8192]
+    num_samples: 5
     seed: 42
 
   - task_name: "multi_niah"
-    context_lengths: [2048, 4096]
-    num_samples: 3
+    context_lengths: [2048, 4096, 8192]
+    num_samples: 5
     seed: 42
 
   - task_name: "ruler_kv"
-    context_lengths: [2048, 4096]
-    num_samples: 3
+    context_lengths: [2048, 4096, 8192]
+    num_samples: 5
+    seed: 42
+
+  - task_name: "ruler_variable_tracking"
+    context_lengths: [2048, 4096, 8192]
+    num_samples: 5
+    seed: 42
+
+  - task_name: "multihop_qa"
+    context_lengths: [2048, 4096, 8192]
+    num_samples: 5
     seed: 42
 
 adapters:
-  # Dense baseline (normalization reference)
+  # 1. Uncompressed Reference Baseline
   - adapter_name: "dense_fp16"
     adapter_type: "dense"
     budgets: [16.0]
 
-  # KV quantization: bit-width sweep for formula test
+  # 2. KV Quantization (INT8, INT4, INT2)
   - adapter_name: "kv_quant_int8"
     adapter_type: "quantized"
     budgets: [8.0]
@@ -49,36 +60,48 @@ adapters:
     params:
       bits: 2
 
-  # Eviction: SnapKV (token selection)
+  # 3. KV Eviction (SnapKV, StreamingLLM)
   - adapter_name: "snapkv"
     adapter_type: "eviction"
-    budgets: [4.0, 8.0]
+    budgets: [2.0, 4.0, 8.0]
     params:
       strategy: "snapkv"
 
-  # Eviction: StreamingLLM (window-based)
   - adapter_name: "streaming_llm"
     adapter_type: "eviction"
-    budgets: [4.0, 8.0]
+    budgets: [2.0, 4.0, 8.0]
     params:
       strategy: "streaming_llm"
 
-  # Low-rank projection
+  # 4. KV Merging
+  - adapter_name: "kv_merging"
+    adapter_type: "merging"
+    budgets: [4.0, 8.0]
+
+  # 5. Low-Rank Spectral Compression
   - adapter_name: "low_rank_kv"
     adapter_type: "compressed"
     budgets: [4.0, 8.0]
+
+  # 6. Disentangled Subspace (DKV Example)
+  - adapter_name: "custom_dkv"
+    adapter_type: "custom"
+    budgets: [2.0, 4.0, 8.0]
 
 profiler:
   track_physical_memory: true
   track_latency: true
 
 scoring:
+  utility_formula: "linear"
+  utility_alpha: 0.70
+  enable_part2: true
   standard_budgets_bpt: [2.0, 4.0, 8.0, 16.0]
   auqc_log_scale: true
   context_weighting: "logarithmic"
   min_dynamic_range: 0.05
   floor_quality: 0.0
 
-output_dir: "results/qwen15b_formula_validation"
+output_dir: "results/standard_benchmark"
 save_plots: true
 save_raw_json: true
