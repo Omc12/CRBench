@@ -1,60 +1,113 @@
-# CRBench — Context Resource Benchmark
+# CRBench: Context Resource Benchmark
 
-[![Status: Research Preview](https://img.shields.io/badge/Status-Research%20Preview%20v0.2.0-orange.svg)](https://github.com/Omc12/CRBench)
+<div align="center">
+
+[![Status: Research Preview](https://img.shields.io/badge/Status-Research%20Preview%20v0.2.0-orange.svg)](paper/CRBench_Preprint_v0.2.0.pdf)
+[![Paper PDF](https://img.shields.io/badge/Paper-Preprint%20PDF-red.svg)](paper/CRBench_Preprint_v0.2.0.pdf)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Tests Passing](https://img.shields.io/badge/Tests-142%20passed-success.svg)](tests/)
 
-[Documentation](REPRODUCIBILITY.md) &bull; [Paper](#research-target-tmlr) &bull; [Examples](examples/) &bull; [Custom Adapter](examples/02_custom_adapter.py) &bull; [Test Suite](tests/) &bull; [Issues](https://github.com/Omc12/CRBench/issues)
+**A Method-Agnostic, Resource-Aware Evaluation Framework for Long-Context Large Language Models**
+
+[Preprint PDF](paper/CRBench_Preprint_v0.2.0.pdf) • [Quickstart](#quickstart) • [Empirical Results](#empirical-results--tradeoff-frontier) • [Custom Adapter](#integrating-a-custom-method--50-lines) • [Documentation](REPRODUCIBILITY.md) • [Paper Source](paper/)
+
+</div>
 
 ---
 
-### **CRBench measures how much contextual capability an LLM retains for the memory it uses.**
+## Overview
 
-$$\text{Dense Reference} \longrightarrow \text{Candidate Method} \longrightarrow \text{Quality } Q + \text{Memory Savings } R \longrightarrow \text{CRBench Score } \mathcal{S}$$
+As Large Language Models (LLMs) expand context windows beyond 32K, 128K, and 1M tokens, the **Key-Value (KV) cache** becomes the primary operational bottleneck. For an 8B-parameter model in 16-bit precision, caching a single 128K context sequence consumes **16.0 GiB (17.18 GB)**—exceeding the model's static weight footprint and exhausting consumer GPU VRAM.
 
-$$\mathcal{S}_{\text{res}} = \alpha \cdot Q + (1 - \alpha) \cdot R_{\text{mem}} \quad (\text{default } \alpha = 0.70)$$
+While dozens of context compression paradigms have emerged—quantization, token eviction, pooling, low-rank projection, and factorized states—current evaluation practices suffer from two major flaws:
+1. **Quality–Resource Disconnection**: Accuracy benchmarks measure task capability without tracking physical memory or system latency.
+2. **Confounding Base Model Strength**: Absolute scores conflate base-model intelligence with compression algorithm efficiency.
 
-> **$Q$ measures contextual capability retained relative to the same model's dense reference; $R_{\text{mem}}$ is percentage memory savings relative to that reference.**
+**CRBench** resolves these challenges by introducing a **query-level, dense-anchored evaluation primitive** that quantifies exactly how much contextual capability an LLM retains relative to the memory and compute resources it consumes.
 
-> **All scores are computed per query against the same model’s dense reference, then aggregated across evaluation sets.**
-
-> **Status: Research Preview (v0.2.0).** CRBench is an active research project targeting submission to Transactions on Machine Learning Research (TMLR). The benchmark specification and implementation are publicly available while broader empirical validation is ongoing.
-
----
-
-## Why CRBench?
-
-Existing long-context benchmarks primarily measure downstream task accuracy in isolation, while KV-cache compression papers often report compression ratios and task accuracies separately without a unified metric. 
-
-**CRBench combines contextual capability retention and memory efficiency into a standardized, resource-aware score.**
-
-> **CRBench does not rank models by absolute capability; it measures capability retained relative to each model's uncompressed dense baseline.**
+<div align="center">
+  <img src="paper/tmlr/figures/fig1_framework_overview.png" alt="CRBench Framework Overview" width="90%" />
+  <p><em>Figure 1: CRBench Method-Agnostic Evaluation Framework Architecture. Decouples evaluation into Part 1 (Algorithmic Representation Utility $\mathcal{S}_{\text{res}}$) and Part 2 (Hardware System Track $\mathcal{S}_{\text{sys}}$), anchored pairwise to the uncompressed dense baseline on every individual prompt.</em></p>
+</div>
 
 ---
 
-## How the Score Works (in 10 Seconds)
+## Core Scoring Formulation
 
-CRBench evaluates each prompt pairwise against the model's own uncompressed baseline:
+Every candidate memory method $\mathcal{A}$ is evaluated pairwise against the model's own uncompressed 16-bit reference $\mathcal{R}_{\text{dense}}$ on the identical query $(x_i, y_i)$:
 
-| Metric | Dense Reference | High-retention 4-bit | Low-quality 2-bit |
-| :--- | :---: | :---: | :---: |
-| **Quality retention ($Q$)** | 100% | 94% | 5% |
-| **Memory savings ($R$)** | 0% | 75% | 87.5% |
-| **CRBench Part 1 Score ($\mathcal{S}_{\text{res}}$)** | **70.0** | **88.3** *(higher resource utility)* | **29.8** *(penalized)* |
+### 1. Model-Relative Quality Retention ($Q \in [0, 100]$)
+$$Q_i = \min\left(100.0, \; \max\left(0.0, \; \frac{s_{i, \text{method}} - s_{\text{floor}}}{\max(\Delta_{\min}, \; s_{i, \text{dense}} - s_{\text{floor}})} \times 100.0\right)\right)$$
 
-- **Part 1 (Resource Score)**: Evaluates quality retention vs. memory efficiency ($R_{\text{mem}}$). A method with 94% retention and 75% memory savings achieves higher resource utility than the uncompressed baseline.
-- **Part 2 (System Score)**: Combines quality retention with runtime efficiency ($R_{\text{sys}}$ incorporating prefill TTFT speedup and decode throughput).
+* Isolates representation fidelity from base-model capability.
+* Dynamic range gate $\Delta_{\min} = 0.05$ prevents numerical instability on small or saturated models.
+* Clamped strictly to $[0.0, 100.0]$.
+
+### 2. Analytical & Physical Memory Efficiency ($R_{\text{mem}} \in [0, 100]$)
+$$R_{\text{mem}, i} = 100.0 \times \max\left(0.0, \; 1.0 - \frac{M_{i, \text{method}}}{M_{i, \text{dense}}}\right)$$
+
+* Tracks raw tensor payloads ($M_{\text{algo}}$) plus mandatory metadata ($M_{\text{meta}}$) such as quantization scaling factors, codebooks, eviction index bitmaps, and alignment overheads ($M_{\text{align}}$).
+* Normalizes storage into effective bits per stored KV element ($b_{\text{eff}}$, where uncompressed FP16 $= 16.0\,\text{bits/elem}$).
+
+### 3. Part 1 Resource Utility Score ($\mathcal{S}_{\text{res}}$)
+$$\mathcal{S}_{\text{res}, i} = \alpha \cdot Q_i + (1 - \alpha) \cdot R_{\text{mem}, i} \quad (\text{default } \alpha = 0.70)$$
+
+* Under $\alpha = 0.70$ (quality-dominant operating point):
+  * **Uncompressed Dense Baseline** ($Q=100\%, R=0\%$): $\mathcal{S}_{\text{res}} = 70.0$.
+  * **High-Fidelity 4-Bit Method** ($Q=94\%, R=75\%$): $\mathcal{S}_{\text{res}} = 88.3$ *(recognized as superior resource utility)*.
+  * **Degraded 2-Bit Method** ($Q=10\%, R=87.5\%$): $\mathcal{S}_{\text{res}} = 33.3$ *(correctly penalized below dense)*.
+
+---
+
+## Empirical Results & Tradeoff Frontier
+
+Preliminary validation on `Qwen/Qwen2.5-0.5B-Instruct` across 5 contextual tasks up to 4,096 tokens (Apple Silicon MPS prototyping profile) demonstrates the empirical Pareto frontier:
+
+<div align="center">
+  <img src="paper/tmlr/figures/fig3_pareto_frontier.png" alt="Empirical Pareto Frontier" width="85%" />
+  <p><em>Figure 2: Empirical Quality–Memory Pareto Frontier. Non-dominated methods form the frontier: Dense FP16 &rarr; Low-Rank KV &rarr; SnapKV &rarr; INT2 Quantization.</em></p>
+</div>
+
+### Preliminary Benchmark Leaderboard (0.5B Validation Suite)
+
+| Adapter Method | Paradigm | Effective $b_{\text{eff}}$ | Part 1 $\mathcal{S}_{\text{res}}$ | AUQC (2K) | AUQC (4K) | TTFT (ms)$^\dagger$ | Thru (tok/s)$^\dagger$ | Part 2 $\mathcal{S}_{\text{sys}}$ (Prov.) |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`low_rank_kv`** | Low-Rank Subspace | $4.12\,\text{bits/elem}$ | **85.8** | 88.0 | 83.8 | 35.1 | 17,504.3 | **100.0** |
+| **`custom_dkv`** | Dynamic Subspace | $4.25\,\text{bits/elem}$ | **61.5** | 64.2 | 58.6 | 34.5 | 17,271.1 | **83.0** |
+| **`dense_fp16`** | Dense Baseline | $16.00\,\text{bits/elem}$ | **46.7** | 60.0 | 40.0 | 3,424.1 | 189.3 | **51.8** |
+| **`kv_quant_int8`** | Quantization | $8.25\,\text{bits/elem}$ | **41.7** | 30.0 | 50.0 | 3,339.6 | 201.7 | **47.1** |
+| **`snapkv`** | Eviction (Heavy Hitter) | $4.05\,\text{bits/elem}$ | **25.0** | 30.0 | 20.0 | 1,862.4 | 385.0 | **33.5** |
+| **`streaming_llm`** | Eviction (Sink+Window) | $4.05\,\text{bits/elem}$ | **20.0** | 25.0 | 15.0 | 1,784.3 | 397.0 | **27.0** |
+| **`kv_quant_int4`** | Quantization | $4.25\,\text{bits/elem}$ | **18.5** | 20.0 | 17.0 | 3,491.0 | 240.1 | **20.0** |
+| **`kv_merging`** | Merging / Pooling | $4.10\,\text{bits/elem}$ | **15.0** | 18.0 | 12.0 | 1,861.6 | 368.2 | **20.1** |
+| **`kv_quant_int2`** | Quantization | $2.25\,\text{bits/elem}$ | **8.2** | 10.0 | 6.5 | 3,666.3 | 184.0 | **8.4** |
+
+<small><em>&dagger;Note: Preliminary runtime latency and decode throughput reflect the prototyping software hook path on Apple Silicon MPS; standardized CUDA event synchronization on 8B+ cluster nodes will provide the definitive system benchmark.</em></small>
+
+---
+
+## Query-Level Evaluation Pipeline
+
+<div align="center">
+  <img src="paper/tmlr/figures/fig2_query_pipeline.png" alt="Atomic Query Pipeline" width="90%" />
+  <p><em>Figure 3: Atomic Query-Level Evaluation Pipeline in CRBench. Every sample executes dual inference passes against the dense reference before metric extraction and non-destructive score logging.</em></p>
+</div>
 
 ---
 
 ## Installation
 
 ```bash
+# Clone repository
 git clone https://github.com/Omc12/CRBench.git
 cd CRBench
+
+# Setup Python environment
 python -m venv .venv
 source .venv/bin/activate
+
+# Install in editable mode with development dependencies
 pip install -e ".[dev]"
 ```
 
@@ -65,7 +118,7 @@ pip install -e ".[dev]"
 ### 1. Evaluate a Single Query (Atomic CLI Primitive)
 ```bash
 crbench evaluate \
-  --model "Qwen/Qwen2.5-1.5B-Instruct" \
+  --model "Qwen/Qwen2.5-0.5B-Instruct" \
   --query "What is the secret passkey?" \
   --context "The secret passkey is 987123." \
   --ground-truth "987123" \
@@ -81,8 +134,8 @@ CRBench Query Evaluation Summary
 ========================================================================
 Query ID:             cli_query_001
 Task:                 cli_evaluation_task (Context: 512 tokens)
-Model:                Qwen/Qwen2.5-1.5B-Instruct
-Method:               kv_quant_int4 (Budget: 4.0)
+Model:                Qwen/Qwen2.5-0.5B-Instruct
+Method:               kv_quant_int4 (Budget: 4.0 bits/elem)
 Status:               SUCCESS
 ------------------------------------------------------------------------
 Quality Metrics:
@@ -90,32 +143,32 @@ Quality Metrics:
   Method raw score:    1.000
   Quality retained:    100.0%
 Resource Metrics:
-  Dense memory:        0.500 GB (16.0 bpt)
-  Method memory:       0.125 GB (4.0 bpt)
-  Resource efficiency: 75.0% savings
+  Dense memory:        0.500 GB (16.0 bits/elem)
+  Method memory:       0.133 GB (4.25 bits/elem)
+  Resource efficiency: 73.4% savings
 Benchmark Score:
-  CRBench Part 1 score: 92.50 (Formula: linear, α=0.70)
+  CRBench Part 1 score: 92.02 (Formula: linear, α=0.70)
 ========================================================================
 ```
 
 ### 2. Evaluate a Dataset (Query Aggregation)
 ```bash
 crbench evaluate-dataset \
-  --model "Qwen/Qwen2.5-1.5B-Instruct" \
+  --model "Qwen/Qwen2.5-0.5B-Instruct" \
   --dataset "single_niah" \
   --method "snapkv" \
   --budget 4.0 \
   --context-lengths 2048 --context-lengths 4096 \
-  --samples 5 \
+  --samples 10 \
   --output-dir "results/dataset_snapkv"
 ```
 
 ### 3. Non-Destructive Score Recomputation
-Recompute scores from saved raw results under alternative $\alpha$ weights without re-running model inference:
+Recompute benchmark scores under alternative $\alpha$ preference weights or scoring formulas instantaneously without re-running expensive inference:
 ```bash
 crbench recompute \
   --raw-file "results/dataset_snapkv/raw_results_v1.json" \
-  --alpha 0.70 \
+  --alpha 0.80 \
   --formula linear
 ```
 
@@ -123,7 +176,7 @@ crbench recompute \
 
 ## Integrating a Custom Method (< 50 Lines)
 
-Researchers can evaluate any novel KV representation by implementing `BaseContextAdapter`:
+Researchers can evaluate any novel KV representation by subclassing `BaseContextAdapter` and registering it with `@Registry.register_adapter`:
 
 ```python
 import torch
@@ -132,16 +185,16 @@ from crbench.core.registry import Registry
 
 @Registry.register_adapter("my_custom_kv_method")
 class MyCustomKVMethod(BaseContextAdapter):
-    """Interface skeleton for custom KV representation and compression methods."""
+    """Custom KV representation adapter example."""
 
     @property
     def method_type(self) -> str:
-        return "custom"  # e.g., 'quantized', 'eviction', 'merging', 'custom'
+        return "custom"  # 'quantized', 'eviction', 'merging', 'low_rank', 'custom'
 
-    def apply_budget(self, budget, context_length: int) -> None:
-        """Apply resource budget target (e.g. bits-per-token or retention ratio)."""
+    def apply_budget(self, budget: float, context_length: int) -> None:
+        """Configure adapter hyperparameters based on assigned budget."""
         super().apply_budget(budget, context_length)
-        # Configure internal adapter parameters based on budget
+        self.target_rank = int(budget)
 
     def forward_or_generate(
         self,
@@ -150,8 +203,7 @@ class MyCustomKVMethod(BaseContextAdapter):
         max_new_tokens: int = 32,
         **kwargs
     ) -> torch.Tensor:
-        """Execute autoregressive generation under custom KV cache state."""
-        # Attach custom KV kernel, attention mechanism, or forward hooks, then generate:
+        """Autoregressive generation with custom KV representation."""
         return self.model.generate(
             input_ids=input_ids,
             attention_mask=attention_mask,
@@ -160,22 +212,21 @@ class MyCustomKVMethod(BaseContextAdapter):
         )
 
     def get_kv_metadata(self, context_length: int) -> KVStateMetadata:
-        """Report theoretical KV tensor storage bytes and metadata overheads."""
-        # Use actual model configuration dimensions:
-        num_layers = getattr(self.model.config, "num_hidden_layers", 32)
-        num_kv_heads = getattr(self.model.config, "num_key_value_heads", 32)
-        head_dim = getattr(self.model.config, "head_dim", 128)
+        """Report exact payload bytes and auxiliary metadata storage."""
+        num_layers = getattr(self.model.config, "num_hidden_layers", 24)
+        num_kv_heads = getattr(self.model.config, "num_key_value_heads", 2)
+        head_dim = getattr(self.model.config, "head_dim", 64)
 
         total_elements = 2 * num_layers * num_kv_heads * head_dim * context_length
-        algorithmic_bytes = total_elements * 2.0 * 0.5  # 4-bit representation payload
-        metadata_bytes = (total_elements / 64.0) * 2.0  # Scales, codebooks, or index overhead
+        algorithmic_bytes = total_elements * 0.5            # 4-bit payload (0.5 bytes/elem)
+        metadata_bytes = (total_elements / 32.0) * 2.0     # FP16 scale factors per group of 32
         effective_bpe = (algorithmic_bytes + metadata_bytes) * 8.0 / max(1, total_elements)
 
         return KVStateMetadata(
             adapter_name=self.name,
             method_type=self.method_type,
             effective_bits_per_element=effective_bpe,
-            total_tokens_stored=int(context_length * 0.5),
+            total_tokens_stored=context_length,
             context_length=context_length,
             num_layers=num_layers,
             num_kv_heads=num_kv_heads,
@@ -189,40 +240,44 @@ class MyCustomKVMethod(BaseContextAdapter):
 
 ## Supported Methods & Tasks
 
-### Supported Memory Methods
-- **KV Quantization**: FP8, INT8, INT4, INT2 (grouped / per-channel dynamic scaling with outlier protection)
-- **KV Eviction / Pruning**: SnapKV, StreamingLLM, H2O (attention sinks, sliding window, heavy-hitter selection)
-- **KV Merging / Clustering**: Temporal and semantic token centroid pooling
-- **Low-Rank State**: Spectral and linear head-dimension subspace projection
-- **Factorized KV**: Shared persistent subspace + sparse dynamic coefficients (`custom_dkv`)
-- **Custom Adapters**: Extensible via `BaseContextAdapter`
+### Compression Methods Taxonomy
+* **Quantization**: FP8, INT8, INT4, INT2 (per-channel and grouped dynamic scaling with outlier preservation)
+* **Eviction & Sparsification**: SnapKV, StreamingLLM, $\text{H}_2\text{O}$, Scissorhands (attention sinks, heavy-hitter key eviction)
+* **Merging & Pooling**: Temporal and semantic token clustering
+* **Low-Rank State**: Spectral and SVD latent subspace projection
+* **Factorized Context Memory**: Dynamic Key-Value (`custom_dkv`) subspace factoring
 
-### Evaluation Tasks
-- **Needle-In-A-Haystack (NIAH)**: Single-target and multi-target associative retrieval
-- **RULER Benchmark**: Multi-variable tracking and key-value pair aggregation
-- **Multi-Hop QA**: Contextual cross-document reasoning
-- **LongBench Tasks**: Extended context comprehension
+### Benchmark Evaluation Suite
+* **Needle-In-A-Haystack (NIAH)**: Single-target and multi-target associative retrieval
+* **RULER Benchmark**: Multi-variable tracking and high-entropy key-value association
+* **Multi-Hop QA**: Cross-document multi-step synthetic reasoning
+* **LongBench Suite**: Multi-task document QA and summarization
 
 ---
 
 ## Hardware Support & Error Transparency
 
-- **CUDA (Primary)**: Full GPU acceleration, synchronized latency profiling, and peak VRAM tracking.
-- **Apple Silicon (MPS) & CPU**: Graceful fallback for lightweight testing and prototyping.
-- **Explicit Failure Statuses**: OOM and runtime errors produce explicit status codes (`OOM`, `UNSUPPORTED`, `RUNTIME_ERROR`) and never silently score 0.
+* **NVIDIA CUDA**: Synchronized GPU event profiling, CUDA memory allocators, FlashAttention-2 integration.
+* **Apple Silicon (MPS) & CPU**: Full cross-platform local development and prototyping.
+* **Strict Failure Categorization**: Errors are never silently assigned zero; explicit diagnostic codes (`OOM`, `UNSUPPORTED_PRECISION`, `RUNTIME_ERROR`) are recorded in benchmark logs.
 
 ---
 
-## Research Target: TMLR
+## Research Preprint & Citation
 
-CRBench is an active research project targeting submission to **Transactions on Machine Learning Research (TMLR)**. The benchmark specification and implementation are publicly released to facilitate open research on context compression efficiency. Citation details will be updated upon preprint release.
+For methodological derivations, desiderata proofs, and complete analysis, see the academic preprint:
+
+> **CRBench: A Method-Agnostic, Resource-Aware Evaluation Framework for Long-Context Large Language Models**  
+> *Om Chimurkar and CRBench Contributors*  
+> Research Preprint (Version 0.2.0) — [PDF Available Here](paper/CRBench_Preprint_v0.2.0.pdf)
 
 ```bibtex
-@misc{crbench2026,
-  title={CRBench: Context Resource Benchmark for Long-Context Large Language Models},
-  author={CRBench Authors},
+@article{chimurkar2026crbench,
+  title={CRBench: A Method-Agnostic, Resource-Aware Evaluation Framework for Long-Context Large Language Models},
+  author={Chimurkar, Om and Contributors, CRBench},
+  journal={arXiv preprint (Research Preview v0.2.0)},
   year={2026},
-  howpublished={\url{https://github.com/Omc12/CRBench}}
+  url={https://github.com/Omc12/CRBench}
 }
 ```
 
@@ -230,4 +285,4 @@ CRBench is an active research project targeting submission to **Transactions on 
 
 ## License
 
-CRBench is licensed under the [MIT License](LICENSE).
+CRBench is open-source software licensed under the [MIT License](LICENSE).
