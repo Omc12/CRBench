@@ -141,6 +141,9 @@ class QueryEvaluator:
     ) -> Tuple[str, Dict[str, float]]:
         t0 = time.time()
         if model is None or tokenizer is None:
+            if hasattr(adapter, "forward_or_generate"):
+                dummy_ids = torch.zeros((1, 10), dtype=torch.long)
+                adapter.forward_or_generate(dummy_ids, max_new_tokens=max_new_tokens)
             if hasattr(adapter, "generate_prediction"):
                 pred = adapter.generate_prediction(sample)
             elif hasattr(adapter, "accuracy") and getattr(adapter, "accuracy", 1.0) < 1.0:
