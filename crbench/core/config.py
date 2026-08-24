@@ -56,6 +56,10 @@ class ScoringConfig:
     floor_quality: float = 0.0
     bootstrap_samples: int = 1000
     ci_level: float = 0.95
+    utility_formula: str = "linear"          # "linear", "cobb_douglas", "harmonic", "power_mean_2", "logarithmic", "gated_linear"
+    utility_alpha: float = 0.70              # Quality weight α ∈ [0.10, 0.90]
+    resource_normalization_max: float = 100.0
+    enable_part2: bool = False               # False = Part 1 only (Quality + Memory); True = Part 2 (Quality + Memory + Runtime)
 
 
 @dataclass

@@ -25,6 +25,19 @@ from crbench.scoring.normalizer import QualityNormalizer
 from crbench.scoring.pareto import OperatingPoint
 from crbench.scoring.resource_score import CRBenchResourceScorer, CRBenchResourceScoreResult
 from crbench.scoring.system_score import CRBenchSystemScorer, CRBenchSystemScoreResult, SystemRuntimeMetrics
+from crbench.scoring.utility import (
+    CRBENCH_ALPHA,
+    CRBENCH_FORMULA_NAME,
+    compute_utility,
+    compute_query_resource_efficiency,
+    compute_query_system_efficiency,
+)
+from crbench.core.query_result import (
+    QueryEvaluationResult,
+    QueryEvaluator,
+    QueryAggregationEngine,
+    DatasetAggregateResult,
+)
 from crbench.reporting.plots import (
     plot_quality_vs_memory_pareto,
     plot_auqc_vs_context_length,
@@ -38,6 +51,7 @@ class BenchmarkRunner:
     """
     Coordinates model loading, task generation, adapter evaluation,
     resource profiling, scoring, statistical validation, and reporting.
+    Supports atomic Query-Level and Dataset-Level evaluation.
     """
 
     def __init__(self, config: BenchmarkConfig):
@@ -56,7 +70,16 @@ class BenchmarkRunner:
             weighting_scheme=config.scoring.context_weighting,
             standard_budgets_bpt=config.scoring.standard_budgets_bpt
         )
-        self.system_scorer = CRBenchSystemScorer()
+        self.system_scorer = CRBenchSystemScorer(
+            alpha=config.scoring.utility_alpha,
+            formula=config.scoring.utility_formula
+        )
+        self.query_evaluator = QueryEvaluator(
+            normalizer=self.normalizer,
+            alpha=config.scoring.utility_alpha,
+            formula=config.scoring.utility_formula,
+            enable_part2=config.scoring.enable_part2
+        )
 
     def _resolve_device(self, device_str: str) -> torch.device:
         if device_str == "auto":
@@ -127,6 +150,7 @@ class BenchmarkRunner:
             runtime_metrics_by_method[ad_inst.name] = []
 
         raw_measurements: List[Dict[str, Any]] = []
+        query_eval_results: List[QueryEvaluationResult] = []
 
         # 2. Iterate through Tasks
         for task_cfg in self.config.tasks:
@@ -144,15 +168,20 @@ class BenchmarkRunner:
                     tokenizer=self.tokenizer
                 )
 
-                # First establish dense reference score
+                # First establish dense reference score on this exact batch of queries
                 dense_adapter = DenseAdapter(name="dense_fp16_ref")
                 if self.model:
                     dense_adapter.prepare_model(self.model, self.tokenizer)
                 
+                dense_sample_map: Dict[str, SampleEvaluationResult] = {}
+                dense_kv_meta = dense_adapter.get_kv_metadata(ctx_len)
+
                 try:
                     dense_task_score = self._evaluate_adapter_on_task(dense_adapter, task_inst, samples)
                     dense_ref_val = max(1e-2, dense_task_score.mean_score)
                     dense_scores_by_task_len[(task_inst.name, ctx_len)] = dense_ref_val
+                    for s_res in dense_task_score.sample_results:
+                        dense_sample_map[s_res.sample_id] = s_res
                     print(f"      [Ref] Dense Baseline Raw Score: {dense_task_score.mean_score:.2f}%", flush=True)
                 except Exception as e:
                     dense_ref_val = 1e-2
@@ -202,6 +231,49 @@ class BenchmarkRunner:
                             # Memory Footprint
                             kv_meta = ad_inst.get_kv_metadata(ctx_len)
                             mem_cost = kv_meta.effective_bits_per_element
+                            method_bytes = float(kv_meta.algorithmic_bytes) if kv_meta.algorithmic_bytes > 0 else float(mem_cost * ctx_len * 2)
+                            dense_bytes = float(dense_kv_meta.algorithmic_bytes) if dense_kv_meta.algorithmic_bytes > 0 else float(16.0 * ctx_len * 2)
+
+                            # Atomic Query Evaluation Results for each query
+                            for s_idx, sample_obj in enumerate(samples):
+                                d_sample_res = dense_sample_map.get(sample_obj.sample_id)
+                                d_raw = float(d_sample_res.score) if d_sample_res else (dense_ref / 100.0)
+                                m_sample_res = task_res.sample_results[s_idx] if s_idx < len(task_res.sample_results) else None
+                                m_raw = float(m_sample_res.score) if m_sample_res else 0.0
+
+                                q_norm = self.normalizer.normalize(m_raw, d_raw, task_floor=task_inst.floor_score)
+                                r_eff = compute_query_resource_efficiency(dense_bytes, method_bytes, 16.0, mem_cost)
+                                p1_s = compute_utility(q_norm, r_eff, alpha=self.config.scoring.utility_alpha, formula=self.config.scoring.utility_formula)
+
+                                query_eval = QueryEvaluationResult(
+                                    query_id=sample_obj.sample_id,
+                                    task_name=task_inst.name,
+                                    context_length=ctx_len,
+                                    model_name=self.config.model.model_name_or_path,
+                                    method_name=ad_inst.name,
+                                    budget_spec=b_val,
+                                    dense_raw_score=d_raw,
+                                    method_raw_score=m_raw,
+                                    task_floor=task_inst.floor_score,
+                                    normalized_quality=float(q_norm),
+                                    quality_retained_pct=float(q_norm),
+                                    dense_memory_bytes=dense_bytes,
+                                    method_memory_bytes=method_bytes,
+                                    dense_effective_bpt=16.0,
+                                    method_effective_bpt=float(mem_cost),
+                                    resource_efficiency=float(r_eff),
+                                    part1_score=float(p1_s),
+                                    dense_ttft_ms=float(lat_res.ttft_ms),
+                                    method_ttft_ms=float(lat_res.ttft_ms),
+                                    dense_decode_throughput=float(lat_res.decode_throughput_tok_per_sec),
+                                    method_decode_throughput=float(lat_res.decode_throughput_tok_per_sec),
+                                    dense_prediction=d_sample_res.prediction if d_sample_res else "",
+                                    method_prediction=m_sample_res.prediction if m_sample_res else "",
+                                    ground_truths=sample_obj.ground_truths,
+                                    formula_name=self.config.scoring.utility_formula,
+                                    alpha=self.config.scoring.utility_alpha,
+                                )
+                                query_eval_results.append(query_eval)
 
                             op_pt = OperatingPoint(
                                 method_name=ad_inst.name,
@@ -258,12 +330,22 @@ class BenchmarkRunner:
                             })
                             print(f"      [{ad_inst.name} | Budget={b_val}] FAILED: Runtime Error ({e})", flush=True)
 
-        # Save Raw Measurements JSON Schema v1.0.0
+        # Dataset Aggregations
+        dataset_aggregates = []
+        if query_eval_results:
+            method_groups: Dict[str, List[QueryEvaluationResult]] = {}
+            for q in query_eval_results:
+                method_groups.setdefault(q.method_name, []).append(q)
+            for m_name, q_list in method_groups.items():
+                agg = QueryAggregationEngine.aggregate(q_list, dataset_name=self.config.benchmark_name)
+                dataset_aggregates.append(agg.to_dict() if hasattr(agg, "to_dict") else asdict(agg))
+
+        # Save Raw Measurements JSON Schema v2.0.0 (Atomic Query Level)
         import platform
         raw_manifest = {
-            "schema_version": "1.0.0",
+            "schema_version": "2.0.0",
             "benchmark_name": self.config.benchmark_name,
-            "timestamp": str(torch.datetime.datetime.now() if hasattr(torch, "datetime") else os.popen("date").read().strip()),
+            "timestamp": str(os.popen("date").read().strip()),
             "environment": {
                 "python_version": platform.python_version(),
                 "pytorch_version": torch.__version__,
@@ -271,12 +353,20 @@ class BenchmarkRunner:
                 "os": platform.platform()
             },
             "model_name": self.config.model.model_name_or_path,
+            "scoring_config": {
+                "utility_formula": self.config.scoring.utility_formula,
+                "utility_alpha": self.config.scoring.utility_alpha,
+                "resource_normalization_max": self.config.scoring.resource_normalization_max,
+                "enable_part2": self.config.scoring.enable_part2,
+            },
+            "query_results": [q.to_dict() for q in query_eval_results],
+            "dataset_aggregates": dataset_aggregates,
             "raw_measurements": raw_measurements
         }
         raw_json_path = out_dir / "raw_results_v1.json"
         with open(raw_json_path, "w", encoding="utf-8") as f:
             json.dump(raw_manifest, f, indent=2)
-        print(f"[✓] Versioned raw measurements saved: {raw_json_path}", flush=True)
+        print(f"[✓] Versioned query-level measurements saved: {raw_json_path}", flush=True)
 
         # 3. Part 1 Scoring: CRBench Resource Scores
         print("\n" + "=" * 70, flush=True)
@@ -480,16 +570,54 @@ class BenchmarkRunner:
 
 def recompute_scores_from_raw_file(
     raw_results_path: str,
-    weighting_scheme: str = "logarithmic"
+    weighting_scheme: str = "logarithmic",
+    utility_formula: str = "linear",
+    utility_alpha: float = CRBENCH_ALPHA,
 ) -> Dict[str, Any]:
     """
-    Recomputes Part 1 Resource Scores and Part 2 System Scores directly from
-    saved raw measurement JSON data without re-executing any models.
+    Recomputes Part 1 Resource Scores, Part 2 System Scores, and Query-Level Dataset
+    Aggregates directly from saved raw measurement JSON data without re-executing any models.
     """
     with open(raw_results_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     measurements = data.get("raw_measurements", [])
+    raw_query_results = data.get("query_results", [])
+    benchmark_name = data.get("benchmark_name", "recomputed_benchmark")
+
+    # 1. Recompute Query-Level Results if present
+    recomputed_queries: List[QueryEvaluationResult] = []
+    if raw_query_results:
+        for q_dict in raw_query_results:
+            q_res = QueryEvaluationResult.from_dict(q_dict)
+            # Recompute utility score with new formula and alpha
+            q_res.formula_name = utility_formula
+            q_res.alpha = utility_alpha
+            q_res.part1_score = compute_utility(
+                q_res.normalized_quality,
+                q_res.resource_efficiency,
+                alpha=utility_alpha,
+                formula=utility_formula,
+            )
+            if q_res.system_runtime_efficiency is not None:
+                q_res.part2_score = compute_utility(
+                    q_res.normalized_quality,
+                    q_res.system_runtime_efficiency,
+                    alpha=utility_alpha,
+                    formula=utility_formula,
+                )
+            recomputed_queries.append(q_res)
+
+    # 2. Recompute Dataset Aggregates
+    dataset_aggregates = {}
+    if recomputed_queries:
+        method_groups: Dict[str, List[QueryEvaluationResult]] = {}
+        for q in recomputed_queries:
+            method_groups.setdefault(q.method_name, []).append(q)
+        for m_name, q_list in method_groups.items():
+            dataset_aggregates[m_name] = QueryAggregationEngine.aggregate(q_list, dataset_name=benchmark_name)
+
+    # 3. Recompute Operating Points and AUQC
     operating_points: Dict[str, Dict[int, List[OperatingPoint]]] = {}
     runtime_metrics_by_method: Dict[str, List[SystemRuntimeMetrics]] = {}
 
@@ -535,7 +663,7 @@ def recompute_scores_from_raw_file(
         if any(pts.values())
     ]
 
-    sys_scorer = CRBenchSystemScorer()
+    sys_scorer = CRBenchSystemScorer(alpha=utility_alpha, formula=utility_formula)
     dense_profiles = runtime_metrics_by_method.get("dense_fp16", runtime_metrics_by_method.get("dense", []))
     dense_ttft = sum(p.mean_ttft_ms for p in dense_profiles) / max(1, len(dense_profiles)) if dense_profiles else 1000.0
     dense_thru = sum(p.mean_decode_throughput_tok_per_sec for p in dense_profiles) / max(1, len(dense_profiles)) if dense_profiles else 30.0
@@ -556,12 +684,16 @@ def recompute_scores_from_raw_file(
             part1_result=r,
             runtime_metrics=avg_metrics,
             reference_ttft_ms=dense_ttft,
-            reference_decode_throughput_tok_sec=dense_thru
+            reference_decode_throughput_tok_sec=dense_thru,
+            alpha=utility_alpha,
+            formula=utility_formula,
         )
         system_results.append(sys_res)
 
     return {
         "resource_results": resource_results,
         "system_results": system_results,
-        "operating_points": operating_points
+        "operating_points": operating_points,
+        "query_results": recomputed_queries,
+        "dataset_aggregates": dataset_aggregates,
     }

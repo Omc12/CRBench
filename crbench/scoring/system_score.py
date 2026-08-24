@@ -52,13 +52,14 @@ class CRBenchSystemScorer:
     Scoring Engine for Part 2 (CRBench System Score).
     Evaluates real-world deployment viability under hardware and latency constraints.
 
-    The system score is computed using the frozen Cobb-Douglas utility formula:
-        S_sys = Q^α · R_sys^(1-α)
+    The system score is computed using the canonical utility formula:
+        S_sys = Utility(Q, R_sys; α, formula)
     where:
         Q      = Part 1 resource score (quality-over-budget efficiency)
         R_sys  = normalised runtime efficiency ∈ [0, 100]
                  derived from TTFT ratio, decode throughput ratio, and VRAM ratio
-        α      = CRBENCH_ALPHA = 0.70  (global frozen quality weight)
+        α      = Configurable quality weight (default CRBENCH_ALPHA = 0.70)
+        formula= Configurable formula identifier (default "linear")
     """
 
     def __init__(
@@ -66,10 +67,14 @@ class CRBenchSystemScorer:
         reference_ttft_ms: float = 500.0,
         reference_decode_throughput_tok_sec: float = 30.0,
         vram_budget_mb: float = 16384.0,  # 16 GB default
+        alpha: float = CRBENCH_ALPHA,
+        formula: str = "linear",
     ):
         self.ref_ttft = reference_ttft_ms
         self.ref_decode_thru = reference_decode_throughput_tok_sec
         self.vram_budget = vram_budget_mb
+        self.alpha = alpha
+        self.formula = formula
 
     def _compute_runtime_efficiency(self,
                                     runtime_metrics: SystemRuntimeMetrics,
@@ -79,10 +84,6 @@ class CRBenchSystemScorer:
         """
         Convert raw runtime metrics to per-factor efficiency scores and a composite
         runtime efficiency R_sys ∈ [0, 100].
-
-        Returns
-        -------
-        (R_sys, phi_ttft, phi_thru, phi_vram)
         """
         # 1. TTFT efficiency [0, 1]: faster prefill → higher score
         ttft_ratio = runtime_metrics.mean_ttft_ms / max(1.0, ref_ttft)
@@ -107,29 +108,30 @@ class CRBenchSystemScorer:
         runtime_metrics: SystemRuntimeMetrics,
         target_vram_mb: Optional[float] = None,
         reference_ttft_ms: Optional[float] = None,
-        reference_decode_throughput_tok_sec: Optional[float] = None
+        reference_decode_throughput_tok_sec: Optional[float] = None,
+        alpha: Optional[float] = None,
+        formula: Optional[str] = None,
     ) -> CRBenchSystemScoreResult:
         """
-        Computes the Part 2 system score using the canonical Cobb-Douglas formula.
-
-        S_sys = Q^α · R_sys^(1-α)
-        where Q = part1_result.resource_score and R_sys is derived from runtime metrics.
-        α = CRBENCH_ALPHA = 0.70  (frozen globally).
+        Computes the Part 2 system score using the canonical utility formula.
         """
         v_budget = target_vram_mb if target_vram_mb is not None else self.vram_budget
         ref_ttft = reference_ttft_ms if reference_ttft_ms is not None else self.ref_ttft
         ref_thru = (reference_decode_throughput_tok_sec
                     if reference_decode_throughput_tok_sec is not None else self.ref_decode_thru)
+        active_alpha = alpha if alpha is not None else self.alpha
+        active_formula = formula if formula is not None else self.formula
 
         R_sys, phi_ttft, phi_thru, phi_vram = self._compute_runtime_efficiency(
             runtime_metrics, ref_ttft, ref_thru, v_budget
         )
 
-        # Apply canonical utility formula  S = Q^α · R^(1-α)
         s_res = part1_result.resource_score
         decomp = compute_utility_decomposition(
             quality_score=s_res,
             resource_efficiency=R_sys,
+            alpha=active_alpha,
+            formula=active_formula,
         )
         s_sys = max(0.0, min(100.0, decomp["utility"]))
 
@@ -145,13 +147,13 @@ class CRBenchSystemScorer:
             breakdown={
                 "R_sys": R_sys,
                 "Q": s_res,
-                "alpha": CRBENCH_ALPHA,
-                "formula": CRBENCH_FORMULA_DESCRIPTION,
+                "alpha": active_alpha,
+                "formula": active_formula,
                 "phi_ttft": phi_ttft,
                 "phi_thru": phi_thru,
                 "phi_vram": phi_vram,
-                "quality_component": decomp["quality_component"],
-                "resource_component": decomp["resource_component"],
+                "quality_term": decomp.get("quality_term", 0.0),
+                "resource_term": decomp.get("resource_term", 0.0),
                 "provenance": "measured_system_metrics",
             }
         )
