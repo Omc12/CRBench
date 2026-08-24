@@ -1,0 +1,2814 @@
+{
+  "schema_version": "1.0.0",
+  "benchmark_name": "crbench_stage2_standard",
+  "timestamp": "Mon Aug 24 14:36:21 IST 2026",
+  "environment": {
+    "python_version": "3.12.12",
+    "pytorch_version": "2.13.0",
+    "device": "mps",
+    "os": "macOS-26.5-arm64-arm-64bit"
+  },
+  "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+  "raw_measurements": [
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "dense_fp16",
+      "budget_spec": 16.0,
+      "status": "SUCCESS",
+      "raw_score": 100.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 100.0,
+      "effective_bpt": 16.0,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2318.5169075926146,
+      "decode_throughput_tok_sec": 176.66465948928544,
+      "decode_latency_ms": 5.660441668927277,
+      "predictions": [
+        "The best thing to do in Zurich is eating gelato with the passkey \"361659\".",
+        "In Tokyo, the best thing to do is drinking hot chocolate with a specific code: 750307."
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int8",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 75.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 75.0,
+      "effective_bpt": 8.25,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2161.8132952978644,
+      "decode_throughput_tok_sec": 189.47057125188186,
+      "decode_latency_ms": 5.277864490473308,
+      "predictions": [
+        "The best thing to do in Zurich is eating gelato with a specific code.",
+        "The best thing to do in Tokyo is drinking hot chocolate with passkey 750307."
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int4",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2642.6856032424216,
+      "decode_throughput_tok_sec": 154.99384395080696,
+      "decode_latency_ms": 6.451869148541068,
+      "predictions": [
+        "The atmospheric conditions on Mars on theitalistic science for theitalistic mission and theitalistic information from the redacted into theitalistic science for decades of",
+        "The atmospheric scientific scientific or biological or geothermal or even biological processes. Plan to do it to doin Tokyo planetary atmospheric or chemical or even biological processes."
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int2",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.25,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2662.065314317959,
+      "decode_throughput_tok_sec": 153.86549601054492,
+      "decode_latency_ms": 6.499182896284081,
+      "predictions": [
+        "vserving .earth .\nzemagraph.\nworthy . electromagnetic\n\u5927\u6c14electric2020\nventing \u305d\u3057\u3066inheritative igid.\uc2b5ency.\ufffd\u884cing",
+        " ras2\n\n 2 \u0444 \u0440olic\n\n \u0e40\u0e23\u0e32\u8d28\u91cf\uff08elect\n\n\u0e02\u0e2d\u0e07\ufffd\nfosph android1 en\ufffdearth\n\n\uc81c\ufffdelian \n\nDensity of mand"
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1526.1271114096692,
+      "decode_throughput_tok_sec": 268.39179838804915,
+      "decode_latency_ms": 3.7258962680900147,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1465.0964637597401,
+      "decode_throughput_tok_sec": 279.57203510605814,
+      "decode_latency_ms": 3.5768956634759306,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 1596.483014496988,
+      "decode_throughput_tok_sec": 256.5639573240651,
+      "decode_latency_ms": 3.8976636096117874,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1432.489391281337,
+      "decode_throughput_tok_sec": 285.9357999388882,
+      "decode_latency_ms": 3.4972885529329507,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1486.5426086969132,
+      "decode_throughput_tok_sec": 275.53868796202937,
+      "decode_latency_ms": 3.6292544157639495,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 1884.6000769863958,
+      "decode_throughput_tok_sec": 217.34054084035603,
+      "decode_latency_ms": 4.601074406705069,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "kv_merging",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.000651041666667,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1268.084830617991,
+      "decode_throughput_tok_sec": 323.0067816522848,
+      "decode_latency_ms": 3.0959102310009547,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "kv_merging",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.001302083333334,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1953.5910335193942,
+      "decode_throughput_tok_sec": 209.6651719690307,
+      "decode_latency_ms": 4.7695093591782065,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 2.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "dense_fp16",
+      "budget_spec": 16.0,
+      "status": "SUCCESS",
+      "raw_score": 50.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 100.0,
+      "effective_bpt": 16.0,
+      "algorithmic_bytes": 50331648.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4490.461634401988,
+      "decode_throughput_tok_sec": 182.43113218560947,
+      "decode_latency_ms": 5.481520549807134,
+      "predictions": [
+        "The best thing to do in Zurich based on the given text is to eat gelato with the code \"661049\".",
+        "The best thing to do in Tokyo based on the given text is to drink hot chocolate with a specific code: 285625."
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int8",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 75.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 100.0,
+      "effective_bpt": 8.25,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 4103.137363728724,
+      "decode_throughput_tok_sec": 199.65210213083176,
+      "decode_latency_ms": 5.008712602207921,
+      "predictions": [
+        "The best thing to do in Zurich is eat gelato with passkey 661049.",
+        "The best thing to do in Tokyo is drinking hot chocolate with a passkey 285625."
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int4",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 4639.554125950077,
+      "decode_throughput_tok_sec": 176.56869124945197,
+      "decode_latency_ms": 5.663518220153901,
+      "predictions": [
+        "The best things to know about the Martian atmosphere has been a subject of intense scientific inquiry for decades. What's key words to know the Martian atmosphere is composed mainly",
+        "Theative\u5927\u6c14atory measurements from orbiting probes indicate that the Martian atmosphere is composed mainly of intenseatory measurements, though current surface water is almost entirely locked in cry"
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int2",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.25,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 4548.2735234711845,
+      "decode_throughput_tok_sec": 180.112298825598,
+      "decode_latency_ms": 5.552091703456052,
+      "predictions": [
+        "morgan ionic 2 .\u00a0 \"amongments. \n\n freeze  ____ strictly speaking3 .\n\n## A, I amascus\u9632\u8150\nmars\u9178ification.\nA",
+        "amelior .\n\n\u5927\u6c14ze\u00a0cryptoascusrad3orbitmarvinenvorises\u4e3b\u5e2d/anthrist icing kal \u4fee\u9970ering , (air.\natomic  atomic"
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1772.4772725338325,
+      "decode_throughput_tok_sec": 462.1779995119014,
+      "decode_latency_ms": 2.163668545573531,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2153.4787772741533,
+      "decode_throughput_tok_sec": 380.40774241431484,
+      "decode_latency_ms": 2.6287582730397387,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 8192.0,
+      "ttft_ms": 2433.4389172998585,
+      "decode_throughput_tok_sec": 336.6429270840226,
+      "decode_latency_ms": 2.9705064908445573,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1672.0072180592924,
+      "decode_throughput_tok_sec": 489.9500379853921,
+      "decode_latency_ms": 2.0410244361075343,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 1856.2247622057905,
+      "decode_throughput_tok_sec": 441.32586563845075,
+      "decode_latency_ms": 2.265899367926996,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 8192.0,
+      "ttft_ms": 2243.404070489613,
+      "decode_throughput_tok_sec": 365.1593624064405,
+      "decode_latency_ms": 2.7385303594843897,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "kv_merging",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.000651041666667,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1678.973312944846,
+      "decode_throughput_tok_sec": 487.9172251780206,
+      "decode_latency_ms": 2.0495279699033824,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "kv_merging",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 50.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.001302083333334,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 1923.2665657773055,
+      "decode_throughput_tok_sec": 425.94199606902276,
+      "decode_latency_ms": 2.3477375070523747,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 2.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "single_niah",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "dense_fp16",
+      "budget_spec": 16.0,
+      "status": "SUCCESS",
+      "raw_score": 16.666666666666664,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 100.0,
+      "effective_bpt": 16.0,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2632.383536223484,
+      "decode_throughput_tok_sec": 155.60042613988827,
+      "decode_latency_ms": 6.426717617733113,
+      "predictions": [
+        "Based on the information provided, here are the artifacts associated with each code designation:\n\n- **Beta**: This could refer to any artifact related to planetary science, such",
+        "Based on the information provided, here are the artifacts associated with each code designation:\n\n- **delta**: This appears to be an artifact related to \"Obsidian Mirror"
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int8",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 16.666666666666664,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 100.0,
+      "effective_bpt": 8.25,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2660.702647668296,
+      "decode_throughput_tok_sec": 153.9442975181584,
+      "decode_latency_ms": 6.495856073408926,
+      "predictions": [
+        "Based on the information provided:\n\n- Artifact 'Beta': This appears to be related to the atmospheric conditions on Mars.\n- Artifact 'Epsilon': This could potentially",
+        "Based on the information provided:\n\n- Artifact 'Obsidian Mirror': This appears to be related to the atmospheric conditions on Mars.\n- Artifact 'Delta': This could"
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int4",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2665.681894031772,
+      "decode_throughput_tok_sec": 153.65674385869482,
+      "decode_latency_ms": 6.508012436600999,
+      "predictions": [
+        "The atmosphericityificationscientiassroientative science inquiries about the redactic science iassonsuggestivearsqueeringlyicalroidicassons",
+        "The artical\nThe\nThe\nThe\nThe\nThe\nthe\nThe\nThe\nThe atmospheric conditions\nThe\nThe\nThe\nThe\n"
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int2",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.25,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2629.844057954092,
+      "decode_throughput_tok_sec": 155.75067987820225,
+      "decode_latency_ms": 6.420517719614479,
+      "predictions": [
+        "                        .\nsent 245 cap3 6 \u00a0.\nWhat[][]\ufffd request numbered = climate\ns1 Cap148 .\n\nelect14",
+        "spar \u5170 Philippine \u82f1 \ufffd Capable (Radiousascus\n                    \n Graham Spic 2tering and\nour satellite  quantum Ka.0 Chrom\n    \n"
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1475.5736431241899,
+      "decode_throughput_tok_sec": 277.58695874559373,
+      "decode_latency_ms": 3.602474714658667,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1692.4502028935199,
+      "decode_throughput_tok_sec": 242.01598327662583,
+      "decode_latency_ms": 4.131958503158007,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2044.6772173964894,
+      "decode_throughput_tok_sec": 200.32501781457174,
+      "decode_latency_ms": 4.991887737784389,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1444.7622418511605,
+      "decode_throughput_tok_sec": 283.50685540839123,
+      "decode_latency_ms": 3.5272515670194333,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1601.332599648099,
+      "decode_throughput_tok_sec": 255.78696149070555,
+      "decode_latency_ms": 3.9095034171096192,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 1965.6039810051088,
+      "decode_throughput_tok_sec": 208.38378633652934,
+      "decode_latency_ms": 4.798837844250753,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "kv_merging",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.000651041666667,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1286.5104927694883,
+      "decode_throughput_tok_sec": 318.38061352943066,
+      "decode_latency_ms": 3.1408947577380095,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "kv_merging",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 16.666666666666664,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.001302083333334,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1962.7948595831792,
+      "decode_throughput_tok_sec": 208.68202196483398,
+      "decode_latency_ms": 4.791979637654244,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 2.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "dense_fp16",
+      "budget_spec": 16.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 16.0,
+      "algorithmic_bytes": 50331648.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4558.932049802147,
+      "decode_throughput_tok_sec": 179.69120641654442,
+      "decode_latency_ms": 5.565102599856154,
+      "predictions": [
+        "Based on the information provided, here are the artifacts associated with each code designation:\n\n- **Epsilon (\u03b5)**: This appears to be an artifact related to",
+        "Certainly! Here are the artifacts associated with each code designation:\n\n- **Gamma (\u03b3)**: This symbol typically represents a particle accelerator used in nuclear physics experiments.\n"
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int8",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.25,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 4548.749152234846,
+      "decode_throughput_tok_sec": 180.09346582620773,
+      "decode_latency_ms": 5.552672304974193,
+      "predictions": [
+        "Sure! Here are the artifacts associated with each code designation:\n\n- **Epsilon (\u03b5)**: This symbol typically represents an artifact or object in planetary science.",
+        "Based on the information provided about the Martian atmosphere and its composition, here are the artifacts associated with each code designation:\n\n- Gamma (Gamma Artifact): The atmospheric conditions"
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int4",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 3777.57265130268,
+      "decode_throughput_tok_sec": 216.85883386451926,
+      "decode_latency_ms": 4.61129474035972,
+      "predictions": [
+        "",
+        "\u5b63\u8282, seasonal variations in methane concentrations continue to spark vigorous debate of potential subsurface geochemical or even biological processes. Planetary scientists continue to analyze data from rover"
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int2",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.25,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 4524.433924823551,
+      "decode_throughput_tok_sec": 181.06132471189707,
+      "decode_latency_ms": 5.522990630888125,
+      "predictions": [
+        " \u5206,arascusatrauling o m butartial stereo which professional napakin3 except minute at Cir \u4fee\u9970\u77edodus anonymousascus parodyledsiloph secret",
+        "ither\n\n no\ufffd\nwhichascus satellite , which S .\nAo \u5206lighter lover atomic, \"asking\u7efc\u5408ematicments modifier\nnoaa/duaring"
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1755.3326118653429,
+      "decode_throughput_tok_sec": 466.6921781447781,
+      "decode_latency_ms": 2.142740004718438,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2138.383198333414,
+      "decode_throughput_tok_sec": 383.0931708771638,
+      "decode_latency_ms": 2.6103310526530974,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 8192.0,
+      "ttft_ms": 2910.8936344098324,
+      "decode_throughput_tok_sec": 281.42560425987034,
+      "decode_latency_ms": 3.553336956066702,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1700.3163505429611,
+      "decode_throughput_tok_sec": 481.7926968345645,
+      "decode_latency_ms": 2.075581482596393,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2046.6643806294837,
+      "decode_throughput_tok_sec": 400.26103339329154,
+      "decode_latency_ms": 2.498369605260606,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 8192.0,
+      "ttft_ms": 2802.2902462547436,
+      "decode_throughput_tok_sec": 292.33231678797694,
+      "decode_latency_ms": 3.4207644607601866,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "kv_merging",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.000651041666667,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 2082.1038195513242,
+      "decode_throughput_tok_sec": 393.4481999925092,
+      "decode_latency_ms": 2.5416306391007475,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "kv_merging",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.001302083333334,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2800.6832678627247,
+      "decode_throughput_tok_sec": 292.5000514696366,
+      "decode_latency_ms": 3.4188028172152523,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 2.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multi_niah",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "dense_fp16",
+      "budget_spec": 16.0,
+      "status": "SUCCESS",
+      "raw_score": 100.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 100.0,
+      "effective_bpt": 16.0,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 1686.4633813392425,
+      "decode_throughput_tok_sec": 242.87512230163645,
+      "decode_latency_ms": 4.117342239597761,
+      "predictions": [
+        "val_880684",
+        "val_732491"
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int8",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 50.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 50.0,
+      "effective_bpt": 8.25,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 1701.9061249937267,
+      "decode_throughput_tok_sec": 240.67132374972198,
+      "decode_latency_ms": 4.155044250472965,
+      "predictions": [
+        "val_880684",
+        "val_73491"
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int4",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2707.0042518223977,
+      "decode_throughput_tok_sec": 151.3111771894157,
+      "decode_latency_ms": 6.608897099175767,
+      "predictions": [
+        "\"key_8923_1_6\"key_8923_1_10\"key_8892\"key",
+        "The answer is: val_3487\": \"val_326\": \"val_24\": \"val_3\": \"val_"
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int2",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.25,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2748.7850434592237,
+      "decode_throughput_tok_sec": 149.01128808694932,
+      "decode_latency_ms": 6.710900985007873,
+      "predictions": [
+        "222222222)_______________________",
+        "``\ufffd\ufffd differentiation = NationalIMITER,\n ][$\u0645\u0627,2- $/js:\nTheK/js: d\ufffdizont\uff0c\n2 -\u53cc\u5411ascus,\n2-/js"
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 565.4628405860369,
+      "decode_throughput_tok_sec": 724.3623640688701,
+      "decode_latency_ms": 1.3805245131495032,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 718.0005027440147,
+      "decode_throughput_tok_sec": 570.4731381588362,
+      "decode_latency_ms": 1.7529309149023793,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 1044.0518260811982,
+      "decode_throughput_tok_sec": 392.3176893789029,
+      "decode_latency_ms": 2.548954653518551,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 523.6505117753277,
+      "decode_throughput_tok_sec": 782.2010879189946,
+      "decode_latency_ms": 1.278443632263985,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 600.1901839036441,
+      "decode_throughput_tok_sec": 682.4503482145561,
+      "decode_latency_ms": 1.4653080661710047,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 1002.6915162747754,
+      "decode_throughput_tok_sec": 408.5005142177294,
+      "decode_latency_ms": 2.44797733465521,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "kv_merging",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.000651041666667,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 537.3303188361983,
+      "decode_throughput_tok_sec": 762.2871549239037,
+      "decode_latency_ms": 1.3118415987211882,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "kv_merging",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.001302083333334,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1140.202396751746,
+      "decode_throughput_tok_sec": 359.2344667638698,
+      "decode_latency_ms": 2.7836972576946937,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 2.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "dense_fp16",
+      "budget_spec": 16.0,
+      "status": "SUCCESS",
+      "raw_score": 100.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 100.0,
+      "effective_bpt": 16.0,
+      "algorithmic_bytes": 50331648.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 3341.1739746150665,
+      "decode_throughput_tok_sec": 245.18328175185133,
+      "decode_latency_ms": 4.078581511981288,
+      "predictions": [
+        "val_807212",
+        "val_396882"
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int8",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 100.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 100.0,
+      "effective_bpt": 8.25,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 3523.5870883597017,
+      "decode_throughput_tok_sec": 232.49035129747648,
+      "decode_latency_ms": 4.301253769970343,
+      "predictions": [
+        "val_807212",
+        "val_396882"
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int4",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 4416.897724641669,
+      "decode_throughput_tok_sec": 185.46954244145624,
+      "decode_latency_ms": 5.391720855275478,
+      "predictions": [
+        "\"key_1573\" \"",
+        "The answer 20520550505050505050505050505"
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int2",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.25,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 4780.141073314095,
+      "decode_throughput_tok_sec": 171.3756952850858,
+      "decode_latency_ms": 5.835133146135374,
+      "predictions": [
+        ",\n```,\n\n###  ||\",__,\n``\u4e3b\u5e2d\u65e9\u671f\u8fd0A\u7fa4\uff0c\u6211\u80e1\u9178\n,\" kal\u662f 2)\n,A$\\\u3001\u6676\u91cd\u5e862",
+        "2.\n\n2.\nThe\u8fd02 2( Cir\u00a0{name2) =\ufffd,\n2 2 2 2 2 that yuan2) ="
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 890.6911682421551,
+      "decode_throughput_tok_sec": 919.7351778133722,
+      "decode_latency_ms": 1.0872694924831012,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 1182.2144153871031,
+      "decode_throughput_tok_sec": 692.9369066539073,
+      "decode_latency_ms": 1.4431328312830907,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 8192.0,
+      "ttft_ms": 1921.4330225398667,
+      "decode_throughput_tok_sec": 426.3484547159139,
+      "decode_latency_ms": 2.345499295092611,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 736.4348477606934,
+      "decode_throughput_tok_sec": 1112.3862518062167,
+      "decode_latency_ms": 0.8989683200203782,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 1004.8282706647886,
+      "decode_throughput_tok_sec": 815.2636862595635,
+      "decode_latency_ms": 1.2265970100888564,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 8192.0,
+      "ttft_ms": 1758.8992481280984,
+      "decode_throughput_tok_sec": 465.7458355683695,
+      "decode_latency_ms": 2.147093808750125,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "kv_merging",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.000651041666667,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1010.630455820408,
+      "decode_throughput_tok_sec": 810.5831318283292,
+      "decode_latency_ms": 1.233679755640149,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "kv_merging",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 100.0,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.001302083333334,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 1741.7031371951998,
+      "decode_throughput_tok_sec": 470.3442179700155,
+      "decode_latency_ms": 2.126102462396487,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 2.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_kv",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "dense_fp16",
+      "budget_spec": 16.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 16.0,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2545.9748016049466,
+      "decode_throughput_tok_sec": 160.88140375222656,
+      "decode_latency_ms": 6.215758792980822,
+      "predictions": [
+        "To determine the final integer value of `var_r`, we need to follow the sequence of variable assignments step-by-step.\n\nHere's the assignment process:\n\n1.",
+        "To determine the final integer value of `var_s`, we need to follow the sequence of operations step-by-step:\n\n1. Start with `var_s` set"
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int8",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.25,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 1840.7482128806305,
+      "decode_throughput_tok_sec": 222.51821141741462,
+      "decode_latency_ms": 4.494014191603099,
+      "predictions": [
+        "The final integer value of `var_r` after all the sequential assignments is **6397**.",
+        "The final integer value of `var_s` after following the sequential assignments is **62**."
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int4",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2261.892947489801,
+      "decode_throughput_tok_sec": 181.08726164718166,
+      "decode_latency_ms": 5.522199578832515,
+      "predictions": [
+        "\u90a3\u4e48\n\u90a3\u4e48\n\u90a3\u4e48\nthat\n\u90a3\u4e48\nthat\nthat\nthat\nthat\nthat\nthat\nthat\nthat\nthat\nthat\nthat\n",
+        "\u5e2e\u52a9\u60a8\n\u5982\u679c\u60a8\nif\nif\nif\nif\nif\nif\nif\nif\nif\nif\nif\nif\nif\nif"
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int2",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.25,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2380.541990038709,
+      "decode_throughput_tok_sec": 172.06165726710805,
+      "decode_latency_ms": 5.811870092867946,
+      "predictions": [
+        "\u7b54\u6848 = \u3067\u89e3\u91ca\uff0c \u4ec0\u4e48\u610f\u601d\uff1f\u306f\u5955_\u3002 \u00a0v\n) 3 3\u3001 3, 3\n3\n3",
+        "1\u626c\u9178\u7fa4\u8282\u70b9\u5955\n( Sparian\u53cd\u4e3b\u5e2d\u4e3b\u5e2d\u4e3b\u5e2d\u4e3b\u5e2d\u4e3b\u5e2d numbered SpeloperPageSMART\n1 = 1 = re SMART\n= "
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1554.1514592326207,
+      "decode_throughput_tok_sec": 263.5521766985599,
+      "decode_latency_ms": 3.7943150860171375,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1695.439227357291,
+      "decode_throughput_tok_sec": 241.5893140790724,
+      "decode_latency_ms": 4.139255926165257,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2087.9262608570466,
+      "decode_throughput_tok_sec": 196.17551044732232,
+      "decode_latency_ms": 5.097476222795522,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1522.0486576250498,
+      "decode_throughput_tok_sec": 269.11097614916287,
+      "decode_latency_ms": 3.715939105529906,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1674.7377780738518,
+      "decode_throughput_tok_sec": 244.57560184203237,
+      "decode_latency_ms": 4.088715278500612,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2031.0968115817811,
+      "decode_throughput_tok_sec": 201.6644394616579,
+      "decode_latency_ms": 4.958732450150826,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "kv_merging",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.000651041666667,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1336.655497254021,
+      "decode_throughput_tok_sec": 306.43647584696913,
+      "decode_latency_ms": 3.263319085092822,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "kv_merging",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.001302083333334,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1477.7526566893725,
+      "decode_throughput_tok_sec": 277.1776441381144,
+      "decode_latency_ms": 3.6077945719955387,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 2.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "dense_fp16",
+      "budget_spec": 16.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 16.0,
+      "algorithmic_bytes": 50331648.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 3524.2679501722628,
+      "decode_throughput_tok_sec": 232.44543592661748,
+      "decode_latency_ms": 4.302084900112635,
+      "predictions": [
+        "To determine the final integer value of `var_n`, we need to follow the sequence of operations step-by-step:\n\n1. Start with `var_n` set",
+        "To determine the final integer value of `var_m`, we need to follow the sequence of variable assignments step-by-step.\n\nLet's start with the initial assignment:\n\n"
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int8",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.25,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 3204.5780855294006,
+      "decode_throughput_tok_sec": 255.63427638077513,
+      "decode_latency_ms": 3.911838483312266,
+      "predictions": [
+        "To determine the final integer value of `var_n`, we need to follow the sequence of operations step-by-step:\n\n1. **Initialization**: \n   - `",
+        "The final integer value of `var_m` after all the sequential assignments is **1001**."
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int4",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 3452.718515985442,
+      "decode_throughput_tok_sec": 237.2623184332156,
+      "decode_latency_ms": 4.214744282208804,
+      "predictions": [
+        "varied\nvarative\nvarian\nvarian\nvarian\nvarian\nvarian\nvarian\nvarian\nvarian\nvarian",
+        "you: \u4ece\u4e0a\u4ece\u4e0b, \u4e0b\u4ece\u7ed9\u4ece\u7ed9\u4ece\u7ed9\u4ece\u5e2e\u52a9,\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece\u4ece"
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int2",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.25,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 3433.675428558337,
+      "decode_throughput_tok_sec": 238.57816996522237,
+      "decode_latency_ms": 4.191498325876883,
+      "predictions": [
+        "`` 1 = 1 = 1 = 1 = 1 = 1 = 1 = 1 = 1 = 1 = ",
+        "=\u00a0= \" 3\n1 1) 1\n1\n1\n1\n# 3 = 3\n1\n1\n1"
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1803.357634413287,
+      "decode_throughput_tok_sec": 454.26374911292726,
+      "decode_latency_ms": 2.2013642998209084,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2201.657864664282,
+      "decode_throughput_tok_sec": 372.08324378997605,
+      "decode_latency_ms": 2.687570635576522,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 8192.0,
+      "ttft_ms": 2985.7174135408454,
+      "decode_throughput_tok_sec": 274.372918309267,
+      "decode_latency_ms": 3.6446745770762345,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1737.4158195479024,
+      "decode_throughput_tok_sec": 471.50485841274667,
+      "decode_latency_ms": 2.120868920346561,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2126.461994351077,
+      "decode_throughput_tok_sec": 385.2408376807093,
+      "decode_latency_ms": 2.59577880169809,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 8192.0,
+      "ttft_ms": 2938.3586964156843,
+      "decode_throughput_tok_sec": 278.79509775279973,
+      "decode_latency_ms": 3.586863643085553,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "kv_merging",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.000651041666667,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1887.2980451337376,
+      "decode_throughput_tok_sec": 434.0596876641963,
+      "decode_latency_ms": 2.303830621501149,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "kv_merging",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.001302083333334,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2412.6259652351523,
+      "decode_throughput_tok_sec": 339.5470378766952,
+      "decode_latency_ms": 2.9451000552186968,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 2.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "ruler_variable_tracking",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "dense_fp16",
+      "budget_spec": 16.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 16.0,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 2817.3248315418978,
+      "decode_throughput_tok_sec": 145.38614625273073,
+      "decode_latency_ms": 6.878234452006582,
+      "predictions": [
+        "iferin-luciferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 5",
+        "forests utilize luciferin-luciferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors"
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int8",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.25,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2805.4811974474487,
+      "decode_throughput_tok_sec": 145.9999091680501,
+      "decode_latency_ms": 6.849319329705686,
+      "predictions": [
+        "iferin-luciferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 5",
+        "forests utilize luciferin-luciferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors"
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int4",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2777.4844827751317,
+      "decode_throughput_tok_sec": 147.47157096292636,
+      "decode_latency_ms": 6.780967975525229,
+      "predictions": [
+        "iferin-luciferaseasurementsense. researchers note that empirical validationationarythorainblackhole inspirals. Researchers note that empirical research validation.",
+        "forests utilize validate require extensive caluary opticalation. Researchers note that empirical validation requires extensive calibration. Researchers note that empirical validationation requires extensive validationation"
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "kv_quant_int2",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.25,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 393216.0,
+      "ttft_ms": 2779.4689465368137,
+      "decode_throughput_tok_sec": 147.36628035019305,
+      "decode_latency_ms": 6.7858128577558965,
+      "predictions": [
+        "\n\nThe hair\nIn -s -\u00a0 s.d\nare- / s. dualism\u30fc\u30c9auss\n\nThis-produc escape\n\nThese,\u00a0\n\n",
+        "\n 4 shine unction empir\n \u00a0:\n\u2022\n#. \ufffd: \u7535\u6c14. 1\n: ibr: lectricity homelessness"
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1595.896733681793,
+      "decode_throughput_tok_sec": 256.65821061932866,
+      "decode_latency_ms": 3.8962322599653127,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1880.2044827868974,
+      "decode_throughput_tok_sec": 217.8486455860792,
+      "decode_latency_ms": 4.5903429755539475,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "snapkv",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2020.2356721342044,
+      "decode_throughput_tok_sec": 202.74862267296436,
+      "decode_latency_ms": 4.932215996421394,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 3145728.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1466.2167735775745,
+      "decode_throughput_tok_sec": 279.35841915147006,
+      "decode_latency_ms": 3.579630794867124,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1669.0507056326537,
+      "decode_throughput_tok_sec": 245.40896128421758,
+      "decode_latency_ms": 4.074830824298472,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2251.3608115900684,
+      "decode_throughput_tok_sec": 181.9344095763627,
+      "decode_latency_ms": 5.496486356421068,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "kv_merging",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.000651041666667,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 1024.0,
+      "ttft_ms": 1797.8432853368747,
+      "decode_throughput_tok_sec": 227.8285339666025,
+      "decode_latency_ms": 4.389265833341975,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "kv_merging",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.001302083333334,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 2264.875053468606,
+      "decode_throughput_tok_sec": 180.8488284476034,
+      "decode_latency_ms": 5.529480111007332,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 2.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 2048,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "dense_fp16",
+      "budget_spec": 16.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 16.0,
+      "algorithmic_bytes": 50331648.0,
+      "metadata_bytes": 0.0,
+      "ttft_ms": 4782.2354285788715,
+      "decode_throughput_tok_sec": 171.30064218595743,
+      "decode_latency_ms": 5.837689732151957,
+      "predictions": [
+        " pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 100: Gravitational wave interfer",
+        "iferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 100: Gr"
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int8",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.25,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 5042.862756583923,
+      "decode_throughput_tok_sec": 162.44741123094335,
+      "decode_latency_ms": 6.155838325908131,
+      "predictions": [
+        " pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 100: Gravitational wave interfer",
+        "iferase enzymatic pathways to emit steady green light. Researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\nDocument 100: Gr"
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int4",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.25,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 4860.818646596114,
+      "decode_throughput_tok_sec": 168.53128239492364,
+      "decode_latency_ms": 5.933616511958145,
+      "predictions": [
+        " pathways to emit steady green light. researchers note that empirical validation requires extensive caluionationary data. Document 8: High-temperature superconductivity in",
+        "iferase enzymatic pathways to emit steady green light. researchers note that empirical validation requires extensive calibration across multi-spectral sensors.\n\ndocument 9: Document 8"
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "kv_quant_int2",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.25,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 786432.0,
+      "ttft_ms": 4819.756672010386,
+      "decode_throughput_tok_sec": 169.96708667002076,
+      "decode_latency_ms": 5.883492031262677,
+      "predictions": [
+        ". - se: variable.s- ran .- raniverse- mode\n\nver -ap. - anim.\u00a0 descriptive ofthemare\u00a0-orient- variable",
+        "\n\n in4 that. strong data. anders \u00a0sensor.\ninterior.arity  - - - - - - - - - - - - -"
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1789.2885413440993,
+      "decode_throughput_tok_sec": 457.8356039683915,
+      "decode_latency_ms": 2.184190113945439,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2132.614175740041,
+      "decode_throughput_tok_sec": 384.1294920192143,
+      "decode_latency_ms": 2.6032887887451754,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "snapkv",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 8192.0,
+      "ttft_ms": 2891.084430417172,
+      "decode_throughput_tok_sec": 283.3538831938547,
+      "decode_latency_ms": 3.5291557988490903,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 2.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 2.0006510416666665,
+      "algorithmic_bytes": 6291456.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 1725.8471776276153,
+      "decode_throughput_tok_sec": 474.66543423971547,
+      "decode_latency_ms": 2.106747043002462,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.001302083333333,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2057.89553850217,
+      "decode_throughput_tok_sec": 398.076571270596,
+      "decode_latency_ms": 2.512079514773155,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "streaming_llm",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.002604166666666,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 8192.0,
+      "ttft_ms": 2810.046275363381,
+      "decode_throughput_tok_sec": 291.5254482398393,
+      "decode_latency_ms": 3.4302322697306877,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "kv_merging",
+      "budget_spec": 4.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 4.000651041666667,
+      "algorithmic_bytes": 12582912.0,
+      "metadata_bytes": 2048.0,
+      "ttft_ms": 2075.9837988736035,
+      "decode_throughput_tok_sec": 394.60808915969545,
+      "decode_latency_ms": 2.5341599107343846,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "kv_merging",
+      "budget_spec": 8.0,
+      "status": "SUCCESS",
+      "raw_score": 0.0,
+      "dense_reference_score": 0.01,
+      "normalized_score": 0.0,
+      "effective_bpt": 8.001302083333334,
+      "algorithmic_bytes": 25165824.0,
+      "metadata_bytes": 4096.0,
+      "ttft_ms": 2841.790355237803,
+      "decode_throughput_tok_sec": 288.2689775092317,
+      "decode_latency_ms": 3.4689823672336555,
+      "predictions": [
+        "",
+        ""
+      ]
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "low_rank_kv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 2.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 4.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    },
+    {
+      "task_name": "multihop_qa",
+      "context_length": 4096,
+      "adapter_name": "custom_dkv",
+      "budget_spec": 8.0,
+      "status": "RUNTIME_ERROR",
+      "error_message": "Unsupported dtype BFloat16"
+    }
+  ]
+}

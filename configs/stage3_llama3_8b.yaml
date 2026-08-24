@@ -1,0 +1,110 @@
+benchmark_name: "crbench_llama3_8b_standard"
+
+# Full 8B open-weight long-context evaluation configuration
+model:
+  model_name_or_path: "meta-llama/Meta-Llama-3.1-8B-Instruct"
+  dtype: "bfloat16"
+  device: "cuda"
+  attn_implementation: "sdpa"  # or "flash_attention_2"
+  trust_remote_code: true
+
+tasks:
+  - task_name: "single_niah"
+    context_lengths: [4096, 8192, 16384, 32768]
+    num_samples: 10
+    seed: 42
+
+  - task_name: "multi_niah"
+    context_lengths: [4096, 8192, 16384, 32768]
+    num_samples: 10
+    seed: 42
+
+  - task_name: "ruler_kv"
+    context_lengths: [4096, 8192, 16384, 32768]
+    num_samples: 10
+    seed: 42
+
+  - task_name: "ruler_variable_tracking"
+    context_lengths: [4096, 8192, 16384, 32768]
+    num_samples: 10
+    seed: 42
+
+  - task_name: "multihop_qa"
+    context_lengths: [4096, 8192, 16384, 32768]
+    num_samples: 10
+    seed: 42
+
+adapters:
+  - adapter_name: "dense_fp16"
+    adapter_type: "dense"
+    budgets: [16.0]
+
+  - adapter_name: "kv_quant_fp8"
+    adapter_type: "quantized"
+    budgets: [8.0]
+    params:
+      bits: 8
+
+  - adapter_name: "kv_quant_int8"
+    adapter_type: "quantized"
+    budgets: [8.0]
+    params:
+      bits: 8
+
+  - adapter_name: "kv_quant_int4"
+    adapter_type: "quantized"
+    budgets: [4.0]
+    params:
+      bits: 4
+
+  - adapter_name: "kv_quant_int2"
+    adapter_type: "quantized"
+    budgets: [2.0]
+    params:
+      bits: 2
+
+  - adapter_name: "snapkv"
+    adapter_type: "eviction"
+    budgets: [2.0, 4.0, 8.0]
+    params:
+      strategy: "snapkv"
+      sink_tokens: 32
+      local_tokens: 128
+
+  - adapter_name: "streaming_llm"
+    adapter_type: "eviction"
+    budgets: [2.0, 4.0, 8.0]
+    params:
+      strategy: "streaming_llm"
+      sink_tokens: 32
+      local_tokens: 128
+
+  - adapter_name: "kv_merging"
+    adapter_type: "merging"
+    budgets: [4.0, 8.0]
+    params:
+      merge_ratio: 0.5
+
+  - adapter_name: "low_rank_kv"
+    adapter_type: "compressed"
+    budgets: [4.0, 8.0]
+    params:
+      rank_ratio: 0.5
+
+  - adapter_name: "custom_dkv"
+    adapter_type: "custom"
+    budgets: [2.0, 4.0, 8.0]
+    params:
+      subspace_dim_ratio: 0.5
+      token_sparsity: 0.5
+
+scoring:
+  auqc_log_scale: true
+  iso_budgets_bpt: [2.0, 4.0, 8.0, 16.0]
+  weighting_scheme: "logarithmic"
+  reference_ttft_ms: 1000.0
+  reference_decode_throughput_tok_sec: 45.0
+  vram_budget_mb: 24576.0
+
+save_plots: true
+output_dir: "results/stage3_llama3_8b"
