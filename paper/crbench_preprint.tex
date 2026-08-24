@@ -12,6 +12,7 @@
 \usepackage{microtype}
 \usepackage{xcolor}
 \usepackage{tabularx}
+\usepackage{array}
 \usepackage{subcaption}
 \usepackage{enumitem}
 \usepackage{cite}
@@ -98,7 +99,7 @@ CRBench is \textit{not} an empirical bake-off designed to crown a single compres
     \item \textbf{Explicit Analytical \& Physical Memory Accounting}: We formalize effective bits-per-element ($b_{\text{eff}}$) and memory efficiency $R_{\text{mem}}$, accounting not only for raw tensor payloads but also quantization scales, codebooks, eviction index bitmaps, and alignment overheads.
     \item \textbf{Desiderata-Based Scoring Utility Analysis}: We evaluate seven candidate utility formulations against five key measurement desiderata (quality monotonicity, resource monotonicity, boundedness, Pareto consistency, and low-quality penalty criteria), proposing the linear additive formulation $\mathcal{S}_{\text{res}} = \alpha Q + (1 - \alpha) R_{\text{mem}}$ (default $\alpha = 0.70$) as a transparent, non-destructive scoring formulation.
     \item \textbf{Two-Track Benchmark Separation}: We decouple Part~1 (algorithmic context representation efficiency) from Part~2 (hardware-dependent system latency, TTFT, and decode throughput), enabling pure theoretical comparisons alongside deployability profiles.
-    \item \textbf{Open-Source Extensible Implementation}: We release the modular CRBench v0.2.0 Python package featuring custom adapter registration in under 50 lines of code, non-destructive score recomputation, transparent failure categorization, and preliminary validation on a $0.5\text{B}$-parameter open-weight model.
+    \item \textbf{Open-Source Extensible Implementation}: We release the modular CRBench v0.2.0 Python package featuring custom adapter registration in under 50 lines of code, non-destructive score recomputation, transparent failure categorization, and preliminary validation on an open-weight 0.5B model.
 \end{itemize}
 
 % ==============================================================================
@@ -115,22 +116,24 @@ Existing approaches to evaluating long-context models and compression techniques
 \small
 \caption{\textbf{Comparison of Common Evaluation Paradigms and Capabilities Provided by CRBench.} Summary of dimensions captured across long-context accuracy benchmarks, synthetic needle tests, inference profilers, and CRBench.}
 \label{tab:paradigms}
-\begin{tabularx}{\textwidth}{lccccc}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
 \toprule
 \textbf{Evaluation Paradigm} & \textbf{Quality} & \textbf{Memory} & \textbf{System Latency} & \textbf{Dense-Anchored} & \textbf{Query-Level Pairwise} \\
 \midrule
-Standard Long-Context (e.g. LongBench) & \checkmark & $\times$ & $\times$ & $\times$ & $\times$ \\
-Synthetic Needle Tests (e.g. NIAH, RULER) & \checkmark & $\times$ & $\times$ & $\times$ & $\times$ \\
-Inference Systems Profilers (e.g. vLLM) & $\times$ & \checkmark & \checkmark & $\times$ & $\times$ \\
+Standard Long-Context (e.g., LongBench) & \checkmark & $\times$ & $\times$ & $\times$ & $\times$ \\
+Synthetic Needle Tests (e.g., NIAH, RULER) & \checkmark & $\times$ & $\times$ & $\times$ & $\times$ \\
+Inference Systems Profilers (e.g., vLLM) & $\times$ & \checkmark & \checkmark & $\times$ & $\times$ \\
 Ad-hoc Compression Papers & \checkmark & $\triangle$ & $\triangle$ & $\times$ & $\times$ \\
 \textbf{CRBench (This Work)} & \textbf{\checkmark} & \textbf{\checkmark} & \textbf{\checkmark} & \textbf{\checkmark} & \textbf{\checkmark} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}%
+}
 \end{table*}
 
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Quality--Resource Disconnection}: Traditional benchmarks (e.g., L-Eval~\cite{an2023leval}, BAMBOO~\cite{dong2023bamboo}, InfiniteBench~\cite{zhang2024infinitebench}) measure accuracy without tracking memory. A method that achieves 90\% accuracy while consuming 16 bits per token is treated identically to a method achieving 90\% accuracy at 4 bits per token, despite the latter offering $4\times$ greater hardware efficiency.
-    \item \textbf{Confounding Base Model Capability with Representation Quality}: Reporting absolute task accuracy confuses the model's fundamental reasoning capability with the efficiency of the KV compression algorithm. A weak compression technique applied to a 70B parameter model might achieve a higher absolute accuracy than a state-of-the-art compression method on an 8B model. By anchoring evaluations to each model's uncompressed dense execution on the same query, CRBench isolates representation efficiency.
+    \item \textbf{Confounding Base Model Capability with Representation Quality}: Reporting absolute task accuracy confuses the model's fundamental reasoning capability with the efficiency of the KV compression algorithm. A weak compression technique applied to a 70B parameter model might achieve a higher absolute accuracy than an advanced compression method on an 8B model. By anchoring evaluations to each model's uncompressed dense execution on the same query, CRBench isolates representation efficiency.
     \item \textbf{Ignoring Metadata and System Overhead}: Many compression works claim theoretical 4-bit or 2-bit compression while omitting the memory required for scaling factors, outlier vectors, or eviction index tables. Furthermore, algorithms that save memory by executing uncoalesced memory reads or expensive CPU--GPU synchronization can severely degrade prefill latency (TTFT) and decode throughput.
 \end{enumerate}
 
@@ -227,7 +230,7 @@ R_{\text{mem}, i} = 100.0 \times \max\left(0.0, \; 1.0 - \frac{M_{i, \text{metho
 \label{sec:scoring}
 
 \subsection{Measurement Desiderata for Utility Formulation}
-A scientifically rigorous resource benchmark score $\mathcal{S}(Q, R)$ mapping quality retention $Q \in [0, 100]$ and resource savings $R \in [0, 100]$ to a scalar metric $\mathcal{S} \in [0, 100]$ is evaluated against five key measurement desiderata:
+A scientifically rigorous resource benchmark score $\mathcal{S}(Q, R)$ mapping quality retention $Q \in [0, 100]$ and resource savings $R \in [0, 100]$ to a scalar metric $\mathcal{S} \in [0, 100]$ is evaluated against five key measurement desiderata, with the systematic audit of candidate formulations summarized in Table~\ref{tab:axiom_audit}:
 
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Desideratum 1 (Quality Monotonicity)}: $\frac{\partial \mathcal{S}}{\partial Q} > 0$. For any fixed resource savings, strictly higher quality retention yields a strictly higher benchmark score.
@@ -259,7 +262,8 @@ The current $\alpha = 0.70$ configuration reflects a quality-dominant design cho
 \small
 \caption{\textbf{Evaluation of Candidate Scoring Formulations Against Measurement Desiderata.} Seven mathematical formulations were systematically evaluated across $Q, R \in [0, 100]$. The linear formulation satisfies the specified desiderata under the benchmark's default configuration and tested ranges.}
 \label{tab:axiom_audit}
-\begin{tabularx}{\textwidth}{llccccc}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{clccccc}
 \toprule
 \textbf{ID} & \textbf{Mathematical Formula} & \textbf{Q-Mono} & \textbf{R-Mono} & \textbf{Bounded} & \textbf{Pareto Consistency} & \textbf{Low-Q Penalty} \\
 \midrule
@@ -271,7 +275,8 @@ F5 & $\mathcal{S} = Q \cdot (R/100)^\alpha$ & \checkmark & \checkmark & \checkma
 F6 & $\mathcal{S} = \min(Q^\alpha, R^{1-\alpha})$ & $\times$ & $\times$ & \checkmark & 83\% (30/36) & \checkmark \\
 F7 & $\mathcal{S} = \frac{Q}{100} \cdot (\alpha Q + (1-\alpha) R)$ (Gated Linear) & \checkmark & \checkmark & \checkmark & 100\% (36/36) & \checkmark \\
 \bottomrule
-\end{tabularx}
+\end{tabular}%
+}
 \vspace{0.2em}
 \raggedright\footnotesize{$^*$Note: Multiplicative and harmonic formulations assign $\mathcal{S} = 0.0$ to the dense reference whenever $R=0\%$, artificially penalizing the uncompressed baseline.}
 \end{table*}
@@ -360,7 +365,7 @@ CRBench v0.2.0 is engineered as a modular, open-source Python framework designed
 \end{figure*}
 
 \subsection{Extensible Context Adapter Interface}
-To evaluate any novel KV representation, researchers implement `BaseContextAdapter` by defining three core methods:
+To evaluate any novel KV representation, researchers implement \texttt{BaseContextAdapter} by defining three core methods, executed through the atomic flow detailed in Algorithm~\ref{alg:query_eval}:
 
 \begin{algorithm}[h]
 \caption{Atomic Query Evaluation Flow in CRBench}
@@ -373,7 +378,8 @@ To evaluate any novel KV representation, researchers implement `BaseContextAdapt
 \STATE Execute Candidate Adapter: $\hat{y}_{\text{method}}, \text{prof}_{\text{method}} \leftarrow \text{Generate}(\mathcal{M}, x, \mathcal{A})$
 \STATE Calculate Raw Method Score: $s_{\text{method}} \leftarrow \text{Eval}(\hat{y}_{\text{method}}, y)$
 \STATE Compute Normalized Quality: $Q \leftarrow \min\left(100.0, \; \max\left(0.0, \; \frac{s_{\text{method}} - s_{\text{floor}}}{\max(\Delta_{\min}, s_{\text{dense}} - s_{\text{floor}})} \times 100.0\right)\right)$
-\STATE Query Metadata: $\text{meta}_{\text{dense}} \leftarrow \mathcal{R}_{\text{dense}}.\text{get\_kv\_metadata}(), \; \text{meta}_{\text{method}} \leftarrow \mathcal{A}.\text{get\_kv\_metadata}()$
+\STATE Extract Dense Metadata: $\text{meta}_{\text{dense}} \leftarrow \mathcal{R}_{\text{dense}}.\text{get\_kv\_metadata}()$
+\STATE Extract Adapter Metadata: $\text{meta}_{\text{method}} \leftarrow \mathcal{A}.\text{get\_kv\_metadata}()$
 \STATE Compute Memory Efficiency: $R_{\text{mem}} \leftarrow 100.0 \times \max\left(0, 1.0 - \frac{\text{meta}_{\text{method}}.\text{bytes}}{\text{meta}_{\text{dense}}.\text{bytes}}\right)$
 \STATE Compute Part 1 Score: $\mathcal{S}_{\text{res}} \leftarrow \alpha Q + (1 - \alpha) R_{\text{mem}}$
 \RETURN $\text{QueryEvaluationResult}(Q, R_{\text{mem}}, \mathcal{S}_{\text{res}}, \text{status}=\text{SUCCESS})$
@@ -411,9 +417,10 @@ Unlike benchmarks that silently record $0.0$ accuracy when a model runs out of m
 \small
 \caption{\textbf{Preliminary Benchmark Validation on Qwen2.5-0.5B-Instruct (Apple Silicon MPS Profile).} Evaluated across 5 context tasks up to 4,096 tokens. Effective $b_{\text{eff}}$ is reported in bits per stored KV element ($16.0\,\text{bits/elem}$ for uncompressed FP16). These preliminary results validate implementation mechanics, pairwise scoring fidelity, and memory accounting; they do not constitute final benchmark rankings for 7B+ foundation models.}
 \label{tab:prelim_results}
-\begin{tabularx}{\textwidth}{llccccccc}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccccc}
 \toprule
-\textbf{Adapter Method} & \textbf{Paradigm} & \textbf{Effective $b_{\text{eff}}$ (bits/elem)} & \textbf{Part 1 $\mathcal{S}_{\text{res}}$} & \textbf{AUQC (2K)} & \textbf{AUQC (4K)} & \textbf{TTFT (ms)$^\dagger$} & \textbf{Thru (tok/s)$^\dagger$} & \textbf{Part 2 $\mathcal{S}_{\text{sys}}$ (Prov.)} \\
+\textbf{Adapter Method} & \textbf{Paradigm} & \textbf{Effective $b_{\text{eff}}$} & \textbf{Part 1 $\mathcal{S}_{\text{res}}$} & \textbf{AUQC (2K)} & \textbf{AUQC (4K)} & \textbf{TTFT (ms)$^\dagger$} & \textbf{Thru (tok/s)$^\dagger$} & \textbf{Part 2 $\mathcal{S}_{\text{sys}}$ (Prov.)} \\
 \midrule
 \texttt{low\_rank\_kv} & Low-Rank Subspace & $4.12\,\text{bits/elem}$ & \textbf{85.8} & 88.0 & 83.8 & 35.1 & 17,504.3 & \textbf{100.0} \\
 \texttt{custom\_dkv} & Dynamic Subspace & $4.25\,\text{bits/elem}$ & \textbf{61.5} & 64.2 & 58.6 & 34.5 & 17,271.1 & \textbf{83.0} \\
@@ -425,7 +432,8 @@ Unlike benchmarks that silently record $0.0$ accuracy when a model runs out of m
 \texttt{kv\_merging} & Merging / Pooling & $4.10\,\text{bits/elem}$ & \textbf{15.0} & 18.0 & 12.0 & 1,861.6 & 368.2 & \textbf{20.1} \\
 \texttt{kv\_quant\_int2} & Quantization & $2.25\,\text{bits/elem}$ & \textbf{8.2} & 10.0 & 6.5 & 3,666.3 & 184.0 & \textbf{8.4} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}%
+}
 \vspace{0.2em}
 \raggedright\footnotesize{$^\dagger$Note: Preliminary runtime latency (TTFT) and decode throughput reflect the prototyping software hook execution path on Apple Silicon MPS; standardized CUDA event synchronization with fused kernels on 8B+ cluster nodes will provide the definitive system benchmark.}
 \end{table*}
@@ -451,10 +459,10 @@ We benchmarked 9 context adapters on \texttt{Qwen/Qwen2.5-0.5B-Instruct} across 
     \label{fig:pareto_frontier}
 \end{subfigure}
 \hfill
-\begin{subfigure}[b]{0.33\textwidth}
+\begin{subfigure}[b]{0.32\textwidth}
     \centering
     \includegraphics[width=\textwidth]{tmlr/figures/fig4_score_comparison.pdf}
-    \caption{Part 1 vs. Part 2 Scores}
+    \caption{Part 1 vs. Provisional Part 2}
     \label{fig:score_comparison}
 \end{subfigure}
 \hfill
@@ -472,9 +480,9 @@ We benchmarked 9 context adapters on \texttt{Qwen/Qwen2.5-0.5B-Instruct} across 
 \paragraph{Implementation and Scoring Validation.}
 The preliminary experiments confirm that the query-level evaluation pipeline correctly executes dense references and candidate adapters on identical samples. Monotonicity and Pareto ordering are strictly preserved in empirical practice:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Pareto Separation}: As plotted in Figure~\ref{fig:pareto_frontier}, the empirical non-dominated Pareto frontier connects the Dense reference ($Q=100\%, R=0\%$), Low-Rank KV ($Q=90.7\%, R=74.3\%$), SnapKV ($Q=25.0\%, R=74.7\%$), and 2-bit quantization ($Q=8.2\%, R=85.9\%$). Low-Rank KV establishes a dominant high-retention operating point, achieving an $\mathcal{S}_{\text{res}}$ score of $85.8$ and demonstrating that the scoring formula correctly rewards methods that maintain high contextual fidelity under significant memory reduction ($4.12\,\text{bits/elem}$ vs $16.00\,\text{bits/elem}$).
+    \item \textbf{Pareto Separation}: As plotted in Figure~\ref{fig:pareto_frontier}, the empirical non-dominated Pareto frontier connects the Dense reference ($Q=100\%, R=0\%$), Low-Rank KV ($Q=90.7\%, R=74.3\%$), SnapKV ($Q=25.0\%, R=74.7\%$), and 2-bit quantization ($Q=8.2\%, R=85.9\%$). Low-Rank KV establishes a high-retention frontier point, achieving an $\mathcal{S}_{\text{res}}$ score of $85.8$ and demonstrating that the scoring formula correctly rewards methods that maintain high contextual fidelity under significant memory reduction ($4.12\,\text{bits/elem}$ vs $16.00\,\text{bits/elem}$).
     \item \textbf{Penalty for Catastrophic Degradation}: 2-bit quantization (\texttt{kv\_quant\_int2}) experiences severe accuracy collapse on multi-hop retrieval tasks ($Q = 8.2\%$), resulting in an $\mathcal{S}_{\text{res}}$ score of $8.2$---well below the uncompressed baseline ($46.7$), satisfying Desideratum~5 in practice.
-    \item \textbf{System Score Decoupling (Part~2)}: As shown in Figure~\ref{fig:score_comparison}, eviction-based methods (\texttt{snapkv}, \texttt{streaming\_llm}) achieve a nearly $2\times$ speedup in prefill TTFT ($1,784\,\text{ms}$ vs $3,424\,\text{ms}$) and a $2\times$ increase in decode throughput ($397\,\text{tok/s}$ vs $189\,\text{tok/s}$), earning positive system utility adjustments in Part~2 ($\mathcal{S}_{\text{sys}} = 33.5$ vs $\mathcal{S}_{\text{res}} = 25.0$). Conversely, software-based quantization without hardware-fused kernels incurs slight dequantization latency overhead, resulting in neutral Part~2 adjustments.
+    \item \textbf{System Score Decoupling (Part~2)}: As shown in Figure~\ref{fig:score_comparison}, eviction-based methods (\texttt{snapkv}, \texttt{streaming\_llm}) achieve a nearly $2\times$ speedup in prefill TTFT ($1,784\,\text{ms}$ vs $3,424\,\text{ms}$) and a $2\times$ increase in decode throughput ($397\,\text{tok/s}$ vs $189\,\text{tok/s}$), earning positive system utility adjustments in Part~2 ($\mathcal{S}_{\text{sys}} = 33.5$ vs $\mathcal{S}_{\text{res}} = 25.0$). Conversely, software quantization without fused kernels incurs slight dequantization overhead, yielding neutral Part~2 adjustments.
 \end{itemize}
 
 \subsection{Weighting Scheme Invariance \& Context Scaling}
@@ -518,7 +526,7 @@ To maintain clear scientific boundaries:
 \subsection{Future Validation Roadmap}
 The next phase of CRBench research includes:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Multi-Architecture 8B+ Cluster Sweep}: Scaling evaluations across Llama-3.1-8B/70B, Qwen-2.5-7B/14B, and Mistral-NeMo on dedicated NVIDIA A100/H100 GPU clusters using CUDA FlashAttention-2 integration.
+    \item \textbf{Multi-Architecture 8B+ Cluster Sweep}: Scaling evaluations across Llama-3.1-8B/70B, Qwen-2.5-7B/14B, and Mistral-NeMo on dedicated NVIDIA A100/H100 clusters using CUDA FlashAttention-2.
     \item \textbf{Extended Context Horizons}: Expanding sequence evaluations from 8K up to 128K tokens.
     \item \textbf{Fused Kernel Benchmarking}: Integrating custom Triton and CUDA kernels for INT4/FP8 quantization and Flash-Decoupled KV attention.
 \end{enumerate}
@@ -535,7 +543,11 @@ We introduced \textbf{CRBench}, a method-agnostic, resource-aware evaluation fra
 % REFERENCES
 % ==============================================================================
 \bibliographystyle{plain}
+\begingroup
+\small
 \begin{thebibliography}{10}
+\setlength{\itemsep}{1.5pt}
+\setlength{\parskip}{0pt}
 
 \bibitem{achiam2023gpt4}
 Josh Achiam, Steven Adler, Sandhini Agarwal, et~al.
@@ -678,5 +690,6 @@ Zhaozhi Zhang, Yixin Song, Runxin Xu, et~al.
 \newblock {\em arXiv preprint arXiv:2406.02069}, 2024.
 
 \end{thebibliography}
+\endgroup
 
 \end{document}
