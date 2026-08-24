@@ -312,7 +312,7 @@ For an evaluation dataset $\mathcal{D}$ containing $|\mathcal{D}|$ queries, the 
 \bar{R}_{\text{mem}} = \frac{1}{|\mathcal{D}|} \sum_{i=1}^{|\mathcal{D}|} R_{\text{mem}, i}
 }
 \end{equation}
-To ensure rigorous statistical significance, CRBench computes $95\%$ non-parametric bootstrap confidence intervals $\text{CI}_{95}(\bar{\mathcal{S}}_{\text{res}})$ with $B = 2,000$ resamples (for example, on our preliminary 1.5B evaluation, DKV Mid achieves $\bar{\mathcal{S}}_{\text{res}} = 88.0$ with $\text{CI}_{95} = [87.1, 88.9]$ and Low-Rank KV achieves $84.2$ with $\text{CI}_{95} = [83.3, 85.1]$, confirming statistically significant separation).
+To ensure statistical rigor, CRBench computes $95\%$ non-parametric bootstrap confidence intervals $\text{CI}_{95}(\bar{\mathcal{S}}_{\text{res}})$ with $B = 2,000$ resamples (for example, on our preliminary 1.5B evaluation, DKV Mid achieves $\bar{\mathcal{S}}_{\text{res}} = 88.0$ with $\text{CI}_{95} = [87.1, 88.9]$ and Low-Rank KV achieves $84.2$ with $\text{CI}_{95} = [83.3, 85.1]$, showing clear separation in the preliminary bootstrap intervals).
 
 \paragraph{Area Under the Quality Curve (AUQC).} For contextual retrieval and tracking tasks evaluated across parameterized needle insertion depths $D = \{d_1, d_2, \dots, d_m\} \subset [0, 1]$ at context length $L$, we define the Area Under the Quality Curve ($\text{AUQC}$) as the depth-integrated contextual retention score:
 \begin{equation}
@@ -451,23 +451,23 @@ Unlike benchmarks that silently record $0.0$ accuracy when a model runs out of m
 \begin{table*}[t]
 \centering
 \small
-\caption{\textbf{Benchmark Validation on Qwen2.5-1.5B-Instruct (Apple Silicon MPS Profile \& Cloned Upstream Repositories).} Evaluated across 5 context tasks up to 4,096 tokens. Effective $b_{\text{eff}}$ is reported in bits per stored KV element ($16.0\,\text{bits/elem}$ for uncompressed FP16). Upstream repositories for Differential-KV (\texttt{dkv}), SnapKV, and StreamingLLM were evaluated directly alongside baseline quantizers.}
+\caption{\textbf{Benchmark Validation on Qwen2.5-1.5B-Instruct (Apple Silicon MPS Profile \& Cloned Upstream Repositories).} Evaluated across 5 context tasks up to 4,096 tokens. Effective $b_{\text{eff}}$ is reported in bits per stored KV element ($16.0\,\text{bits/elem}$ for uncompressed FP16). $\bar{Q}$ represents the 5-task average normalized quality retention. Both Part~1 ($\mathcal{S}_{\text{res}} = 0.70\bar{Q} + 0.30R_{\text{mem}}$) and Part~2 ($\mathcal{S}_{\text{sys}} = 0.70\bar{Q} + 0.30R_{\text{sys}}$) are derived directly from $\bar{Q}$. Upstream repositories for Differential-KV (\texttt{dkv}), SnapKV, and StreamingLLM were evaluated directly alongside baseline quantizers.}
 \label{tab:prelim_results}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{llccccccc}
+\begin{tabular}{llcccccccc}
 \toprule
-\textbf{Adapter Method} & \textbf{Paradigm} & \textbf{Effective $b_{\text{eff}}$} & \textbf{Part 1 $\mathcal{S}_{\text{res}}$} & \textbf{AUQC (2K)} & \textbf{AUQC (4K)} & \textbf{TTFT (ms)$^\dagger$} & \textbf{Thru (tok/s)$^\dagger$} & \textbf{Part 2 $\mathcal{S}_{\text{sys}}$ (Prov.)} \\
+\textbf{Adapter Method} & \textbf{Paradigm} & \textbf{Effective $b_{\text{eff}}$} & \textbf{Quality $\bar{Q}$ (\%)} & \textbf{Part 1 $\mathcal{S}_{\text{res}}$} & \textbf{AUQC (2K)} & \textbf{AUQC (4K)} & \textbf{TTFT (ms)$^\dagger$} & \textbf{Thru (tok/s)$^\dagger$} & \textbf{Part 2 $\mathcal{S}_{\text{sys}}$ (Prov.)} \\
 \midrule
-\texttt{dkv\_high} & Differential KV (High) & $5.80\,\text{bits/elem}$ & \textbf{88.2} & 99.0 & 98.2 & 1,820.0 & 340.2 & \textbf{88.5} \\
-\texttt{dkv\_mid} & Differential KV (Mid) & $4.25\,\text{bits/elem}$ & \textbf{88.0} & 96.0 & 92.4 & 1,650.0 & 360.5 & \textbf{89.5} \\
-\texttt{low\_rank\_kv} & Low-Rank Subspace & $4.12\,\text{bits/elem}$ & \textbf{84.2} & 90.0 & 87.0 & 1,710.0 & 355.0 & \textbf{85.0} \\
-\texttt{kv\_quant\_int8} & Quantization & $8.25\,\text{bits/elem}$ & \textbf{78.9} & 94.0 & 90.0 & 3,339.6 & 201.7 & \textbf{79.1} \\
-\texttt{dense\_fp16} & Dense Baseline & $16.00\,\text{bits/elem}$ & \textbf{70.0} & 75.0 & 65.0 & 3,424.1 & 189.3 & \textbf{70.0} \\
-\texttt{kv\_quant\_int4} & Quantization & $4.25\,\text{bits/elem}$ & \textbf{60.5} & 60.0 & 50.0 & 3,491.0 & 240.1 & \textbf{60.5} \\
-\texttt{snapkv} & Eviction (Heavy Hitter) & $4.05\,\text{bits/elem}$ & \textbf{52.2} & 50.0 & 35.0 & 1,862.4 & 385.0 & \textbf{55.4} \\
-\texttt{streaming\_llm} & Eviction (Sink+Window) & $4.05\,\text{bits/elem}$ & \textbf{44.8} & 38.0 & 26.0 & 1,784.3 & 397.0 & \textbf{48.0} \\
-\texttt{kv\_merging} & Merging / Pooling & $4.10\,\text{bits/elem}$ & \textbf{41.9} & 32.0 & 24.0 & 1,861.6 & 368.2 & \textbf{45.1} \\
-\texttt{kv\_quant\_int2} & Quantization & $2.25\,\text{bits/elem}$ & \textbf{31.5} & 10.0 & 6.5 & 3,666.3 & 184.0 & \textbf{31.5} \\
+\texttt{dkv\_high} & Differential KV (High) & $5.80\,\text{bits/elem}$ & 98.6 & \textbf{88.2} & 99.0 & 98.2 & 1,820.0 & 340.2 & \textbf{92.4} \\
+\texttt{dkv\_mid} & Differential KV (Mid) & $4.25\,\text{bits/elem}$ & 94.2 & \textbf{88.0} & 96.0 & 92.4 & 1,650.0 & 360.5 & \textbf{91.6} \\
+\texttt{low\_rank\_kv} & Low-Rank Subspace & $4.12\,\text{bits/elem}$ & 88.5 & \textbf{84.2} & 90.0 & 87.0 & 1,710.0 & 355.0 & \textbf{87.6} \\
+\texttt{kv\_quant\_int8} & Quantization & $8.25\,\text{bits/elem}$ & 92.0 & \textbf{78.9} & 94.0 & 90.0 & 3,339.6 & 201.7 & \textbf{79.5} \\
+\texttt{dense\_fp16} & Dense Baseline & $16.00\,\text{bits/elem}$ & 100.0 & \textbf{70.0} & 75.0 & 65.0 & 3,424.1 & 189.3 & \textbf{77.5} \\
+\texttt{kv\_quant\_int4} & Quantization & $4.25\,\text{bits/elem}$ & 55.0 & \textbf{60.5} & 60.0 & 50.0 & 3,491.0 & 240.1 & \textbf{58.0} \\
+\texttt{snapkv} & Eviction (Heavy Hitter) & $4.05\,\text{bits/elem}$ & 42.5 & \textbf{52.2} & 50.0 & 35.0 & 1,862.4 & 385.0 & \textbf{55.3} \\
+\texttt{streaming\_llm} & Eviction (Sink+Window) & $4.05\,\text{bits/elem}$ & 32.0 & \textbf{44.8} & 38.0 & 26.0 & 1,784.3 & 397.0 & \textbf{48.3} \\
+\texttt{kv\_merging} & Merging / Pooling & $4.10\,\text{bits/elem}$ & 28.0 & \textbf{41.9} & 32.0 & 24.0 & 1,861.6 & 368.2 & \textbf{44.9} \\
+\texttt{kv\_quant\_int2} & Quantization & $2.25\,\text{bits/elem}$ & 8.2 & \textbf{31.5} & 10.0 & 6.5 & 3,666.3 & 184.0 & \textbf{25.8} \\
 \bottomrule
 \end{tabular}%
 }
@@ -500,13 +500,13 @@ The preliminary experiments confirm that the query-level evaluation pipeline cor
 \begin{itemize}[leftmargin=*]
     \item \textbf{Pareto Separation}: As plotted in Figure~\ref{fig:pareto_frontier}, the empirical non-dominated Pareto frontier connects the Dense reference ($Q=100\%, R=0\%$), DKV High Preset ($Q=98.6\%, R=63.8\%$), DKV Mid Preset ($Q=94.2\%, R=73.4\%$), Low-Rank KV ($Q=88.5\%, R=74.3\%$), SnapKV ($Q=42.5\%, R=74.7\%$), and 2-bit quantization ($Q=8.2\%, R=85.9\%$). Note that the aggregate quality metric $\bar{Q}$ (e.g., $42.5\%$ for SnapKV, used to compute $\mathcal{S}_{\text{res}} = 0.70(42.5) + 0.30(74.7) = 52.2$) represents normalized contextual capability retention averaged across all 5 evaluated tasks, whereas $\text{AUQC}(L)$ (reported in Table~\ref{tab:prelim_results} and Figure~\ref{fig:context_scaling}) specifically measures needle-depth-integrated retention on contextual retrieval tasks at context length $L$. DKV Mid establishes a high-fidelity frontier point, achieving an $\mathcal{S}_{\text{res}}$ score of $88.0$ and demonstrating that the scoring formula correctly rewards methods that maintain high contextual fidelity under significant memory reduction ($4.25\,\text{bits/elem}$ vs $16.00\,\text{bits/elem}$).
     \item \textbf{Penalty for Catastrophic Degradation}: 2-bit quantization (\texttt{kv\_quant\_int2}) experiences severe accuracy collapse on multi-hop retrieval tasks ($Q = 8.2\%$), resulting in an $\mathcal{S}_{\text{res}}$ score of $31.5$---well below the uncompressed baseline ($70.0$), satisfying Desideratum~5 in practice.
-    \item \textbf{System Score Decoupling (Part~2)}: As shown in Figure~\ref{fig:score_comparison}, eviction-based methods achieve marked runtime acceleration: \texttt{streaming\_llm} achieves a nearly $2\times$ speedup in prefill TTFT ($1,784.3\,\text{ms}$ vs $3,424.1\,\text{ms}$) and a $2\times$ increase in decode throughput ($397.0\,\text{tok/s}$ vs $189.3\,\text{tok/s}$), while \texttt{snapkv} shows a comparable acceleration ($1,862.4\,\text{ms}$; $385.0\,\text{tok/s}$), earning positive system utility adjustments in Part~2 ($\mathcal{S}_{\text{sys}} = 55.4$ vs $\mathcal{S}_{\text{res}} = 52.2$ for SnapKV). Conversely, software quantization without fused kernels incurs slight dequantization overhead, yielding neutral Part~2 adjustments.
+    \item \textbf{System Score Decoupling (Part~2)}: As shown in Figure~\ref{fig:score_comparison}, eviction-based methods achieve marked runtime acceleration: \texttt{streaming\_llm} achieves a nearly $2\times$ speedup in prefill TTFT ($1,784.3\,\text{ms}$ vs $3,424.1\,\text{ms}$) and a $2\times$ increase in decode throughput ($397.0\,\text{tok/s}$ vs $189.3\,\text{tok/s}$), while \texttt{snapkv} shows a comparable acceleration ($1,862.4\,\text{ms}$; $385.0\,\text{tok/s}$), earning positive system utility adjustments in Part~2 ($\mathcal{S}_{\text{sys}} = 55.3$ vs $\mathcal{S}_{\text{res}} = 52.2$ for SnapKV; $\mathcal{S}_{\text{sys}} = 48.3$ vs $\mathcal{S}_{\text{res}} = 44.8$ for StreamingLLM). Conversely, software quantization without fused kernels incurs slight dequantization overhead, yielding neutral or penalizing Part~2 adjustments ($\mathcal{S}_{\text{sys}} = 58.0$ vs $\mathcal{S}_{\text{res}} = 60.5$ for INT4).
 \end{itemize}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{tmlr/figures/fig4_score_comparison.pdf}
-\caption{\textbf{Part~1 (Algorithmic Resource) vs. Provisional Part~2 (System Utility) Score Comparison.} Evaluated on \texttt{Qwen2.5-1.5B-Instruct} (Apple Silicon MPS prototyping profile). Eviction-based methods (\texttt{snapkv}, \texttt{streaming\_llm}) achieve prefill TTFT and decode throughput acceleration, yielding positive Part~2 adjustments ($\mathcal{S}_{\text{sys}} > \mathcal{S}_{\text{res}}$), while software quantization without fused kernels receives neutral scoring adjustments.}
+\includegraphics[width=0.54\textwidth]{tmlr/figures/fig4_score_comparison.pdf}
+\caption{\textbf{Part~1 (Algorithmic Resource) vs. Provisional Part~2 (System Utility) Score Comparison.} Evaluated on \texttt{Qwen2.5-1.5B-Instruct} (Apple Silicon MPS prototyping profile). Eviction-based methods (\texttt{snapkv}, \texttt{streaming\_llm}) achieve prefill TTFT and decode throughput acceleration, yielding positive Part~2 adjustments ($\mathcal{S}_{\text{sys}} > \mathcal{S}_{\text{res}}$), while software quantization without fused kernels receives neutral or penalizing scoring adjustments.}
 \label{fig:score_comparison}
 \end{figure*}
 
@@ -515,7 +515,7 @@ Figure~\ref{fig:context_scaling} visualizes the scaling behavior of each method 
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{tmlr/figures/fig5_context_scaling.pdf}
+\includegraphics[width=0.54\textwidth]{tmlr/figures/fig5_context_scaling.pdf}
 \caption{\textbf{Context-Length Representation AUQC Scaling (2,048 to 4,096 Tokens).} Measured capability retention scaling across all 10 evaluated configurations on \texttt{Qwen2.5-1.5B-Instruct}, demonstrating monotonic degradation with increasing sequence length while preserving relative method ordering.}
 \label{fig:context_scaling}
 \end{figure*}

@@ -70,18 +70,18 @@ Preliminary validation on `Qwen/Qwen2.5-1.5B-Instruct` across 5 contextual tasks
 
 ### Benchmark Leaderboard (1.5B Suite & Cloned Upstream Repositories)
 
-| Adapter Method | Paradigm | Effective $b_{\text{eff}}$ | Part 1 $\mathcal{S}_{\text{res}}$ | AUQC (2K) | AUQC (4K) | TTFT (ms)$^\dagger$ | Thru (tok/s)$^\dagger$ | Part 2 $\mathcal{S}_{\text{sys}}$ (Prov.) |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **`dkv_high`** | Differential KV (High) | $5.80\,\text{bits/elem}$ | **88.2** | 99.0 | 98.2 | 1,820.0 | 340.2 | **88.5** |
-| **`dkv_mid`** | Differential KV (Mid) | $4.25\,\text{bits/elem}$ | **88.0** | 96.0 | 92.4 | 1,650.0 | 360.5 | **89.5** |
-| **`low_rank_kv`** | Low-Rank Subspace | $4.12\,\text{bits/elem}$ | **84.2** | 90.0 | 87.0 | 1,710.0 | 355.0 | **85.0** |
-| **`kv_quant_int8`** | Quantization | $8.25\,\text{bits/elem}$ | **78.9** | 94.0 | 90.0 | 3,339.6 | 201.7 | **79.1** |
-| **`dense_fp16`** | Dense Baseline | $16.00\,\text{bits/elem}$ | **70.0** | 75.0 | 65.0 | 3,424.1 | 189.3 | **70.0** |
-| **`kv_quant_int4`** | Quantization | $4.25\,\text{bits/elem}$ | **60.5** | 60.0 | 50.0 | 3,491.0 | 240.1 | **60.5** |
-| **`snapkv`** | Eviction (Heavy Hitter) | $4.05\,\text{bits/elem}$ | **52.2** | 50.0 | 35.0 | 1,862.4 | 385.0 | **55.4** |
-| **`streaming_llm`** | Eviction (Sink+Window) | $4.05\,\text{bits/elem}$ | **44.8** | 38.0 | 26.0 | 1,784.3 | 397.0 | **48.0** |
-| **`kv_merging`** | Merging / Pooling | $4.10\,\text{bits/elem}$ | **41.9** | 32.0 | 24.0 | 1,861.6 | 368.2 | **45.1** |
-| **`kv_quant_int2`** | Quantization | $2.25\,\text{bits/elem}$ | **31.5** | 10.0 | 6.5 | 3,666.3 | 184.0 | **31.5** |
+| Adapter Method | Paradigm | Effective $b_{\text{eff}}$ | Quality $\bar{Q}$ (%) | Part 1 $\mathcal{S}_{\text{res}}$ | AUQC (2K) | AUQC (4K) | TTFT (ms)$^\dagger$ | Thru (tok/s)$^\dagger$ | Part 2 $\mathcal{S}_{\text{sys}}$ (Prov.) |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`dkv_high`** | Differential KV (High) | $5.80\,\text{bits/elem}$ | 98.6 | **88.2** | 99.0 | 98.2 | 1,820.0 | 340.2 | **92.4** |
+| **`dkv_mid`** | Differential KV (Mid) | $4.25\,\text{bits/elem}$ | 94.2 | **88.0** | 96.0 | 92.4 | 1,650.0 | 360.5 | **91.6** |
+| **`low_rank_kv`** | Low-Rank Subspace | $4.12\,\text{bits/elem}$ | 88.5 | **84.2** | 90.0 | 87.0 | 1,710.0 | 355.0 | **87.6** |
+| **`kv_quant_int8`** | Quantization | $8.25\,\text{bits/elem}$ | 92.0 | **78.9** | 94.0 | 90.0 | 3,339.6 | 201.7 | **79.5** |
+| **`dense_fp16`** | Dense Baseline | $16.00\,\text{bits/elem}$ | 100.0 | **70.0** | 75.0 | 65.0 | 3,424.1 | 189.3 | **77.5** |
+| **`kv_quant_int4`** | Quantization | $4.25\,\text{bits/elem}$ | 55.0 | **60.5** | 60.0 | 50.0 | 3,491.0 | 240.1 | **58.0** |
+| **`snapkv`** | Eviction (Heavy Hitter) | $4.05\,\text{bits/elem}$ | 42.5 | **52.2** | 50.0 | 35.0 | 1,862.4 | 385.0 | **55.3** |
+| **`streaming_llm`** | Eviction (Sink+Window) | $4.05\,\text{bits/elem}$ | 32.0 | **44.8** | 38.0 | 26.0 | 1,784.3 | 397.0 | **48.3** |
+| **`kv_merging`** | Merging / Pooling | $4.10\,\text{bits/elem}$ | 28.0 | **41.9** | 32.0 | 24.0 | 1,861.6 | 368.2 | **44.9** |
+| **`kv_quant_int2`** | Quantization | $2.25\,\text{bits/elem}$ | 8.2 | **31.5** | 10.0 | 6.5 | 3,666.3 | 184.0 | **25.8** |
 
 <small><em>&dagger;Note: Runtime latency and decode throughput reflect the execution path on Apple Silicon MPS with cloned upstream repositories; standardized CUDA event synchronization on 8B+ cluster nodes will provide the definitive system benchmark.</em></small>
 

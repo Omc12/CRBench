@@ -74,6 +74,16 @@ METHOD_COLORS = {
 }
 
 # Measured Benchmark Data on Qwen2.5-1.5B-Instruct (Apple Silicon Profile & Cloned Repos)
+DENSE_TTFT_MS = 3424.1
+DENSE_THRU_TOK_S = 189.3
+
+def compute_s_sys(q_retention: float, r_mem: float, ttft_ms: float, thru_tok_s: float, alpha: float = 0.70) -> float:
+    """Derive Part 2 System Score S_sys directly from Equations 12-14."""
+    r_ttft = min(100.0, 50.0 * (DENSE_TTFT_MS / ttft_ms))
+    r_thru = min(100.0, 50.0 * (thru_tok_s / DENSE_THRU_TOK_S))
+    r_sys = 0.50 * r_mem + 0.25 * r_ttft + 0.25 * r_thru
+    return round(alpha * q_retention + (1.0 - alpha) * r_sys, 1)
+
 MEASURED_DATA = [
     {
         "name": "dense_fp16",
@@ -87,7 +97,7 @@ MEASURED_DATA = [
         "auqc_4k": 65.0,
         "ttft_ms": 3424.1,
         "thru_tok_s": 189.3,
-        "s_sys": 70.0,
+        "s_sys": compute_s_sys(100.0, 0.0, 3424.1, 189.3),
         "color": METHOD_COLORS["dense_fp16"],
         "marker": "s",
     },
@@ -103,7 +113,7 @@ MEASURED_DATA = [
         "auqc_4k": 98.2,
         "ttft_ms": 1820.0,
         "thru_tok_s": 340.2,
-        "s_sys": 88.5,
+        "s_sys": compute_s_sys(98.6, 63.75, 1820.0, 340.2),
         "color": METHOD_COLORS["dkv_high"],
         "marker": "P",
     },
@@ -119,7 +129,7 @@ MEASURED_DATA = [
         "auqc_4k": 92.4,
         "ttft_ms": 1650.0,
         "thru_tok_s": 360.5,
-        "s_sys": 89.5,
+        "s_sys": compute_s_sys(94.2, 73.44, 1650.0, 360.5),
         "color": METHOD_COLORS["dkv_mid"],
         "marker": "D",
     },
@@ -135,7 +145,7 @@ MEASURED_DATA = [
         "auqc_4k": 87.0,
         "ttft_ms": 1710.0,
         "thru_tok_s": 355.0,
-        "s_sys": 85.0,
+        "s_sys": compute_s_sys(88.5, 74.25, 1710.0, 355.0),
         "color": METHOD_COLORS["low_rank_kv"],
         "marker": "o",
     },
@@ -151,7 +161,7 @@ MEASURED_DATA = [
         "auqc_4k": 90.0,
         "ttft_ms": 3339.6,
         "thru_tok_s": 201.7,
-        "s_sys": 79.1,
+        "s_sys": compute_s_sys(92.0, 48.44, 3339.6, 201.7),
         "color": METHOD_COLORS["kv_quant_int8"],
         "marker": "^",
     },
@@ -167,7 +177,7 @@ MEASURED_DATA = [
         "auqc_4k": 35.0,
         "ttft_ms": 1862.4,
         "thru_tok_s": 385.0,
-        "s_sys": 55.4,
+        "s_sys": compute_s_sys(42.5, 74.69, 1862.4, 385.0),
         "color": METHOD_COLORS["snapkv"],
         "marker": "v",
     },
@@ -183,7 +193,7 @@ MEASURED_DATA = [
         "auqc_4k": 26.0,
         "ttft_ms": 1784.3,
         "thru_tok_s": 397.0,
-        "s_sys": 48.0,
+        "s_sys": compute_s_sys(32.0, 74.69, 1784.3, 397.0),
         "color": METHOD_COLORS["streaming_llm"],
         "marker": "<",
     },
@@ -199,7 +209,7 @@ MEASURED_DATA = [
         "auqc_4k": 50.0,
         "ttft_ms": 3491.0,
         "thru_tok_s": 240.1,
-        "s_sys": 60.5,
+        "s_sys": compute_s_sys(55.0, 73.44, 3491.0, 240.1),
         "color": METHOD_COLORS["kv_quant_int4"],
         "marker": "P",
     },
@@ -215,7 +225,7 @@ MEASURED_DATA = [
         "auqc_4k": 24.0,
         "ttft_ms": 1861.6,
         "thru_tok_s": 368.2,
-        "s_sys": 45.1,
+        "s_sys": compute_s_sys(28.0, 74.38, 1861.6, 368.2),
         "color": METHOD_COLORS["kv_merging"],
         "marker": "X",
     },
@@ -231,7 +241,7 @@ MEASURED_DATA = [
         "auqc_4k": 6.5,
         "ttft_ms": 3666.3,
         "thru_tok_s": 184.0,
-        "s_sys": 31.5,
+        "s_sys": compute_s_sys(8.2, 85.94, 3666.3, 184.0),
         "color": METHOD_COLORS["kv_quant_int2"],
         "marker": "*",
     },

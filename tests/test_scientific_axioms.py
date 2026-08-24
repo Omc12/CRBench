@@ -198,3 +198,38 @@ def test_axiom_context_weighting_sensitivity():
 
     assert rho >= 0.99
     assert tau >= 0.99
+
+
+def test_table3_mathematical_consistency():
+    """Verify that all published Table 3 values match Equations 6 and 12-14 exactly."""
+    # Data from Table 3 in preprint paper
+    # (name, Q, b_eff, S_res_published, ttft_ms, thru_tok_s, S_sys_published)
+    dense_ttft = 3424.1
+    dense_thru = 189.3
+    alpha = 0.70
+
+    published_table = [
+        ("dkv_high", 98.6, 5.80, 88.2, 1820.0, 340.2, 92.4),
+        ("dkv_mid", 94.2, 4.25, 88.0, 1650.0, 360.5, 91.6),
+        ("low_rank_kv", 88.5, 4.12, 84.2, 1710.0, 355.0, 87.6),
+        ("kv_quant_int8", 92.0, 8.25, 78.9, 3339.6, 201.7, 79.5),
+        ("dense_fp16", 100.0, 16.00, 70.0, 3424.1, 189.3, 77.5),
+        ("kv_quant_int4", 55.0, 4.25, 60.5, 3491.0, 240.1, 58.0),
+        ("snapkv", 42.5, 4.05, 52.2, 1862.4, 385.0, 55.3),
+        ("streaming_llm", 32.0, 4.05, 44.8, 1784.3, 397.0, 48.3),
+        ("kv_merging", 28.0, 4.10, 41.9, 1861.6, 368.2, 44.9),
+        ("kv_quant_int2", 8.2, 2.25, 31.5, 3666.3, 184.0, 25.8),
+    ]
+
+    for name, Q, b_eff, s_res_pub, ttft, thru, s_sys_pub in published_table:
+        # Part 1 check: S_res = alpha * Q + (1 - alpha) * R_mem
+        r_mem = max(0.0, (1.0 - b_eff / 16.0) * 100.0)
+        s_res_derived = alpha * Q + (1.0 - alpha) * r_mem
+        assert pytest.approx(s_res_derived, abs=0.15) == s_res_pub, f"Part 1 mismatch for {name}: derived={s_res_derived:.2f}, pub={s_res_pub}"
+
+        # Part 2 check: Equations 12-14
+        r_ttft = min(100.0, 50.0 * (dense_ttft / ttft))
+        r_thru = min(100.0, 50.0 * (thru / dense_thru))
+        r_sys = 0.50 * r_mem + 0.25 * r_ttft + 0.25 * r_thru
+        s_sys_derived = alpha * Q + (1.0 - alpha) * r_sys
+        assert pytest.approx(s_sys_derived, abs=0.15) == s_sys_pub, f"Part 2 mismatch for {name}: derived={s_sys_derived:.2f}, pub={s_sys_pub}"
