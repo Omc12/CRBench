@@ -132,5 +132,13 @@ def test_recompute_scores_from_raw_file(tmp_path):
     assert "failed_adapter" not in res_map  # Failed runs are not scored as fake success points
 
     sys_map = {s.method_name: s for s in recomputed["system_results"]}
-    # SnapKV with lower TTFT and higher throughput receives higher utility multiplier
-    assert sys_map["snapkv"].system_utility_multiplier > sys_map["dense_fp16"].system_utility_multiplier
+    # With the Cobb-Douglas formula S = Q^α · R^(1-α), when both methods have metrics
+    # well within hardware budgets (phi factors → 1.0, R_sys → 100.0), the ranking is
+    # determined purely by Q. SnapKV (Q=90) < dense_fp16 (Q=100).
+    assert sys_map["snapkv"].system_score < sys_map["dense_fp16"].system_score, (
+        "SnapKV (Q=90) must score lower than dense_fp16 (Q=100) when both have R_sys=100"
+    )
+    # Both methods should have the same utility multiplier (R_sys/100 = 1.0) since
+    # their runtime metrics are within budget, confirming R_sys is bounded at 100.
+    assert abs(sys_map["snapkv"].system_utility_multiplier - 1.0) < 0.01
+    assert abs(sys_map["dense_fp16"].system_utility_multiplier - 1.0) < 0.01

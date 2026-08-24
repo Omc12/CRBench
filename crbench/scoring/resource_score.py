@@ -13,6 +13,13 @@ from crbench.scoring.auqc import AUQCEngine, AUQCResult
 from crbench.scoring.isobudget import IsoBudgetScorer, IsoBudgetResult
 from crbench.scoring.pareto import OperatingPoint, ParetoAnalyzer, ParetoFrontierResult
 from crbench.scoring.hypervolume import HypervolumeScorer, HypervolumeResult
+from crbench.scoring.utility import (
+    CRBENCH_ALPHA,
+    CRBENCH_FORMULA_DESCRIPTION,
+    CRBENCH_FORMULA_NAME,
+    compute_utility,
+    resource_efficiency_from_bpt,
+)
 
 
 @dataclass
@@ -34,6 +41,9 @@ class CRBenchResourceScoreResult:
     context_weights: Dict[int, float]
     weighting_scheme: str = "logarithmic"
     summary_metrics: Dict[str, Any] = field(default_factory=dict)
+    # Frozen formula metadata (informational, set automatically)
+    utility_formula: str = field(default=CRBENCH_FORMULA_DESCRIPTION, init=False, repr=False)
+    utility_alpha: float = field(default=CRBENCH_ALPHA, init=False, repr=False)
 
     @property
     def mean_auqc(self) -> float:
@@ -173,6 +183,9 @@ class CRBenchResourceScorer:
                 "num_context_lengths": len(lengths),
                 "context_lengths": lengths,
                 "weighting_scheme": active_scheme,
-                "auqc_by_context": {L: context_scores[L].auqc_result.auqc_score for L in lengths}
+                "auqc_by_context": {L: context_scores[L].auqc_result.auqc_score for L in lengths},
+                "utility_formula": CRBENCH_FORMULA_DESCRIPTION,
+                "utility_alpha": CRBENCH_ALPHA,
+                "utility_formula_id": CRBENCH_FORMULA_NAME,
             }
         )
