@@ -34,22 +34,19 @@ git clone https://github.com/Omc12/CRBench.git
 cd CRBench
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .
+pip install -e ".[dev]"
 
 # Run test suite to verify mathematical invariants
 pytest tests/ -v
 
-# Replicate Stage 1 Quick Benchmark
-crbench run --config configs/stage1_quick.yaml
+# Quickstart Benchmark
+crbench run --config configs/quickstart.yaml
 
-# Replicate Stage 2 Standard Evaluation (0.5B on Apple Silicon / CPU / CUDA)
-crbench run --config configs/stage2_standard.yaml
-
-# Scale-Up to RTX 4070 Super (3B model up to 32K context)
-crbench run --config configs/stage3_rtx4070_super.yaml
+# Standard Benchmark (all paradigms)
+crbench run --config configs/standard_benchmark.yaml
 
 # Scale-Up to Full 8B Model on NVIDIA GPUs (Meta-Llama-3.1-8B up to 32K context)
-crbench run --config configs/stage3_llama3_8b.yaml
+crbench run --config configs/cluster_8b.yaml
 ```
 
 ---

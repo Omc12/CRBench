@@ -35,14 +35,14 @@ pytest tests/ -v
 
 # 4. Execute Full Scale CUDA Benchmark Sweep
 echo ""
-echo "[*] Executing CRBench CUDA Full Sweep (8K to 128K context)..."
-crbench run --config configs/stage3_cuda_full.yaml
+echo "[*] Executing CRBench CUDA Full Sweep (8K to 32K context)..."
+crbench run --config configs/cluster_8b.yaml
 
 # 5. Output Summary
 echo ""
 echo "================================================================================"
 echo "[✓] CRBench CUDA Full Sweep Completed Successfully!"
-echo "    Results directory : results/cuda_full_sweep/"
-echo "    Report path       : results/cuda_full_sweep/CRBENCH_REPORT.md"
-echo "    Figures directory : results/cuda_full_sweep/figures/"
+echo "    Results directory : results/8b_cluster_benchmark/"
+echo "    Report path       : results/8b_cluster_benchmark/CRBENCH_REPORT.md"
+echo "    Figures directory : results/8b_cluster_benchmark/figures/"
 echo "================================================================================"
