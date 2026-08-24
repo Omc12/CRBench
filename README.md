@@ -3,54 +3,79 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Tests Passing](https://img.shields.io/badge/Tests-142%20passed-success.svg)](tests/)
-[![Target: TMLR](https://img.shields.io/badge/Target-TMLR-darkgreen.svg)](https://jmlr.org/tmlr/)
 
-**CRBench (Context Resource Benchmark)** is a principled, method-agnostic research benchmark designed to characterize the **quality–resource tradeoff** of long-context Large Language Models (LLMs) under explicit memory and runtime resource constraints.
+**CRBench (Context Resource Benchmark)** is a principled, method-agnostic research benchmark designed to evaluate and characterize the **quality–resource tradeoff** of long-context Large Language Models (LLMs) under explicit memory and runtime resource constraints.
 
-CRBench answers practical questions for researchers and practitioners:
-- *"Under a 4 GB KV memory budget at 64K context, which representation retains the highest contextual capability?"*
-- *"At 4 bits per token, does KV Quantization, KV Eviction (SnapKV), or KV Merging dominate the Pareto frontier?"*
+As context lengths scale from 8K to 128K+ tokens, the key-value (KV) cache becomes the primary memory bottleneck during LLM inference. CRBench provides a unified, mathematically grounded framework to answer:
+- *"Under a 4 GB KV memory budget at 64K context, which compression method retains the highest capability?"*
+- *"At 4 bits per token, does KV Quantization, KV Eviction (e.g. SnapKV), or KV Merging dominate the Pareto frontier?"*
 - *"What is the real system throughput penalty (TTFT, decode tokens/s) of a compressed KV method?"*
 
 ---
 
 ## Key Methodological Principles
 
-1. **Atomic Query-Level Evaluation**:
-   The fundamental unit of evaluation is **(1 Model + 1 Query/Context + Dense Reference + User Method)**. Quality retention and memory savings are computed pairwise on the identical prompt.
-2. **Model-Relative Normalization**:
-   Quality retention measures the exact fraction of the base model's uncompressed Dense FP16 capability retained on that specific prompt:
-   $$Q_i = 100 \cdot \frac{s_{i,\text{method}} - s_{\text{floor}}}{\max(\Delta_{\min}, s_{i,\text{dense}} - s_{\text{floor}})}$$
-   Smaller models (e.g. 0.5B) are scored fairly on retention without being penalized for lower base model accuracy.
-3. **Linear Additive Utility Formulation**:
-   $$S_{\text{res}} = \alpha \cdot Q + (1 - \alpha) \cdot R_{\text{mem}}$$
-   where $Q \in [0, 100]$ is capability retention and $R_{\text{mem}} = 100 \cdot \max\left(0, 1 - \frac{M_{\text{method}}}{M_{\text{dense}}}\right) \in [0, 100]$ is memory resource savings.
-   - Dense FP16 ($Q=100, R=0$) is preserved at $S = 70.0$ (for default $\alpha=0.70$).
-   - INT4 ($Q=95, R=75$) scores $89.0$ (legitimately beats Dense).
-   - Failing INT2 ($Q=5, R=95$) scores $32.0$ (strictly penalized below Dense).
-4. **Strict Separation of Part 1 and Part 2**:
-   - **Part 1 (Resource Score)**: Quality + Memory only. No runtime metrics enter Part 1.
-   - **Part 2 (System Score)**: Quality + System efficiency ($R_{\text{sys}}$ combining memory savings, TTFT prefill speedup, and decode throughput).
-5. **Method-Agnostic Adapter API (`BaseContextAdapter`)**:
-   Standardized plug-in interface for quantization, eviction (SnapKV, StreamingLLM, H2O), token merging, low-rank state, DKV, and custom researcher kernels.
+### 1. Atomic Query-Level Evaluation
+The fundamental evaluation unit in CRBench is:
+$$\langle \text{Model}, \text{Query / Context}, \text{Dense Baseline}, \text{User Method} \rangle$$
+Each prompt is evaluated under both the uncompressed reference (Dense FP16/BF16) and the candidate method, capturing pairwise quality retention and memory savings.
+
+### 2. Model-Relative Normalization
+Quality retention measures the fraction of the base model's own uncompressed capability retained on each specific prompt:
+$$Q_i = 100 \cdot \frac{s_{i,\text{method}} - s_{\text{floor}}}{\max(\Delta_{\min}, s_{i,\text{dense}} - s_{\text{floor}})}$$
+Smaller models (e.g. 0.5B – 1.5B) are scored fairly on contextual retention without being penalized for lower base model reasoning capacity.
+
+### 3. Linear Additive Utility Formulation
+$$\mathcal{S}_{\text{res}} = \alpha \cdot Q + (1 - \alpha) \cdot R_{\text{mem}}$$
+where $Q \in [0, 100]$ is capability retention and $R_{\text{mem}} = 100 \cdot \max\left(0, 1 - \frac{M_{\text{method}}}{M_{\text{dense}}}\right) \in [0, 100]$ is percentage memory savings.
+- **Dense FP16 reference** ($Q=100, R=0$) scores $70.0$ (at default $\alpha=0.70$).
+- **High-retention INT4** ($Q=95, R=75$) scores $89.0$ (legitimately outscores Dense).
+- **Failing INT2** ($Q=5, R=95$) scores $32.0$ (strictly penalized below Dense).
+- $\alpha$ is configurable across all CLI tools and Python APIs.
+
+### 4. Strict Separation: Part 1 vs. Part 2
+- **Part 1 — Resource Score ($\mathcal{S}_{\text{res}}$)**: Evaluates quality retention vs. algorithmic/physical KV memory savings only. No runtime latency enters Part 1.
+- **Part 2 — System Score ($\mathcal{S}_{\text{sys}}$)**: Combines quality retention with end-to-end system deployment efficiency ($R_{\text{sys}}$ incorporating prefill TTFT and decode throughput).
+
+---
+
+## Supported Methods & Paradigms
+
+| Paradigm | Adapters Included | Key Mechanism |
+| :--- | :--- | :--- |
+| **Uncompressed Baseline** | `dense_fp16`, `dense_bf16` | Standard full-precision KV state (Reference Ceiling) |
+| **KV Quantization** | `kv_quant_int8`, `kv_quant_int4`, `kv_quant_int2` | Dynamic grouped / channel quantization with outlier preservation |
+| **KV Eviction / Pruning** | `snapkv`, `streaming_llm`, `h2o` | Attention sinks + sliding window + heavy-hitter token selection |
+| **KV Merging / Clustering** | `kv_merging` | Temporal/semantic token centroid pooling and clustering |
+| **Low-Rank State** | `low_rank_kv` | Spectral/linear head-dimension subspace reduction |
+| **Factorized Representation** | `custom_dkv` | Shared persistent subspace + sparse dynamic coefficients |
+| **Custom Researcher Methods** | `BaseContextAdapter` | Easily integrate any novel KV representation in < 50 lines |
 
 ---
 
 ## Installation
 
 ```bash
+# Clone repository
 git clone https://github.com/Omc12/CRBench.git
 cd CRBench
+
+# Setup Python virtual environment
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .
+
+# Install in editable mode with development dependencies
+pip install -e ".[dev]"
+
+# Verify installation with test suite
+pytest tests/ -v
 ```
 
 ---
 
-## Command-Line Interface (CLI)
+## Quickstart
 
-### 1. Evaluate a Single Query (Atomic Primitive)
+### 1. Evaluate a Single Query (Atomic CLI Primitive)
 ```bash
 crbench evaluate \
   --model "Qwen/Qwen2.5-1.5B-Instruct" \
@@ -86,7 +111,7 @@ Benchmark Score:
 ========================================================================
 ```
 
-### 2. Evaluate a Dataset (Query-Level Aggregation)
+### 2. Evaluate a Dataset with Query-Level Aggregation
 ```bash
 crbench evaluate-dataset \
   --model "Qwen/Qwen2.5-1.5B-Instruct" \
@@ -98,7 +123,10 @@ crbench evaluate-dataset \
   --output-dir "results/dataset_snapkv"
 ```
 
-### 3. Recompute Scores Non-Destructively from Raw JSON
+### 3. Non-Destructive Score Recomputation
+CRBench saves full, versioned raw measurement manifests (`raw_results_v1.json`) containing prompt predictions, ground truths, and memory allocations before computing scores.
+
+Recompute scores under different $\alpha$ values without re-running models:
 ```bash
 crbench recompute \
   --raw-file "results/dataset_snapkv/raw_results_v1.json" \
@@ -106,17 +134,17 @@ crbench recompute \
   --formula linear
 ```
 
-### 4. Execute Full Benchmark Suite
+### 4. Run Standard Benchmark Configuration
 ```bash
-crbench run --config configs/stage1_quick.yaml
+crbench run --config configs/quickstart.yaml
 ```
 
-### 5. Generate Publication Report
+### 5. Generate Markdown / Publication Reports
 ```bash
-crbench report --results-dir results/stage1_quick
+crbench report --results-dir results/quickstart
 ```
 
-### 6. Statistical Comparison Between Two Methods
+### 6. Paired Statistical Hypothesis Testing
 ```bash
 crbench compare "Method_A" "Method_B" \
   -a 88.5 -a 89.0 -a 87.5 -a 90.0 \
@@ -125,9 +153,9 @@ crbench compare "Method_A" "Method_B" \
 
 ---
 
-## Integrating a Custom Method (< 50 Lines)
+## Implementing a Custom Method (< 50 Lines)
 
-To evaluate a novel KV representation, subclass `BaseContextAdapter`:
+To evaluate a novel context representation, inherit from `BaseContextAdapter`:
 
 ```python
 import torch
@@ -149,7 +177,7 @@ class MyCustomKVAdapter(BaseContextAdapter):
         )
 
     def get_kv_metadata(self, context_length: int) -> KVStateMetadata:
-        # Report analytical bytes and metadata overheads
+        # Report exact analytical bytes and metadata overheads
         bytes_stored = 2 * 32 * 32 * 128 * context_length * 0.5  # 4-bit KV storage
         return KVStateMetadata(
             adapter_name=self.name,
@@ -167,31 +195,55 @@ class MyCustomKVAdapter(BaseContextAdapter):
 
 ---
 
-## Execution Status Codes & Failure Transparency
+## Hardware Backend Support & Safety
 
-CRBench never replaces failed executions with silent zeros. Every query records an explicit status:
-
-| Status Code | Meaning |
-| :--- | :--- |
-| `SUCCESS` | Successful autoregressive execution |
-| `OOM` | Device Out-Of-Memory error caught and VRAM cleared |
-| `UNSUPPORTED` | Context length or precision unsupported by hardware/kernel |
-| `RUNTIME_ERROR` | Runtime failure surfaced transparently with error message |
-| `INVALID_CONFIG` | Malformed budget or parameter configuration |
+- **CUDA (Primary)**: Full GPU acceleration, synchronized latency profiling, and peak VRAM tracking.
+- **Apple Silicon (MPS)**: Supported for lightweight development and prototyping with unified memory tracking.
+- **CPU (Fallback)**: Graceful fallback for functional and algorithmic verification.
+- **Failure Transparency**: OOM and runtime errors produce explicit status codes (`OOM`, `UNSUPPORTED`, `RUNTIME_ERROR`) and never silently score 0.
 
 ---
 
-## Test Suite
+## Project Structure
 
-The test suite contains 142 automated tests covering query-level evaluation, scientific axioms, score recomputation, memory accounting, adapter transformations, backend capability queries, and CLI commands:
+```text
+CRBench/
+├── configs/                  # Benchmark configurations (quickstart, standard, cluster_8b)
+├── crbench/
+│   ├── adapters/             # KV cache adapters (Quantized, Eviction, Merging, Low-Rank, DKV)
+│   ├── core/                 # Runner, query evaluation, registry, budget, backend
+│   ├── profiler/             # Latency (TTFT/throughput) and memory profilers
+│   ├── reporting/            # Automated reports, tables, and Pareto visualization
+│   ├── scoring/              # Utility formulas, normalizer, AUQC, hypervolume
+│   ├── statistics/           # Bootstrap CIs, paired permutation tests, stability
+│   ├── tasks/                # NIAH, RULER, Multihop QA, LongBench tasks
+│   ├── cli.py                # Command-line interface
+│   └── __init__.py           # Public API
+├── examples/                 # Python examples (quickstart, custom adapter, statistics)
+├── scripts/                  # Cluster and automation scripts
+├── tests/                    # 142 automated unit and integration tests
+├── pyproject.toml            # Package configuration
+├── README.md                 # Researcher onboarding guide
+└── REPRODUCIBILITY.md        # Protocol and schema specification
+```
 
-```bash
-source .venv/bin/activate
-pytest tests/ -v
+---
+
+## Planned Submission & Citation
+
+CRBench is an active research benchmark planned for submission to **TMLR (Transactions on Machine Learning Research)**. Formal citation details will be provided upon preprint release.
+
+```bibtex
+@misc{crbench2026,
+  title={CRBench: Context Resource Benchmark for Long-Context Large Language Models},
+  author={CRBench Authors},
+  year={2026},
+  howpublished={\url{https://github.com/Omc12/CRBench}}
+}
 ```
 
 ---
 
 ## License
 
-CRBench is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+CRBench is licensed under the [MIT License](LICENSE).
