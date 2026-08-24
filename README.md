@@ -1,74 +1,60 @@
 # CRBench — Context Resource Benchmark
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Status: Research Preview](https://img.shields.io/badge/Status-Research%20Preview%20v0.2.0-orange.svg)](https://github.com/Omc12/CRBench)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![Tests Passing](https://img.shields.io/badge/Tests-142%20passed-success.svg)](tests/)
 
-**CRBench (Context Resource Benchmark)** is a principled, method-agnostic research benchmark designed to evaluate and characterize the **quality–resource tradeoff** of long-context Large Language Models (LLMs) under explicit memory and runtime resource constraints.
-
-As context lengths scale from 8K to 128K+ tokens, the key-value (KV) cache becomes the primary memory bottleneck during LLM inference. CRBench provides a unified, mathematically grounded framework to answer:
-- *"Under a 4 GB KV memory budget at 64K context, which compression method retains the highest capability?"*
-- *"At 4 bits per token, does KV Quantization, KV Eviction (e.g. SnapKV), or KV Merging dominate the Pareto frontier?"*
-- *"What is the real system throughput penalty (TTFT, decode tokens/s) of a compressed KV method?"*
+[Documentation](REPRODUCIBILITY.md) &bull; [Paper](#research-target-tmlr) &bull; [Examples](examples/) &bull; [Custom Adapter](examples/02_custom_adapter.py) &bull; [Test Suite](tests/) &bull; [Issues](https://github.com/Omc12/CRBench/issues)
 
 ---
 
-## Key Methodological Principles
+### **CRBench measures how much contextual capability an LLM retains for the memory it uses.**
 
-### 1. Atomic Query-Level Evaluation
-The fundamental evaluation unit in CRBench is:
-$$\langle \text{Model}, \text{Query / Context}, \text{Dense Baseline}, \text{User Method} \rangle$$
-Each prompt is evaluated under both the uncompressed reference (Dense FP16/BF16) and the candidate method, capturing pairwise quality retention and memory savings.
+$$\text{Dense Reference} \longrightarrow \text{Candidate Method} \longrightarrow \text{Quality } Q + \text{Memory Savings } R \longrightarrow \text{CRBench Score } \mathcal{S}$$
 
-### 2. Model-Relative Normalization
-Quality retention measures the fraction of the base model's own uncompressed capability retained on each specific prompt:
-$$Q_i = 100 \cdot \frac{s_{i,\text{method}} - s_{\text{floor}}}{\max(\Delta_{\min}, s_{i,\text{dense}} - s_{\text{floor}})}$$
-Smaller models (e.g. 0.5B – 1.5B) are scored fairly on contextual retention without being penalized for lower base model reasoning capacity.
+$$\mathcal{S}_{\text{res}} = \alpha \cdot Q + (1 - \alpha) \cdot R_{\text{mem}} \quad (\text{default } \alpha = 0.70)$$
 
-### 3. Linear Additive Utility Formulation
-$$\mathcal{S}_{\text{res}} = \alpha \cdot Q + (1 - \alpha) \cdot R_{\text{mem}}$$
-where $Q \in [0, 100]$ is capability retention and $R_{\text{mem}} = 100 \cdot \max\left(0, 1 - \frac{M_{\text{method}}}{M_{\text{dense}}}\right) \in [0, 100]$ is percentage memory savings.
-- **Dense FP16 reference** ($Q=100, R=0$) scores $70.0$ (at default $\alpha=0.70$).
-- **High-retention INT4** ($Q=95, R=75$) scores $89.0$ (legitimately outscores Dense).
-- **Failing INT2** ($Q=5, R=95$) scores $32.0$ (strictly penalized below Dense).
-- $\alpha$ is configurable across all CLI tools and Python APIs.
+> **$Q$ measures contextual capability retained relative to the same model's dense reference; $R_{\text{mem}}$ is percentage memory savings relative to that reference.**
 
-### 4. Strict Separation: Part 1 vs. Part 2
-- **Part 1 — Resource Score ($\mathcal{S}_{\text{res}}$)**: Evaluates quality retention vs. algorithmic/physical KV memory savings only. No runtime latency enters Part 1.
-- **Part 2 — System Score ($\mathcal{S}_{\text{sys}}$)**: Combines quality retention with end-to-end system deployment efficiency ($R_{\text{sys}}$ incorporating prefill TTFT and decode throughput).
+> **All scores are computed per query against the same model’s dense reference, then aggregated across evaluation sets.**
+
+> **Status: Research Preview (v0.2.0).** Core implementation and query-level architecture are complete; broader empirical evaluation across larger models is ongoing.
 
 ---
 
-## Supported Methods & Paradigms
+## Why CRBench?
 
-| Paradigm | Adapters Included | Key Mechanism |
-| :--- | :--- | :--- |
-| **Uncompressed Baseline** | `dense_fp16`, `dense_bf16` | Standard full-precision KV state (Reference Ceiling) |
-| **KV Quantization** | `kv_quant_int8`, `kv_quant_int4`, `kv_quant_int2` | Dynamic grouped / channel quantization with outlier preservation |
-| **KV Eviction / Pruning** | `snapkv`, `streaming_llm`, `h2o` | Attention sinks + sliding window + heavy-hitter token selection |
-| **KV Merging / Clustering** | `kv_merging` | Temporal/semantic token centroid pooling and clustering |
-| **Low-Rank State** | `low_rank_kv` | Spectral/linear head-dimension subspace reduction |
-| **Factorized Representation** | `custom_dkv` | Shared persistent subspace + sparse dynamic coefficients |
-| **Custom Researcher Methods** | `BaseContextAdapter` | Easily integrate any novel KV representation in < 50 lines |
+Existing long-context benchmarks primarily measure downstream task accuracy in isolation, while KV-cache compression papers often report compression ratios and task accuracies separately without a unified metric. 
+
+**CRBench combines contextual capability retention and memory efficiency into a standardized, resource-aware score.**
+
+> **CRBench does not rank models by absolute capability; it measures capability retained relative to each model's uncompressed dense baseline.**
+
+---
+
+## How the Score Works (in 10 Seconds)
+
+CRBench evaluates each prompt pairwise against the model's own uncompressed baseline:
+
+| Metric | Dense Reference | High-retention 4-bit | Low-quality 2-bit |
+| :--- | :---: | :---: | :---: |
+| **Quality retention ($Q$)** | 100% | 94% | 5% |
+| **Memory savings ($R$)** | 0% | 75% | 87.5% |
+| **CRBench Part 1 Score ($\mathcal{S}_{\text{res}}$)** | **70.0** | **88.3** *(higher resource utility)* | **29.8** *(penalized)* |
+
+- **Part 1 (Resource Score)**: Evaluates quality retention vs. memory efficiency ($R_{\text{mem}}$). A method with 94% retention and 75% memory savings achieves higher resource utility than the uncompressed baseline.
+- **Part 2 (System Score)**: Combines quality retention with runtime efficiency ($R_{\text{sys}}$ incorporating prefill TTFT speedup and decode throughput).
 
 ---
 
 ## Installation
 
 ```bash
-# Clone repository
 git clone https://github.com/Omc12/CRBench.git
 cd CRBench
-
-# Setup Python virtual environment
 python -m venv .venv
 source .venv/bin/activate
-
-# Install in editable mode with development dependencies
 pip install -e ".[dev]"
-
-# Verify installation with test suite
-pytest tests/ -v
 ```
 
 ---
@@ -111,7 +97,7 @@ Benchmark Score:
 ========================================================================
 ```
 
-### 2. Evaluate a Dataset with Query-Level Aggregation
+### 2. Evaluate a Dataset (Query Aggregation)
 ```bash
 crbench evaluate-dataset \
   --model "Qwen/Qwen2.5-1.5B-Instruct" \
@@ -124,9 +110,7 @@ crbench evaluate-dataset \
 ```
 
 ### 3. Non-Destructive Score Recomputation
-CRBench saves full, versioned raw measurement manifests (`raw_results_v1.json`) containing prompt predictions, ground truths, and memory allocations before computing scores.
-
-Recompute scores under different $\alpha$ values without re-running models:
+Recompute scores from saved raw results under alternative $\alpha$ weights without re-running model inference:
 ```bash
 crbench recompute \
   --raw-file "results/dataset_snapkv/raw_results_v1.json" \
@@ -134,104 +118,103 @@ crbench recompute \
   --formula linear
 ```
 
-### 4. Run Standard Benchmark Configuration
-```bash
-crbench run --config configs/quickstart.yaml
-```
-
-### 5. Generate Markdown / Publication Reports
-```bash
-crbench report --results-dir results/quickstart
-```
-
-### 6. Paired Statistical Hypothesis Testing
-```bash
-crbench compare "Method_A" "Method_B" \
-  -a 88.5 -a 89.0 -a 87.5 -a 90.0 \
-  -b 72.0 -b 74.0 -b 71.5 -b 73.0
-```
-
 ---
 
-## Implementing a Custom Method (< 50 Lines)
+## Integrating a Custom Method (< 50 Lines)
 
-To evaluate a novel context representation, inherit from `BaseContextAdapter`:
+Researchers can evaluate any novel KV representation by implementing `BaseContextAdapter`:
 
 ```python
 import torch
 from crbench.core.adapter import BaseContextAdapter, KVStateMetadata
 from crbench.core.registry import Registry
 
-@Registry.register_adapter("my_custom_kv")
-class MyCustomKVAdapter(BaseContextAdapter):
+@Registry.register_adapter("my_custom_kv_method")
+class MyCustomKVMethod(BaseContextAdapter):
+    """Interface skeleton for custom KV representation and compression methods."""
+
     @property
     def method_type(self) -> str:
-        return "custom"
+        return "custom"  # e.g., 'quantized', 'eviction', 'merging', 'custom'
 
-    def forward_or_generate(self, input_ids: torch.Tensor, attention_mask=None, max_new_tokens=32, **kwargs):
-        # Attach your custom KV kernel, hook, or compression mechanism
+    def apply_budget(self, budget, context_length: int) -> None:
+        """Apply resource budget target (e.g. bits-per-token or retention ratio)."""
+        super().apply_budget(budget, context_length)
+        # Configure internal adapter parameters based on budget
+
+    def forward_or_generate(
+        self,
+        input_ids: torch.Tensor,
+        attention_mask=None,
+        max_new_tokens: int = 32,
+        **kwargs
+    ) -> torch.Tensor:
+        """Execute autoregressive generation under custom KV cache state."""
+        # Attach custom KV kernel, attention mechanism, or forward hooks, then generate:
         return self.model.generate(
             input_ids=input_ids,
             attention_mask=attention_mask,
-            max_new_tokens=max_new_tokens
+            max_new_tokens=max_new_tokens,
+            **kwargs
         )
 
     def get_kv_metadata(self, context_length: int) -> KVStateMetadata:
-        # Report exact analytical bytes and metadata overheads
-        bytes_stored = 2 * 32 * 32 * 128 * context_length * 0.5  # 4-bit KV storage
+        """Report theoretical KV tensor storage bytes and metadata overheads."""
+        # Use actual model configuration dimensions:
+        num_layers = getattr(self.model.config, "num_hidden_layers", 32)
+        num_kv_heads = getattr(self.model.config, "num_key_value_heads", 32)
+        head_dim = getattr(self.model.config, "head_dim", 128)
+
+        total_elements = 2 * num_layers * num_kv_heads * head_dim * context_length
+        algorithmic_bytes = total_elements * 2.0 * 0.5  # 4-bit representation payload
+        metadata_bytes = (total_elements / 64.0) * 2.0  # Scales, codebooks, or index overhead
+        effective_bpe = (algorithmic_bytes + metadata_bytes) * 8.0 / max(1, total_elements)
+
         return KVStateMetadata(
             adapter_name=self.name,
             method_type=self.method_type,
-            effective_bits_per_element=4.25,
-            total_tokens_stored=context_length,
+            effective_bits_per_element=effective_bpe,
+            total_tokens_stored=int(context_length * 0.5),
             context_length=context_length,
-            num_layers=32,
-            num_kv_heads=32,
-            head_dim=128,
-            algorithmic_bytes=bytes_stored,
-            metadata_overhead_bytes=bytes_stored * 0.05
+            num_layers=num_layers,
+            num_kv_heads=num_kv_heads,
+            head_dim=head_dim,
+            algorithmic_bytes=algorithmic_bytes,
+            metadata_overhead_bytes=metadata_bytes
         )
 ```
 
 ---
 
-## Hardware Backend Support & Safety
+## Supported Methods & Tasks
+
+### Supported Memory Methods
+- **KV Quantization**: FP8, INT8, INT4, INT2 (grouped / per-channel dynamic scaling with outlier protection)
+- **KV Eviction / Pruning**: SnapKV, StreamingLLM, H2O (attention sinks, sliding window, heavy-hitter selection)
+- **KV Merging / Clustering**: Temporal and semantic token centroid pooling
+- **Low-Rank State**: Spectral and linear head-dimension subspace projection
+- **Factorized KV**: Shared persistent subspace + sparse dynamic coefficients (`custom_dkv`)
+- **Custom Adapters**: Extensible via `BaseContextAdapter`
+
+### Evaluation Tasks
+- **Needle-In-A-Haystack (NIAH)**: Single-target and multi-target associative retrieval
+- **RULER Benchmark**: Multi-variable tracking and key-value pair aggregation
+- **Multi-Hop QA**: Contextual cross-document reasoning
+- **LongBench Tasks**: Extended context comprehension
+
+---
+
+## Hardware Support & Error Transparency
 
 - **CUDA (Primary)**: Full GPU acceleration, synchronized latency profiling, and peak VRAM tracking.
-- **Apple Silicon (MPS)**: Supported for lightweight development and prototyping with unified memory tracking.
-- **CPU (Fallback)**: Graceful fallback for functional and algorithmic verification.
-- **Failure Transparency**: OOM and runtime errors produce explicit status codes (`OOM`, `UNSUPPORTED`, `RUNTIME_ERROR`) and never silently score 0.
+- **Apple Silicon (MPS) & CPU**: Graceful fallback for lightweight testing and prototyping.
+- **Explicit Failure Statuses**: OOM and runtime errors produce explicit status codes (`OOM`, `UNSUPPORTED`, `RUNTIME_ERROR`) and never silently score 0.
 
 ---
 
-## Project Structure
+## Research Target: TMLR
 
-```text
-CRBench/
-├── configs/                  # Benchmark configurations (quickstart, standard, cluster_8b)
-├── crbench/
-│   ├── adapters/             # KV cache adapters (Quantized, Eviction, Merging, Low-Rank, DKV)
-│   ├── core/                 # Runner, query evaluation, registry, budget, backend
-│   ├── profiler/             # Latency (TTFT/throughput) and memory profilers
-│   ├── reporting/            # Automated reports, tables, and Pareto visualization
-│   ├── scoring/              # Utility formulas, normalizer, AUQC, hypervolume
-│   ├── statistics/           # Bootstrap CIs, paired permutation tests, stability
-│   ├── tasks/                # NIAH, RULER, Multihop QA, LongBench tasks
-│   ├── cli.py                # Command-line interface
-│   └── __init__.py           # Public API
-├── examples/                 # Python examples (quickstart, custom adapter, statistics)
-├── scripts/                  # Cluster and automation scripts
-├── tests/                    # 142 automated unit and integration tests
-├── pyproject.toml            # Package configuration
-├── README.md                 # Researcher onboarding guide
-└── REPRODUCIBILITY.md        # Protocol and schema specification
-```
-
----
-
-## Planned Submission & Citation
-
-CRBench is an active research benchmark planned for submission to **TMLR (Transactions on Machine Learning Research)**. Formal citation details will be provided upon preprint release.
+CRBench is an active research project targeting **TMLR (Transactions on Machine Learning Research)**. Citation details will be updated upon preprint release.
 
 ```bibtex
 @misc{crbench2026,
