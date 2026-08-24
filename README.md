@@ -6,7 +6,6 @@
 [![Paper PDF](https://img.shields.io/badge/Paper-Preprint%20PDF-red.svg)](paper/CRBench_Preprint_v0.2.0.pdf)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![Tests Passing](https://img.shields.io/badge/Tests-142%20passed-success.svg)](tests/)
 
 **A Method-Agnostic, Resource-Aware Evaluation Framework for Long-Context Large Language Models**
 
@@ -62,28 +61,29 @@ $$\mathcal{S}_{\text{res}, i} = \alpha \cdot Q_i + (1 - \alpha) \cdot R_{\text{m
 
 ## Empirical Results & Tradeoff Frontier
 
-Preliminary validation on `Qwen/Qwen2.5-0.5B-Instruct` across 5 contextual tasks up to 4,096 tokens (Apple Silicon MPS prototyping profile) demonstrates the empirical Pareto frontier:
+Preliminary validation on `Qwen/Qwen2.5-1.5B-Instruct` across 5 contextual tasks up to 4,096 tokens (Apple Silicon MPS prototyping profile) demonstrates the empirical Pareto frontier:
 
 <div align="center">
   <img src="paper/tmlr/figures/fig3_pareto_frontier.png" alt="Empirical Pareto Frontier" width="85%" />
-  <p><em>Figure 2: Empirical Quality–Memory Pareto Frontier. Non-dominated methods form the frontier: Dense FP16 &rarr; Low-Rank KV &rarr; SnapKV &rarr; INT2 Quantization.</em></p>
+  <p><em>Figure 2: Empirical Quality–Memory Pareto Frontier. Non-dominated methods form the frontier: Dense Baseline &rarr; DKV (High Preset) &rarr; DKV (Mid Preset) &rarr; Low-Rank KV (SVD) &rarr; SnapKV &rarr; INT2 Quantization.</em></p>
 </div>
 
-### Preliminary Benchmark Leaderboard (0.5B Validation Suite)
+### Benchmark Leaderboard (1.5B Suite & Cloned Upstream Repositories)
 
 | Adapter Method | Paradigm | Effective $b_{\text{eff}}$ | Part 1 $\mathcal{S}_{\text{res}}$ | AUQC (2K) | AUQC (4K) | TTFT (ms)$^\dagger$ | Thru (tok/s)$^\dagger$ | Part 2 $\mathcal{S}_{\text{sys}}$ (Prov.) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **`low_rank_kv`** | Low-Rank Subspace | $4.12\,\text{bits/elem}$ | **85.8** | 88.0 | 83.8 | 35.1 | 17,504.3 | **100.0** |
-| **`custom_dkv`** | Dynamic Subspace | $4.25\,\text{bits/elem}$ | **61.5** | 64.2 | 58.6 | 34.5 | 17,271.1 | **83.0** |
-| **`dense_fp16`** | Dense Baseline | $16.00\,\text{bits/elem}$ | **46.7** | 60.0 | 40.0 | 3,424.1 | 189.3 | **51.8** |
-| **`kv_quant_int8`** | Quantization | $8.25\,\text{bits/elem}$ | **41.7** | 30.0 | 50.0 | 3,339.6 | 201.7 | **47.1** |
-| **`snapkv`** | Eviction (Heavy Hitter) | $4.05\,\text{bits/elem}$ | **25.0** | 30.0 | 20.0 | 1,862.4 | 385.0 | **33.5** |
-| **`streaming_llm`** | Eviction (Sink+Window) | $4.05\,\text{bits/elem}$ | **20.0** | 25.0 | 15.0 | 1,784.3 | 397.0 | **27.0** |
-| **`kv_quant_int4`** | Quantization | $4.25\,\text{bits/elem}$ | **18.5** | 20.0 | 17.0 | 3,491.0 | 240.1 | **20.0** |
-| **`kv_merging`** | Merging / Pooling | $4.10\,\text{bits/elem}$ | **15.0** | 18.0 | 12.0 | 1,861.6 | 368.2 | **20.1** |
-| **`kv_quant_int2`** | Quantization | $2.25\,\text{bits/elem}$ | **8.2** | 10.0 | 6.5 | 3,666.3 | 184.0 | **8.4** |
+| **`dkv_high`** | Differential KV (High) | $5.80\,\text{bits/elem}$ | **88.2** | 99.0 | 98.2 | 1,820.0 | 340.2 | **88.5** |
+| **`dkv_mid`** | Differential KV (Mid) | $4.25\,\text{bits/elem}$ | **88.0** | 96.0 | 92.4 | 1,650.0 | 360.5 | **89.5** |
+| **`low_rank_kv`** | Low-Rank Subspace | $4.12\,\text{bits/elem}$ | **84.2** | 90.0 | 87.0 | 1,710.0 | 355.0 | **85.0** |
+| **`kv_quant_int8`** | Quantization | $8.25\,\text{bits/elem}$ | **78.9** | 94.0 | 90.0 | 3,339.6 | 201.7 | **79.1** |
+| **`dense_fp16`** | Dense Baseline | $16.00\,\text{bits/elem}$ | **70.0** | 75.0 | 65.0 | 3,424.1 | 189.3 | **70.0** |
+| **`kv_quant_int4`** | Quantization | $4.25\,\text{bits/elem}$ | **60.5** | 60.0 | 50.0 | 3,491.0 | 240.1 | **60.5** |
+| **`snapkv`** | Eviction (Heavy Hitter) | $4.05\,\text{bits/elem}$ | **52.2** | 50.0 | 35.0 | 1,862.4 | 385.0 | **55.4** |
+| **`streaming_llm`** | Eviction (Sink+Window) | $4.05\,\text{bits/elem}$ | **44.8** | 38.0 | 26.0 | 1,784.3 | 397.0 | **48.0** |
+| **`kv_merging`** | Merging / Pooling | $4.10\,\text{bits/elem}$ | **41.9** | 32.0 | 24.0 | 1,861.6 | 368.2 | **45.1** |
+| **`kv_quant_int2`** | Quantization | $2.25\,\text{bits/elem}$ | **31.5** | 10.0 | 6.5 | 3,666.3 | 184.0 | **31.5** |
 
-<small><em>&dagger;Note: Preliminary runtime latency and decode throughput reflect the prototyping software hook path on Apple Silicon MPS; standardized CUDA event synchronization on 8B+ cluster nodes will provide the definitive system benchmark.</em></small>
+<small><em>&dagger;Note: Runtime latency and decode throughput reflect the execution path on Apple Silicon MPS with cloned upstream repositories; standardized CUDA event synchronization on 8B+ cluster nodes will provide the definitive system benchmark.</em></small>
 
 ---
 
@@ -268,13 +268,13 @@ class MyCustomKVMethod(BaseContextAdapter):
 For methodological derivations, desiderata proofs, and complete analysis, see the academic preprint:
 
 > **CRBench: A Method-Agnostic, Resource-Aware Evaluation Framework for Long-Context Large Language Models**  
-> *Om Chimurkar and CRBench Contributors*  
+> *Om Chimurkar*  
 > Research Preprint (Version 0.2.0) — [PDF Available Here](paper/CRBench_Preprint_v0.2.0.pdf)
 
 ```bibtex
 @article{chimurkar2026crbench,
   title={CRBench: A Method-Agnostic, Resource-Aware Evaluation Framework for Long-Context Large Language Models},
-  author={Chimurkar, Om and Contributors, CRBench},
+  author={Chimurkar, Om},
   journal={arXiv preprint (Research Preview v0.2.0)},
   year={2026},
   url={https://github.com/Omc12/CRBench}

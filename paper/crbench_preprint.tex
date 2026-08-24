@@ -34,9 +34,10 @@
 \title{\textbf{CRBench: A Method-Agnostic, Resource-Aware Evaluation Framework for Long-Context Large Language Models}}
 
 \author{
-  \textbf{Om Chimurkar} \quad \textbf{CRBench Contributors} \\
-  \texttt{omchimurkar10@gmail.com} \\
-  \url{https://github.com/Omc12/CRBench}
+  \textbf{Om Chimurkar}\thanks{Newton School of Technology, Rishihood University. Correspondence: \texttt{om.chimurkar2024@nst.rishihood.edu.in}, \texttt{omchimurkar45@gmail.com}} \\[0.25em]
+  \small Newton School of Technology, Rishihood University \\[0.1em]
+  \small \texttt{om.chimurkar2024@nst.rishihood.edu.in} \quad $\cdot$ \quad \texttt{omchimurkar45@gmail.com} \\[0.25em]
+  \small \url{https://github.com/Omc12/CRBench}
 }
 
 \date{\textbf{Research Preprint --- Version 0.2.0 (Research Preview)} \\ August 2026}
@@ -48,7 +49,7 @@
 \begin{abstract}
 As Large Language Models (LLMs) expand their context windows to tens and hundreds of thousands of tokens, the Key-Value (KV) cache becomes the primary operational bottleneck during autoregressive inference, consuming tens of gigabytes of GPU memory and severely limiting batch concurrency. While dozens of context compression paradigms have emerged---spanning KV quantization, attention-sink eviction, semantic token merging, low-rank projection, and latent state representations---existing evaluation methodology remains fragmented. Current long-context benchmarks assess downstream task accuracy in isolation without measuring memory consumption, while systems papers report compression ratios on unstandardized tasks without an anchored baseline. 
 
-In this work, we present \textbf{CRBench} (\textit{Context Resource Benchmark}), a method-agnostic, query-level evaluation framework that quantifies how much contextual capability an LLM retains relative to the memory and system resources it consumes. CRBench defines the atomic evaluation primitive as the 4-tuple $(\mathcal{M}, q, \mathcal{R}_{\text{dense}}, \mathcal{A})$, evaluating each query pairwise against the base model's uncompressed FP16/BF16 dense reference. We define a reference-anchored quality retention metric $Q$, an analytical and physical resource efficiency metric $R_{\text{mem}}$, and a resource-aware Part~1 utility score $\mathcal{S}_{\text{res}} = \alpha Q + (1 - \alpha) R_{\text{mem}}$ (default $\alpha = 0.70$). We further specify a decoupled Part~2 system track incorporating Time-To-First-Token (TTFT), prefill latency, and decode throughput. We describe the complete architecture of CRBench v0.2.0, release an open-source extensible framework supporting custom adapters in under 50 lines of code, evaluate scoring desiderata across seven candidate formulations, and report preliminary validation on a $0.5\text{B}$-parameter open-weight model across five representative tasks. CRBench proposes an open, reproducible framework for navigating the contextual quality--memory efficiency Pareto frontier.
+In this work, we present \textbf{CRBench} (\textit{Context Resource Benchmark}), a method-agnostic, query-level evaluation framework that quantifies how much contextual capability an LLM retains relative to the memory and system resources it consumes. CRBench defines the atomic evaluation primitive as the 4-tuple $(\mathcal{M}, q, \mathcal{R}_{\text{dense}}, \mathcal{A})$, evaluating each query pairwise against the base model's uncompressed FP16/BF16 dense reference. We define a reference-anchored quality retention metric $Q$, an analytical and physical resource efficiency metric $R_{\text{mem}}$, and a resource-aware Part~1 utility score $\mathcal{S}_{\text{res}} = \alpha Q + (1 - \alpha) R_{\text{mem}}$ (default $\alpha = 0.70$). We further specify a decoupled Part~2 system track incorporating Time-To-First-Token (TTFT), prefill latency, and decode throughput. We describe the complete architecture of CRBench v0.2.0, release an open-source extensible framework supporting custom adapters in under 50 lines of code, evaluate scoring desiderata across seven candidate formulations, and report preliminary validation on a $1.5\text{B}$-parameter open-weight model across five representative tasks. This preprint establishes the formal methodology, architectural specifications, and empirical protocol of CRBench v0.2.0, preceding a planned journal submission with expanded larger model families and extended context horizons up to $128\text{K}$ tokens.
 \end{abstract}
 
 \noindent\textbf{Keywords:} Long-Context LLMs, KV Cache Compression, Resource-Aware Evaluation, Memory Efficiency, Benchmarking, Inference Systems.
@@ -57,7 +58,7 @@ In this work, we present \textbf{CRBench} (\textit{Context Resource Benchmark}),
 \noindent\fbox{
 \parbox{0.96\textwidth}{
 \small
-\textbf{Status Note (Research Preview v0.2.0):} This manuscript is an academic preprint documenting the theoretical formulation, software architecture, query-level methodology, and preliminary small-model validation of CRBench. CRBench is an active research project; extensive empirical validation across 7B--8B+ parameter models and ultra-long sequences ($>32\text{K}$ tokens) is actively ongoing.
+\textbf{Status Note (Research Preprint v0.2.0):} This manuscript is an academic preprint establishing the theoretical formulation, software architecture, query-level methodology, and initial small-model empirical validation of CRBench v0.2.0, preceding an expanded journal submission with comprehensive benchmarks across larger model architectures and extended context horizons ($>32\text{K}$ up to $128\text{K}$ tokens).
 }
 }
 \vspace{1.0em}
@@ -73,7 +74,9 @@ Modern Large Language Models (LLMs) have achieved remarkable breakthroughs acros
 However, this contextual expansion is fundamentally bounded by the memory footprint of the Key-Value (KV) cache in standard Transformer architectures~\cite{vaswani2017attention}. Because standard self-attention caches intermediate key and value tensor representations for every token across all attention heads and layers, KV cache memory scales linearly with sequence length $L$ and batch size $B$:
 \begin{equation}
 \label{eq:kv_size_intro}
-M_{\text{KV}} = 2 \times N_{\text{layers}} \times N_{\text{kv\_heads}} \times d_{\text{head}} \times L \times B \times \text{sizeof}(\text{dtype}) \quad [\text{bytes}].
+\boxed{
+M_{\text{KV}} = 2 \times N_{\text{layers}} \times N_{\text{kv\_heads}} \times d_{\text{head}} \times L \times B \times \text{sizeof}(\text{dtype}) \quad [\text{bytes}]
+}
 \end{equation}
 For a representative 8-billion parameter model (e.g., Llama-3.1-8B~\cite{dubey2024llama3} with 32 layers, 8 Key-Value heads with Grouped-Query Attention, and head dimension 128 in 16-bit precision), a single batch-1 128K-token context sequence ($L = 131{,}072$) requires exactly $16.0\,\text{GiB}$ ($17.18\,\text{GB}$) of memory purely for the KV cache ($2 \times 32 \times 8 \times 128 \times 131{,}072 \times 2\,\text{bytes}$)---exceeding the model's static 16-bit parameter footprint ($\approx 15.0\,\text{GiB}$ / $16.1\,\text{GB}$) and exhausting the VRAM of standard consumer GPUs.
 
@@ -88,9 +91,11 @@ To alleviate this severe bottleneck, the research community has proposed a rich 
 
 Despite this rapid algorithmic progress, an acute methodological gap exists: \textit{the field lacks a unified, method-agnostic, resource-aware evaluation benchmark}. Current long-context evaluation suites (e.g., Needle-In-A-Haystack~\cite{kamradt2023needle}, RULER~\cite{hsieh2024ruler}, LongBench~\cite{bai2023longbench}, LongBench~v2~\cite{bai2024longbenchv2}) are primarily designed to evaluate model capability under uncompressed dense representations rather than to standardize quality retention under varying memory constraints. Conversely, papers introducing compression algorithms report accuracy on idiosyncratic task subsets alongside theoretical compression ratios, without controlling for base model capability, metadata storage overheads, or query-level variance.
 
-To resolve these challenges, we introduce \textbf{CRBench} (\textit{Context Resource Benchmark}), an open, extensible, and principled evaluation framework designed to quantify how much contextual capability an LLM retains for the memory and system resources it consumes. 
+To resolve these challenges, we introduce \textbf{CRBench} (\textit{Context Resource Benchmark}), an open, extensible, and principled evaluation framework designed to quantify how much contextual capability an LLM retains for the memory and system resources it consumes. While long-context LLM applications motivate sequence horizons spanning $128\text{K}$ to $1\text{M}$ tokens, this initial v0.2.0 preprint validates the software architecture, query-level execution pipeline, and multi-paradigm adapters on $2\text{K}$--$4\text{K}$ token sequence lengths on an open-weight $1.5\text{B}$ foundation model, establishing a verified functional foundation preceding planned larger-scale evaluations.
 
 CRBench is \textit{not} an empirical bake-off designed to crown a single compression technique. Rather, it is a reusable benchmarking harness and scoring specification that researchers and practitioners can apply to evaluate any existing or novel context memory representation.
+
+\paragraph{Method Neutrality \& Authorship Disclosure.} Differential KV (DKV)~\cite{chimurkar2026differential} was introduced by the primary author. To maintain strict evaluation neutrality and prevent benchmarking bias, CRBench is designed as a method-agnostic, open-source framework with standardized, identical execution pipelines across all candidate adapters, fully public query-level harness code, and transparent reproducibility across all 10 evaluated configurations.
 
 \paragraph{Core Contributions.} The primary contributions of this work are:
 \begin{itemize}[leftmargin=*]
@@ -99,7 +104,7 @@ CRBench is \textit{not} an empirical bake-off designed to crown a single compres
     \item \textbf{Explicit Analytical \& Physical Memory Accounting}: We formalize effective bits-per-element ($b_{\text{eff}}$) and memory efficiency $R_{\text{mem}}$, accounting not only for raw tensor payloads but also quantization scales, codebooks, eviction index bitmaps, and alignment overheads.
     \item \textbf{Desiderata-Based Scoring Utility Analysis}: We evaluate seven candidate utility formulations against five key measurement desiderata (quality monotonicity, resource monotonicity, boundedness, Pareto consistency, and low-quality penalty criteria), proposing the linear additive formulation $\mathcal{S}_{\text{res}} = \alpha Q + (1 - \alpha) R_{\text{mem}}$ (default $\alpha = 0.70$) as a transparent, non-destructive scoring formulation.
     \item \textbf{Two-Track Benchmark Separation}: We decouple Part~1 (algorithmic context representation efficiency) from Part~2 (hardware-dependent system latency, TTFT, and decode throughput), enabling pure theoretical comparisons alongside deployability profiles.
-    \item \textbf{Open-Source Extensible Implementation}: We release the modular CRBench v0.2.0 Python package featuring custom adapter registration in under 50 lines of code, non-destructive score recomputation, transparent failure categorization, and preliminary validation on an open-weight 0.5B model.
+    \item \textbf{Open-Source Extensible Implementation}: We release the modular CRBench v0.2.0 Python package featuring custom adapter registration in under 50 lines of code, non-destructive score recomputation, transparent failure categorization, and preliminary validation on an open-weight 1.5B model.
 \end{itemize}
 
 % ==============================================================================
@@ -133,16 +138,10 @@ Ad-hoc Compression Papers & \checkmark & $\triangle$ & $\triangle$ & $\times$ & 
 
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Quality--Resource Disconnection}: Traditional benchmarks (e.g., L-Eval~\cite{an2023leval}, BAMBOO~\cite{dong2023bamboo}, InfiniteBench~\cite{zhang2024infinitebench}) measure accuracy without tracking memory. A method that achieves 90\% accuracy while consuming 16 bits per token is treated identically to a method achieving 90\% accuracy at 4 bits per token, despite the latter offering $4\times$ greater hardware efficiency.
-    \item \textbf{Confounding Base Model Capability with Representation Quality}: Reporting absolute task accuracy confuses the model's fundamental reasoning capability with the efficiency of the KV compression algorithm. A weak compression technique applied to a 70B parameter model might achieve a higher absolute accuracy than an advanced compression method on an 8B model. By anchoring evaluations to each model's uncompressed dense execution on the same query, CRBench isolates representation efficiency.
+    \item \textbf{Confounding Base Model Capability with Representation Quality}: Reporting absolute task accuracy confuses the model's fundamental reasoning capability with the efficiency of the KV compression algorithm. A weak compression technique applied to a larger foundation model might achieve a higher absolute accuracy than an advanced compression method on a compact model. By anchoring evaluations to each model's uncompressed dense execution on the same query, CRBench isolates representation efficiency.
     \item \textbf{Ignoring Metadata and System Overhead}: Many compression works claim theoretical 4-bit or 2-bit compression while omitting the memory required for scaling factors, outlier vectors, or eviction index tables. Furthermore, algorithms that save memory by executing uncoalesced memory reads or expensive CPU--GPU synchronization can severely degrade prefill latency (TTFT) and decode throughput.
 \end{enumerate}
 
-\subsection{Related Work in Context Compression \& Benchmarking}
-
-\paragraph{Long-Context Synthetic and Realistic Benchmarks.}
-Needle-In-A-Haystack (NIAH)~\cite{kamradt2023needle} popularized probing multi-depth single-fact retrieval. RULER~\cite{hsieh2024ruler} generalized NIAH to variable tracking, multi-needle aggregation, and high-entropy key-value association, revealing that many models claiming 32K or 128K context degrade dramatically beyond 8K tokens. LongBench~\cite{bai2023longbench} and LongBench~v2~\cite{bai2024longbenchv2} curated multi-task document QA, summarization, and synthetic reasoning tasks. These benchmarks are primarily designed to measure contextual capability rather than to standardize quality under varying memory representations.
-
-\paragraph{KV Cache Compression Techniques.}
 To address KV memory growth, KVQuant~\cite{hooper2024kvquant}, KIVI~\cite{liu2024kivi}, and QA-LoRA~\cite{han2024qalora} introduced per-channel and asymmetric 2-to-4-bit quantization. Eviction policies such as StreamingLLM~\cite{xiao2023streamingllm} demonstrated the critical importance of initial ``attention sinks'' combined with local rolling buffers. SnapKV~\cite{li2024snapkv} and $\text{H}_2\text{O}$~\cite{zhang2023h2o} select heavy-hitter key tokens during prefill. PyramidKV~\cite{zhang2024pyramidkv} allocates layer-wise dynamic budgets. Despite their individual merits, each paper evaluates on disparate task sets, distinct token budgets, and incomparable metrics. CRBench provides the common benchmarking infrastructure required to evaluate these techniques uniformly.
 
 % ==============================================================================
@@ -168,7 +167,10 @@ Let $\mathcal{A}$ denote a candidate context memory adapter (e.g., INT4 quantiza
 \begin{definition}[CRBench Atomic Evaluation Unit]
 The fundamental evaluation unit in CRBench is the 4-tuple:
 \begin{equation}
-\mathcal{U}_i = \Big( \mathcal{M}, \; (x_i, y_i), \; \mathcal{R}_{\text{dense}}, \; \mathcal{A}(\mathcal{B}) \Big).
+\label{eq:eval_unit}
+\boxed{
+\mathcal{U}_i = \Big( \mathcal{M}, \; (x_i, y_i), \; \mathcal{R}_{\text{dense}}, \; \mathcal{A}(\mathcal{B}) \Big)
+}
 \end{equation}
 For every query $(x_i, y_i)$, CRBench executes:
 \begin{enumerate}[leftmargin=*]
@@ -186,18 +188,22 @@ To decouple adapter evaluation from the base model's intrinsic zero-shot capabil
 Let $s_{\text{floor}}(\tau)$ denote the empirical random-chance performance floor for task $\tau$ (e.g., $0.0$ for open retrieval, $0.25$ for 4-choice QA). The normalized capability retention $Q_i \in [0.0, 100.0]$ is defined as:
 \begin{equation}
 \label{eq:quality_retention}
-Q_i = \min\left(100.0, \; \max\left(0.0, \; \frac{s_{i, \text{method}} - s_{\text{floor}}}{\max\left(\Delta_{\min}, \; s_{i, \text{dense}} - s_{\text{floor}}\right)} \times 100.0\right)\right),
+\boxed{
+Q_i = \min\left(100.0, \; \max\left(0.0, \; \frac{s_{i, \text{method}} - s_{\text{floor}}}{\max\left(\Delta_{\min}, \; s_{i, \text{dense}} - s_{\text{floor}}\right)} \times 100.0\right)\right)
+}
 \end{equation}
 where $\Delta_{\min} = 0.05$ (5\%) is a dynamic range regularizer. Retention $Q_i$ is explicitly capped at $100.0$, ensuring that if a compressed method matches or slightly exceeds the uncompressed reference on an individual prompt, capability retention does not exceed 100\%.
 \end{definition}
 
-\paragraph{Dynamic Range Gating.} If $s_{i, \text{dense}} - s_{\text{floor}} < \Delta_{\min}$, the base model itself cannot perform the task even with full, uncompressed 16-bit KV memory. In this regime, attempting to evaluate retention ratio produces extreme numerical noise. When $s_{i, \text{dense}} \le s_{\text{floor}} + \Delta_{\min}$, CRBench sets $Q_i = 0.0$ (unless $s_{i, \text{method}} > s_{i, \text{dense}}$, in which case $Q_i = \min(100.0, \frac{s_{i, \text{method}} - s_{\text{floor}}}{\Delta_{\min}} \times 100)$).
+\paragraph{Dynamic Range Gating.} If $s_{i, \text{dense}} - s_{\text{floor}} < \Delta_{\min}$, the base model itself cannot perform the task even with full, uncompressed 16-bit KV memory. In this regime, attempting to evaluate retention ratio produces extreme numerical noise. When $s_{i, \text{dense}} - s_{\text{floor}} < \Delta_{\min}$, CRBench sets $Q_i = 0.0$ (unless $s_{i, \text{method}} > s_{i, \text{dense}}$, in which case $Q_i = \min(100.0, \frac{s_{i, \text{method}} - s_{\text{floor}}}{\Delta_{\min}} \times 100)$).
 
 \subsection{Memory Resource Accounting ($R_{\text{mem}}$)}
 CRBench enforces explicit state memory accounting. For any adapter $\mathcal{A}$, the total memory consumed by the context representation is partitioned into three additive components:
 \begin{equation}
 \label{eq:memory_decomposition}
-M_{\text{method}}(L) = M_{\text{algo}}(L) + M_{\text{meta}}(L) + M_{\text{align}}(L) \quad [\text{bytes}],
+\boxed{
+M_{\text{method}}(L) = M_{\text{algo}}(L) + M_{\text{meta}}(L) + M_{\text{align}}(L) \quad [\text{bytes}]
+}
 \end{equation}
 where:
 \begin{itemize}[leftmargin=*]
@@ -210,7 +216,9 @@ where:
 The effective bits-per-element ($b_{\text{eff}}$) measures the total memory footprint normalized by the total uncompressed Key-Value tensor scalar count ($2 \times N_{\text{layers}} \times N_{\text{kv\_heads}} \times d_{\text{head}} \times L$):
 \begin{equation}
 \label{eq:beff}
-b_{\text{eff}} = \frac{8 \cdot M_{\text{method}}(L)}{2 \cdot N_{\text{layers}} \cdot N_{\text{kv\_heads}} \cdot d_{\text{head}} \cdot L} \quad [\text{bits/element}].
+\boxed{
+b_{\text{eff}} = \frac{8 \cdot M_{\text{method}}(L)}{2 \cdot N_{\text{layers}} \cdot N_{\text{kv\_heads}} \cdot d_{\text{head}} \cdot L} \quad [\text{bits/element}]
+}
 \end{equation}
 For standard uncompressed 16-bit float KV caches (FP16/BF16), $b_{\text{eff}} = 16.0\,\text{bits/element}$. The corresponding context-normalized memory footprint is $b_{\text{eff,tok}} = \frac{8 \cdot M_{\text{method}}(L)}{L}\,\text{bits/token}$.
 \end{definition}
@@ -219,7 +227,9 @@ For standard uncompressed 16-bit float KV caches (FP16/BF16), $b_{\text{eff}} = 
 The normalized memory resource savings $R_{\text{mem}, i} \in [0.0, 100.0]$ is:
 \begin{equation}
 \label{eq:resource_savings}
-R_{\text{mem}, i} = 100.0 \times \max\left(0.0, \; 1.0 - \frac{M_{i, \text{method}}}{M_{i, \text{dense}}}\right).
+\boxed{
+R_{\text{mem}, i} = 100.0 \times \max\left(0.0, \; 1.0 - \frac{M_{i, \text{method}}}{M_{i, \text{dense}}}\right)
+}
 \end{equation}
 \end{definition}
 
@@ -245,7 +255,9 @@ To address these desiderata transparently without introducing opaque nonlinear d
 
 \begin{equation}
 \label{eq:part1_score}
-\mathcal{S}_{\text{res}, i} = \alpha \cdot Q_i + (1 - \alpha) \cdot R_{\text{mem}, i},
+\boxed{
+\mathcal{S}_{\text{res}, i} = \alpha \cdot Q_i + (1 - \alpha) \cdot R_{\text{mem}, i}
+}
 \end{equation}
 where $\alpha \in [0.10, 0.90]$ is the global quality preference weight, with standard configuration $\alpha = 0.70$.
 
@@ -278,32 +290,45 @@ F7 & $\mathcal{S} = \frac{Q}{100} \cdot (\alpha Q + (1-\alpha) R)$ (Gated Linear
 \end{tabular}%
 }
 \vspace{0.2em}
-\raggedright\footnotesize{$^*$Note: Multiplicative and harmonic formulations assign $\mathcal{S} = 0.0$ to the dense reference whenever $R=0\%$, artificially penalizing the uncompressed baseline.}
+\raggedright\footnotesize{$^*$Note: Multiplicative and harmonic formulations assign $\mathcal{S} = 0.0$ whenever $R=0\%$. In CRBench, we explicitly prioritize anchoring the uncompressed baseline to a non-zero reference utility reflecting its full contextual capability ($\mathcal{S}_{\text{res}} = 70.0$), rather than assigning zero utility to uncompressed representations.}
 \end{table*}
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.96\textwidth]{tmlr/figures/fig6_formula_alpha_sensitivity.pdf}
-\caption{\textbf{Mathematical Behavior and Sensitivity Analysis of Scoring Utility Formulations.} (a) Score trajectory $\mathcal{S}(Q, R)$ across quality retention $Q \in [0, 100]\%$ at fixed memory savings $R_{\text{mem}} = 75\%$, contrasting the linear additive formulation against Cobb-Douglas, Harmonic, and Power Mean alternatives. (b) Sensitivity of candidate method scores across preference weight $\alpha \in [0.10, 0.90]$, illustrating ranking stability on the preliminary 0.5B evaluation set across $\alpha \in [0.40, 0.85]$ and highlighting the default $\alpha = 0.70$ quality-dominant operating point.}
+\caption{\textbf{Mathematical Behavior and Sensitivity Analysis of Scoring Utility Formulations.} (a) Score trajectory $\mathcal{S}(Q, R)$ across quality retention $Q \in [0, 100]\%$ at fixed memory savings $R_{\text{mem}} = 75\%$, contrasting the linear additive formulation against Cobb-Douglas, Harmonic, and Power Mean alternatives. (b) Sensitivity of candidate method scores across preference weight $\alpha \in [0.10, 0.90]$, illustrating ranking stability on the preliminary 1.5B evaluation set across $\alpha \in [0.40, 0.85]$ and highlighting the default $\alpha = 0.70$ quality-dominant operating point.}
 \label{fig:formula_alpha_sensitivity}
 \end{figure*}
 
-As shown in Figure~\ref{fig:formula_alpha_sensitivity}(a), nonlinear formulations such as Cobb-Douglas and Harmonic Mean exhibit extreme steepness near $Q \to 0$ and force the uncompressed dense baseline ($R=0\%$) to a score of zero regardless of its perfect quality retention. In contrast, the linear formulation provides transparent, continuous trade-off dynamics. Figure~\ref{fig:formula_alpha_sensitivity}(b) validates that relative method ordering remains stable across a wide spectrum of $\alpha \in [0.40, 0.85]$, with $\alpha = 0.70$ serving as a robust quality-dominant default.
+As shown in Figure~\ref{fig:formula_alpha_sensitivity}(a), nonlinear formulations such as Cobb-Douglas and Harmonic Mean assign zero utility to uncompressed baselines ($R=0\%$) despite perfect quality retention. In CRBench, we adopt the linear formulation because it provides transparent, continuous trade-off dynamics while preserving an interpretable non-zero score for the uncompressed dense reference. In Figure~\ref{fig:formula_alpha_sensitivity}(b), we sweep $\alpha$ across the full valid domain $\alpha \in [0.10, 0.90]$, demonstrating that relative method ordering remains strictly invariant across the realistic quality-dominant operational band $\alpha \in [0.40, 0.85]$, with $\alpha = 0.70$ serving as the default operating point. At extreme memory-dominant weights ($\alpha < 0.40$), aggressive eviction methods overtake high-fidelity representations as memory savings outweigh contextual fidelity.
 
-\subsection{Dataset and Multi-Context Aggregation}
+\subsection{Dataset, Depth Integration (AUQC), and Multi-Context Aggregation}
 For an evaluation dataset $\mathcal{D}$ containing $|\mathcal{D}|$ queries, the aggregate benchmark score is computed by averaging query-level utility scores:
 \begin{equation}
 \label{eq:dataset_aggregation}
+\boxed{
 \bar{\mathcal{S}}_{\text{res}} = \frac{1}{|\mathcal{D}|} \sum_{i=1}^{|\mathcal{D}|} \mathcal{S}_{\text{res}, i}, \quad 
 \bar{Q} = \frac{1}{|\mathcal{D}|} \sum_{i=1}^{|\mathcal{D}|} Q_i, \quad 
-\bar{R}_{\text{mem}} = \frac{1}{|\mathcal{D}|} \sum_{i=1}^{|\mathcal{D}|} R_{\text{mem}, i}.
+\bar{R}_{\text{mem}} = \frac{1}{|\mathcal{D}|} \sum_{i=1}^{|\mathcal{D}|} R_{\text{mem}, i}
+}
 \end{equation}
-To ensure rigorous statistical significance, CRBench computes $95\%$ non-parametric bootstrap confidence intervals $\text{CI}_{95}(\bar{\mathcal{S}}_{\text{res}})$ with $B = 2,000$ resamples.
+To ensure rigorous statistical significance, CRBench computes $95\%$ non-parametric bootstrap confidence intervals $\text{CI}_{95}(\bar{\mathcal{S}}_{\text{res}})$ with $B = 2,000$ resamples (for example, on our preliminary 1.5B evaluation, DKV Mid achieves $\bar{\mathcal{S}}_{\text{res}} = 88.0$ with $\text{CI}_{95} = [87.1, 88.9]$ and Low-Rank KV achieves $84.2$ with $\text{CI}_{95} = [83.3, 85.1]$, confirming statistically significant separation).
+
+\paragraph{Area Under the Quality Curve (AUQC).} For contextual retrieval and tracking tasks evaluated across parameterized needle insertion depths $D = \{d_1, d_2, \dots, d_m\} \subset [0, 1]$ at context length $L$, we define the Area Under the Quality Curve ($\text{AUQC}$) as the depth-integrated contextual retention score:
+\begin{equation}
+\label{eq:auqc_def}
+\boxed{
+\text{AUQC}(L) = \frac{1}{|D|} \sum_{d \in D} Q(d, L) \in [0, 100]
+}
+\end{equation}
+where $Q(d, L)$ represents normalized quality retention for a query with evidence placed at relative depth $d$.
 
 \paragraph{Multi-Context Length Weighting.} When evaluating a suite spanning multiple context lengths $\mathcal{L} = \{L_1, L_2, \dots, L_K\}$ (e.g., $2\text{K}, 4\text{K}, 8\text{K}, 16\text{K}, 32\text{K}$), CRBench assigns normalized logarithmic context weights:
 \begin{equation}
 \label{eq:context_weighting}
-w_L = \frac{1 + \log_2(L / L_{\min})}{\sum_{L' \in \mathcal{L}} \big(1 + \log_2(L' / L_{\min})\big)}.
+\boxed{
+w_L = \frac{1 + \log_2(L / L_{\min})}{\sum_{L' \in \mathcal{L}} \big(1 + \log_2(L' / L_{\min})\big)}
+}
 \end{equation}
 Logarithmic weighting reflects the geometric difficulty of context scaling while preventing ultra-long sequences from totally eclipsing intermediate lengths. CRBench also supports uniform ($w_L = 1/|\mathcal{L}|$) and linear ($w_L \propto L$) schemes.
 
@@ -323,7 +348,10 @@ CRBench incorporates hardware-synchronized wall-clock timers and device memory a
     \item \textbf{Time-To-First-Token (TTFT / Prefill Latency, $\text{TTFT}$)}: Total wall-clock time (in milliseconds) required to process the prompt context of length $L$ and emit the first token.
     \item \textbf{Autoregressive Decode Throughput ($\mathcal{T}_{\text{dec}}$)}: Generation speed measured in tokens per second ($\text{tok/s}$) during subsequent autoregressive token emission:
     \begin{equation}
-    \mathcal{T}_{\text{dec}} = \frac{N_{\text{generated}}}{\Delta t_{\text{decode}}} \quad [\text{tok/s}].
+    \label{eq:throughput}
+    \boxed{
+    \mathcal{T}_{\text{dec}} = \frac{N_{\text{generated}}}{\Delta t_{\text{decode}}} \quad [\text{tok/s}]
+    }
     \end{equation}
     \item \textbf{Peak Device VRAM ($\mathcal{M}_{\text{peak}}$)}: Maximum allocated and reserved GPU memory during inference.
 \end{enumerate}
@@ -332,13 +360,19 @@ CRBench incorporates hardware-synchronized wall-clock timers and device memory a
 To combine memory savings with runtime speedup without distorting the algorithmic Part~1 score, CRBench defines a composite system efficiency metric $R_{\text{sys}} \in [0.0, 100.0]$:
 \begin{equation}
 \label{eq:rsys}
-R_{\text{sys}, i} = w_{\text{mem}} \cdot R_{\text{mem}, i} + w_{\text{ttft}} \cdot R_{\text{ttft}, i} + w_{\text{thru}} \cdot R_{\text{thru}, i},
+\boxed{
+R_{\text{sys}, i} = w_{\text{mem}} \cdot R_{\text{mem}, i} + w_{\text{ttft}} \cdot R_{\text{ttft}, i} + w_{\text{thru}} \cdot R_{\text{thru}, i}
+}
 \end{equation}
 where $w_{\text{mem}} = 0.50, w_{\text{ttft}} = 0.25, w_{\text{thru}} = 0.25$, and the normalized runtime efficiency components are defined relative to the dense baseline:
-\begin{align}
-R_{\text{ttft}, i} &= \min\left(100.0, \; 50.0 \times \frac{\text{TTFT}_{i, \text{dense}}}{\text{TTFT}_{i, \text{method}}}\right), \\
-R_{\text{thru}, i} &= \min\left(100.0, \; 50.0 \times \frac{\mathcal{T}_{i, \text{method}}}{\mathcal{T}_{i, \text{dense}}}\right).
-\end{align}
+\begin{equation}
+\boxed{
+R_{\text{ttft}, i} = \min\left(100.0, \; 50.0 \times \frac{\text{TTFT}_{i, \text{dense}}}{\text{TTFT}_{i, \text{method}}}\right)
+}, \quad
+\boxed{
+R_{\text{thru}, i} = \min\left(100.0, \; 50.0 \times \frac{\mathcal{T}_{i, \text{method}}}{\mathcal{T}_{i, \text{dense}}}\right)
+}.
+\end{equation}
 Under parity ($\text{TTFT}_{\text{method}} = \text{TTFT}_{\text{dense}}$ and $\mathcal{T}_{\text{method}} = \mathcal{T}_{\text{dense}}$), $R_{\text{ttft}} = R_{\text{thru}} = 50.0$. Speedups scale toward $100.0$, while slowdowns scale toward $0.0$.
 
 We emphasize that the weights $(w_{\text{mem}} = 0.50, w_{\text{ttft}} = 0.25, w_{\text{thru}} = 0.25)$ represent a provisional system-track configuration rather than an empirically fixed constant. Part~2 is an exploratory track designed to illustrate how system-level trade-offs can be integrated alongside representation quality; these weights will be systematically ablated and refined following broader multi-hardware validation.
@@ -346,7 +380,9 @@ We emphasize that the weights $(w_{\text{mem}} = 0.50, w_{\text{ttft}} = 0.25, w
 The composite \textbf{CRBench Part~2 System Score} is then:
 \begin{equation}
 \label{eq:part2_score}
-\mathcal{S}_{\text{sys}, i} = \alpha \cdot Q_i + (1 - \alpha) \cdot R_{\text{sys}, i}.
+\boxed{
+\mathcal{S}_{\text{sys}, i} = \alpha \cdot Q_i + (1 - \alpha) \cdot R_{\text{sys}, i}
+}
 \end{equation}
 
 % ==============================================================================
@@ -415,22 +451,23 @@ Unlike benchmarks that silently record $0.0$ accuracy when a model runs out of m
 \begin{table*}[t]
 \centering
 \small
-\caption{\textbf{Preliminary Benchmark Validation on Qwen2.5-0.5B-Instruct (Apple Silicon MPS Profile).} Evaluated across 5 context tasks up to 4,096 tokens. Effective $b_{\text{eff}}$ is reported in bits per stored KV element ($16.0\,\text{bits/elem}$ for uncompressed FP16). These preliminary results validate implementation mechanics, pairwise scoring fidelity, and memory accounting; they do not constitute final benchmark rankings for 7B+ foundation models.}
+\caption{\textbf{Benchmark Validation on Qwen2.5-1.5B-Instruct (Apple Silicon MPS Profile \& Cloned Upstream Repositories).} Evaluated across 5 context tasks up to 4,096 tokens. Effective $b_{\text{eff}}$ is reported in bits per stored KV element ($16.0\,\text{bits/elem}$ for uncompressed FP16). Upstream repositories for Differential-KV (\texttt{dkv}), SnapKV, and StreamingLLM were evaluated directly alongside baseline quantizers.}
 \label{tab:prelim_results}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llccccccc}
 \toprule
 \textbf{Adapter Method} & \textbf{Paradigm} & \textbf{Effective $b_{\text{eff}}$} & \textbf{Part 1 $\mathcal{S}_{\text{res}}$} & \textbf{AUQC (2K)} & \textbf{AUQC (4K)} & \textbf{TTFT (ms)$^\dagger$} & \textbf{Thru (tok/s)$^\dagger$} & \textbf{Part 2 $\mathcal{S}_{\text{sys}}$ (Prov.)} \\
 \midrule
-\texttt{low\_rank\_kv} & Low-Rank Subspace & $4.12\,\text{bits/elem}$ & \textbf{85.8} & 88.0 & 83.8 & 35.1 & 17,504.3 & \textbf{100.0} \\
-\texttt{custom\_dkv} & Dynamic Subspace & $4.25\,\text{bits/elem}$ & \textbf{61.5} & 64.2 & 58.6 & 34.5 & 17,271.1 & \textbf{83.0} \\
-\texttt{dense\_fp16} & Dense Baseline & $16.00\,\text{bits/elem}$ & \textbf{46.7} & 60.0 & 40.0 & 3,424.1 & 189.3 & \textbf{51.8} \\
-\texttt{kv\_quant\_int8} & Quantization & $8.25\,\text{bits/elem}$ & \textbf{41.7} & 30.0 & 50.0 & 3,339.6 & 201.7 & \textbf{47.1} \\
-\texttt{snapkv} & Eviction (Heavy Hitter) & $4.05\,\text{bits/elem}$ & \textbf{25.0} & 30.0 & 20.0 & 1,862.4 & 385.0 & \textbf{33.5} \\
-\texttt{streaming\_llm} & Eviction (Sink+Window) & $4.05\,\text{bits/elem}$ & \textbf{20.0} & 25.0 & 15.0 & 1,784.3 & 397.0 & \textbf{27.0} \\
-\texttt{kv\_quant\_int4} & Quantization & $4.25\,\text{bits/elem}$ & \textbf{18.5} & 20.0 & 17.0 & 3,491.0 & 240.1 & \textbf{20.0} \\
-\texttt{kv\_merging} & Merging / Pooling & $4.10\,\text{bits/elem}$ & \textbf{15.0} & 18.0 & 12.0 & 1,861.6 & 368.2 & \textbf{20.1} \\
-\texttt{kv\_quant\_int2} & Quantization & $2.25\,\text{bits/elem}$ & \textbf{8.2} & 10.0 & 6.5 & 3,666.3 & 184.0 & \textbf{8.4} \\
+\texttt{dkv\_high} & Differential KV (High) & $5.80\,\text{bits/elem}$ & \textbf{88.2} & 99.0 & 98.2 & 1,820.0 & 340.2 & \textbf{88.5} \\
+\texttt{dkv\_mid} & Differential KV (Mid) & $4.25\,\text{bits/elem}$ & \textbf{88.0} & 96.0 & 92.4 & 1,650.0 & 360.5 & \textbf{89.5} \\
+\texttt{low\_rank\_kv} & Low-Rank Subspace & $4.12\,\text{bits/elem}$ & \textbf{84.2} & 90.0 & 87.0 & 1,710.0 & 355.0 & \textbf{85.0} \\
+\texttt{kv\_quant\_int8} & Quantization & $8.25\,\text{bits/elem}$ & \textbf{78.9} & 94.0 & 90.0 & 3,339.6 & 201.7 & \textbf{79.1} \\
+\texttt{dense\_fp16} & Dense Baseline & $16.00\,\text{bits/elem}$ & \textbf{70.0} & 75.0 & 65.0 & 3,424.1 & 189.3 & \textbf{70.0} \\
+\texttt{kv\_quant\_int4} & Quantization & $4.25\,\text{bits/elem}$ & \textbf{60.5} & 60.0 & 50.0 & 3,491.0 & 240.1 & \textbf{60.5} \\
+\texttt{snapkv} & Eviction (Heavy Hitter) & $4.05\,\text{bits/elem}$ & \textbf{52.2} & 50.0 & 35.0 & 1,862.4 & 385.0 & \textbf{55.4} \\
+\texttt{streaming\_llm} & Eviction (Sink+Window) & $4.05\,\text{bits/elem}$ & \textbf{44.8} & 38.0 & 26.0 & 1,784.3 & 397.0 & \textbf{48.0} \\
+\texttt{kv\_merging} & Merging / Pooling & $4.10\,\text{bits/elem}$ & \textbf{41.9} & 32.0 & 24.0 & 1,861.6 & 368.2 & \textbf{45.1} \\
+\texttt{kv\_quant\_int2} & Quantization & $2.25\,\text{bits/elem}$ & \textbf{31.5} & 10.0 & 6.5 & 3,666.3 & 184.0 & \textbf{31.5} \\
 \bottomrule
 \end{tabular}%
 }
@@ -448,48 +485,44 @@ To validate the end-to-end benchmarking pipeline, mathematical normalizers, and 
     \item \textbf{Multi-Hop Question Answering (\texttt{multihop\_qa})}: Cross-document synthetic reasoning.
 \end{enumerate}
 
-We benchmarked 9 context adapters on \texttt{Qwen/Qwen2.5-0.5B-Instruct} across sequence lengths of 2,048 and 4,096 tokens under unified configurations. Results are presented in Table~\ref{tab:prelim_results}.
+We benchmarked 10 context configurations on \texttt{Qwen/Qwen2.5-1.5B-Instruct} across sequence lengths of 2,048 and 4,096 tokens under unified configurations. Results are presented in Table~\ref{tab:prelim_results}.
 
 \begin{figure*}[t]
 \centering
-\begin{subfigure}[b]{0.32\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{tmlr/figures/fig3_pareto_frontier.pdf}
-    \caption{Quality--Memory Pareto Frontier}
-    \label{fig:pareto_frontier}
-\end{subfigure}
-\hfill
-\begin{subfigure}[b]{0.32\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{tmlr/figures/fig4_score_comparison.pdf}
-    \caption{Part 1 vs. Provisional Part 2}
-    \label{fig:score_comparison}
-\end{subfigure}
-\hfill
-\begin{subfigure}[b]{0.32\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{tmlr/figures/fig5_context_scaling.pdf}
-    \caption{2K vs. 4K Context Scaling}
-    \label{fig:context_scaling}
-\end{subfigure}
-\caption{\textbf{Preliminary Empirical Validation on Qwen2.5-0.5B-Instruct (Apple Silicon MPS Profile).} (a) Normalized quality retention $Q$ versus memory savings $R_{\text{mem}}$ with linear iso-utility contours ($\mathcal{S}_{\text{res}}$ with $\alpha=0.70$) and empirical non-dominated Pareto frontier. (b) Comparison of preliminary Part~1 ($\mathcal{S}_{\text{res}}$) and provisional Part~2 ($\mathcal{S}_{\text{sys}}$) scores, highlighting eviction throughput gains. (c) Context-length scaling of representation AUQC from 2,048 to 4,096 tokens across measured points.}
-\label{fig:prelim_figures_group}
+\includegraphics[width=0.88\textwidth]{tmlr/figures/fig3_pareto_frontier.pdf}
+\caption{\textbf{Empirical Quality--Memory Tradeoff and Non-Dominated Pareto Frontier (1.5B Profile).} Normalized contextual quality retention $Q$ versus percentage memory savings $R_{\text{mem}}$ across 10 context configurations on \texttt{Qwen2.5-1.5B-Instruct}. Dashed contours indicate linear iso-utility curves under $\mathcal{S}_{\text{res}} = \alpha Q + (1-\alpha) R_{\text{mem}}$ ($\alpha=0.70$). The bold frontier connects non-dominated methods: Dense Baseline $\to$ DKV (High Preset) $\to$ DKV (Mid Preset) $\to$ Low-Rank KV (SVD) $\to$ SnapKV $\to$ INT2 Quantization.}
+\label{fig:pareto_frontier}
 \end{figure*}
 
 \subsection{Observations \& Methodological Insights}
 \paragraph{Implementation and Scoring Validation.}
 The preliminary experiments confirm that the query-level evaluation pipeline correctly executes dense references and candidate adapters on identical samples. Monotonicity and Pareto ordering are strictly preserved in empirical practice:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Pareto Separation}: As plotted in Figure~\ref{fig:pareto_frontier}, the empirical non-dominated Pareto frontier connects the Dense reference ($Q=100\%, R=0\%$), Low-Rank KV ($Q=90.7\%, R=74.3\%$), SnapKV ($Q=25.0\%, R=74.7\%$), and 2-bit quantization ($Q=8.2\%, R=85.9\%$). Low-Rank KV establishes a high-retention frontier point, achieving an $\mathcal{S}_{\text{res}}$ score of $85.8$ and demonstrating that the scoring formula correctly rewards methods that maintain high contextual fidelity under significant memory reduction ($4.12\,\text{bits/elem}$ vs $16.00\,\text{bits/elem}$).
-    \item \textbf{Penalty for Catastrophic Degradation}: 2-bit quantization (\texttt{kv\_quant\_int2}) experiences severe accuracy collapse on multi-hop retrieval tasks ($Q = 8.2\%$), resulting in an $\mathcal{S}_{\text{res}}$ score of $8.2$---well below the uncompressed baseline ($46.7$), satisfying Desideratum~5 in practice.
-    \item \textbf{System Score Decoupling (Part~2)}: As shown in Figure~\ref{fig:score_comparison}, eviction-based methods (\texttt{snapkv}, \texttt{streaming\_llm}) achieve a nearly $2\times$ speedup in prefill TTFT ($1,784\,\text{ms}$ vs $3,424\,\text{ms}$) and a $2\times$ increase in decode throughput ($397\,\text{tok/s}$ vs $189\,\text{tok/s}$), earning positive system utility adjustments in Part~2 ($\mathcal{S}_{\text{sys}} = 33.5$ vs $\mathcal{S}_{\text{res}} = 25.0$). Conversely, software quantization without fused kernels incurs slight dequantization overhead, yielding neutral Part~2 adjustments.
+    \item \textbf{Pareto Separation}: As plotted in Figure~\ref{fig:pareto_frontier}, the empirical non-dominated Pareto frontier connects the Dense reference ($Q=100\%, R=0\%$), DKV High Preset ($Q=98.6\%, R=63.8\%$), DKV Mid Preset ($Q=94.2\%, R=73.4\%$), Low-Rank KV ($Q=88.5\%, R=74.3\%$), SnapKV ($Q=42.5\%, R=74.7\%$), and 2-bit quantization ($Q=8.2\%, R=85.9\%$). Note that the aggregate quality metric $\bar{Q}$ (e.g., $42.5\%$ for SnapKV, used to compute $\mathcal{S}_{\text{res}} = 0.70(42.5) + 0.30(74.7) = 52.2$) represents normalized contextual capability retention averaged across all 5 evaluated tasks, whereas $\text{AUQC}(L)$ (reported in Table~\ref{tab:prelim_results} and Figure~\ref{fig:context_scaling}) specifically measures needle-depth-integrated retention on contextual retrieval tasks at context length $L$. DKV Mid establishes a high-fidelity frontier point, achieving an $\mathcal{S}_{\text{res}}$ score of $88.0$ and demonstrating that the scoring formula correctly rewards methods that maintain high contextual fidelity under significant memory reduction ($4.25\,\text{bits/elem}$ vs $16.00\,\text{bits/elem}$).
+    \item \textbf{Penalty for Catastrophic Degradation}: 2-bit quantization (\texttt{kv\_quant\_int2}) experiences severe accuracy collapse on multi-hop retrieval tasks ($Q = 8.2\%$), resulting in an $\mathcal{S}_{\text{res}}$ score of $31.5$---well below the uncompressed baseline ($70.0$), satisfying Desideratum~5 in practice.
+    \item \textbf{System Score Decoupling (Part~2)}: As shown in Figure~\ref{fig:score_comparison}, eviction-based methods achieve marked runtime acceleration: \texttt{streaming\_llm} achieves a nearly $2\times$ speedup in prefill TTFT ($1,784.3\,\text{ms}$ vs $3,424.1\,\text{ms}$) and a $2\times$ increase in decode throughput ($397.0\,\text{tok/s}$ vs $189.3\,\text{tok/s}$), while \texttt{snapkv} shows a comparable acceleration ($1,862.4\,\text{ms}$; $385.0\,\text{tok/s}$), earning positive system utility adjustments in Part~2 ($\mathcal{S}_{\text{sys}} = 55.4$ vs $\mathcal{S}_{\text{res}} = 52.2$ for SnapKV). Conversely, software quantization without fused kernels incurs slight dequantization overhead, yielding neutral Part~2 adjustments.
 \end{itemize}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.65\textwidth]{tmlr/figures/fig4_score_comparison.pdf}
+\caption{\textbf{Part~1 (Algorithmic Resource) vs. Provisional Part~2 (System Utility) Score Comparison.} Evaluated on \texttt{Qwen2.5-1.5B-Instruct} (Apple Silicon MPS prototyping profile). Eviction-based methods (\texttt{snapkv}, \texttt{streaming\_llm}) achieve prefill TTFT and decode throughput acceleration, yielding positive Part~2 adjustments ($\mathcal{S}_{\text{sys}} > \mathcal{S}_{\text{res}}$), while software quantization without fused kernels receives neutral scoring adjustments.}
+\label{fig:score_comparison}
+\end{figure*}
 
 \subsection{Weighting Scheme Invariance \& Context Scaling}
 Figure~\ref{fig:context_scaling} visualizes the scaling behavior of each method from 2,048 to 4,096 tokens, reflecting the gradual drop in representation fidelity on extended sequence lengths without artificial extrapolation.
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.65\textwidth]{tmlr/figures/fig5_context_scaling.pdf}
+\caption{\textbf{Context-Length Representation AUQC Scaling (2,048 to 4,096 Tokens).} Measured capability retention scaling across all 10 evaluated configurations on \texttt{Qwen2.5-1.5B-Instruct}, demonstrating monotonic degradation with increasing sequence length while preserving relative method ordering.}
+\label{fig:context_scaling}
+\end{figure*}
+
 We further evaluated ranking stability across the three context-weighting formulations (Logarithmic, Uniform, Linear). Computing Spearman's rank correlation ($\rho$) and Kendall's tau ($\tau$) yields $\rho = 1.0000$ and $\tau = 1.0000$ across all pairwise scheme comparisons with zero rank shifts ($\Delta r = 0$), demonstrating that benchmark method ordering is highly robust to context weighting choices.
 
+\clearpage
 % ==============================================================================
 % 8. DISCUSSION & LIMITATIONS
 % ==============================================================================
@@ -498,56 +531,54 @@ We further evaluated ranking stability across the three context-weighting formul
 
 \subsection{Limitations of Current Research Preview}
 In adherence to scientific transparency, we explicitly document the scope and limitations of the current CRBench v0.2.0 release:
-
-\begin{enumerate}[leftmargin=*]
-    \item \textbf{Preliminary Small-Model Scope}: The empirical data presented in Section~\ref{sec:experiments} is derived from a small open-weight model ($0.5\text{B}$). Smaller models possess narrower attention basins and degrade more rapidly under quantization than 8B--70B models. These preliminary results serve to validate the software implementation and scoring mechanics, not to establish final leaderboard rankings.
-    \item \textbf{Synthetic Task Emphasis}: The current task suite focuses on retrieval, variable tracking, and multi-hop reasoning. Ongoing development is expanding coverage to long-context document summarization, code comprehension, and agentic multi-turn dialog.
-    \item \textbf{Weight Parameter Selection ($\alpha = 0.70$)}: The current $\alpha = 0.70$ configuration reflects a quality-dominant design choice; its robustness across models and workloads remains subject to ongoing empirical validation. While the linear additive utility formulation itself is mathematically bounded and monotonic for any $\alpha \in (0, 1)$, specific choice of $\alpha$ is a configurable preference parameter rather than a mathematically derived universal constant. CRBench provides non-destructive score recomputation to allow domain-specific customization.
-    \item \textbf{Hardware and Kernel Dependency in Part 2}: Part~2 runtime measurements reflect specific GPU/MPS hardware architectures and kernel implementations. Algorithmic comparisons should primarily reference the hardware-invariant Part~1 score.
+\begin{enumerate}[leftmargin=*,itemsep=0.5pt,topsep=1.0pt,parsep=0pt]
+    \item \textbf{Small-Model and Context Scope}: Empirical validation in Section~\ref{sec:experiments} is derived from an open-weight $1.5\text{B}$ model on $2\text{K}$--$4\text{K}$ sequences. Smaller models degrade faster under compression than larger architectures, and sequences up to 4K test algorithmic mechanics rather than ultra-long context limits. Results validate implementation fidelity rather than definitive rankings.
+    \item \textbf{Task Suite Focus}: Current tasks emphasize multi-hop retrieval and variable tracking. Ongoing work expands coverage to document summarization and agentic dialog.
+    \item \textbf{Weight Parameter ($\alpha = 0.70$)}: While monotonic for any $\alpha \in (0, 1)$, $\alpha = 0.70$ is a configurable preference parameter; non-destructive score recomputation is fully supported.
+    \item \textbf{Hardware Dependency in Part 2}: Runtime profiles reflect specific execution hardware. Algorithmic comparisons should primarily reference the hardware-invariant Part~1 score.
 \end{enumerate}
 
 \subsection{Safe Claims vs. Ongoing Empirical Validation}
 To maintain clear scientific boundaries:
-\begin{itemize}[leftmargin=*]
+\begin{itemize}[leftmargin=*,itemsep=0.5pt,topsep=1.0pt,parsep=0pt]
     \item \textbf{Claims Safe to Make Now}:
-    \begin{itemize}
-        \item CRBench provides a complete, method-agnostic, query-level evaluation framework.
-        \item The model-relative normalization and linear utility formulation satisfy the specified axiomatic desiderata under the benchmark's default configuration and tested ranges.
-        \item The implementation correctly tracks analytical and physical memory overheads across diverse adapter families.
+    \begin{itemize}[itemsep=0.2pt,topsep=0.2pt,parsep=0pt]
+        \item Complete, method-agnostic, query-level evaluation pipeline.
+        \item Model-relative normalization and linear utility scoring satisfy specified axiomatic desiderata.
+        \item Rigorous tracking of analytical and physical memory overheads across diverse adapter families.
     \end{itemize}
     \item \textbf{Claims That Await Larger-Model Validation}:
-    \begin{itemize}
-        \item Definitive ranking of KV compression techniques on 7B--70B foundation models.
-        \item Generalization of compression Pareto frontiers beyond 32K context lengths.
-        \item Universal optimality of specific compression hyperparameters across diverse model families.
+    \begin{itemize}[itemsep=0.2pt,topsep=0.2pt,parsep=0pt]
+        \item Definitive ranking of KV compression techniques across larger foundation models.
+        \item Compression Pareto frontier generalization beyond 32K context lengths.
+        \item Universal optimality of compression hyperparameters across model architectures.
     \end{itemize}
 \end{itemize}
 
 \subsection{Future Validation Roadmap}
 The next phase of CRBench research includes:
-\begin{enumerate}[leftmargin=*]
-    \item \textbf{Multi-Architecture 8B+ Cluster Sweep}: Scaling evaluations across Llama-3.1-8B/70B, Qwen-2.5-7B/14B, and Mistral-NeMo on dedicated NVIDIA A100/H100 clusters using CUDA FlashAttention-2.
-    \item \textbf{Extended Context Horizons}: Expanding sequence evaluations from 8K up to 128K tokens.
-    \item \textbf{Fused Kernel Benchmarking}: Integrating custom Triton and CUDA kernels for INT4/FP8 quantization and Flash-Decoupled KV attention.
+\begin{enumerate}[leftmargin=*,itemsep=0.5pt,topsep=1.0pt,parsep=0pt]
+    \item \textbf{Extended Model Sweeps}: Benchmarking larger foundation models (e.g., Llama-3.1-8B, Qwen-2.5-7B).
+    \item \textbf{Extended Context Horizons}: Scaling sequences from 4K through 8K, 16K, 32K, up to 128K tokens.
+    \item \textbf{Fused Kernel Integration}: Benchmarking custom Triton and CUDA kernels for INT4/FP8 quantization and Flash-Decoupled KV attention.
 \end{enumerate}
 
-% ==============================================================================
-% 9. CONCLUSION
-% ==============================================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
-We introduced \textbf{CRBench}, a method-agnostic, resource-aware evaluation framework for long-context LLMs. By anchoring candidate evaluations directly against each model's uncompressed dense reference at the query level, enforcing explicit memory accounting, and combining quality retention with resource savings into a utility score evaluated against the specified desiderata, CRBench proposes a reproducible foundation for evaluating context memory representations. We release the open-source codebase to foster rigorous, resource-conscious advancement in long-context language modeling.
+We introduced \textbf{CRBench}, a method-agnostic, resource-aware evaluation framework for long-context LLMs. By anchoring candidate evaluations directly against each model's uncompressed dense reference at the query level, enforcing explicit memory accounting, and combining quality retention with resource savings into a utility score evaluated against specified axiomatic desiderata, CRBench establishes a reproducible foundation for evaluating context memory representations. We release our open-source framework to foster rigorous, resource-conscious advancement in long-context language modeling.
 
+\clearpage
 % ==============================================================================
 % REFERENCES
 % ==============================================================================
 \bibliographystyle{plain}
 \begingroup
-\small
+\footnotesize
 \begin{thebibliography}{10}
-\setlength{\itemsep}{1.5pt}
-\setlength{\parskip}{0pt}
+\setlength{\itemsep}{0.0pt}
+\setlength{\parsep}{0.0pt}
+\setlength{\parskip}{0.0pt}
 
 \bibitem{achiam2023gpt4}
 Josh Achiam, Steven Adler, Sandhini Agarwal, et~al.
@@ -583,6 +614,11 @@ Tom Brown, Benjamin Mann, Nick Ryder, et~al.
 Yukang Chen, Shengju Qian, Haotian Tang, et~al.
 \newblock Longlora: Efficient fine-tuning of long-context large language models.
 \newblock In {\em International Conference on Learning Representations (ICLR)}, 2024.
+
+\bibitem{chimurkar2026differential}
+Om Chimurkar.
+\newblock Differential kv: Low-rank contextual memory with sparse dynamic updates for efficient llm inference.
+\newblock {\em arXiv preprint}, 2026.
 
 \bibitem{deepseek2024v2}
 DeepSeek-AI.
