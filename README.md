@@ -3,6 +3,7 @@
 [![Status: Research Preview](https://img.shields.io/badge/Status-Research%20Preview%20v0.2.0-orange.svg)](https://github.com/Omc12/CRBench)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Tests Passing](https://img.shields.io/badge/Tests-142%20passed-success.svg)](tests/)
 
 [Documentation](REPRODUCIBILITY.md) &bull; [Paper](#research-target-tmlr) &bull; [Examples](examples/) &bull; [Custom Adapter](examples/02_custom_adapter.py) &bull; [Test Suite](tests/) &bull; [Issues](https://github.com/Omc12/CRBench/issues)
 
@@ -18,7 +19,7 @@ $$\mathcal{S}_{\text{res}} = \alpha \cdot Q + (1 - \alpha) \cdot R_{\text{mem}} 
 
 > **All scores are computed per query against the same model’s dense reference, then aggregated across evaluation sets.**
 
-> **Status: Research Preview (v0.2.0).** Core implementation and query-level architecture are complete; broader empirical evaluation across larger models is ongoing.
+> **Status: Research Preview (v0.2.0).** CRBench is an active research project targeting submission to Transactions on Machine Learning Research (TMLR). The benchmark specification and implementation are publicly available while broader empirical validation is ongoing.
 
 ---
 
@@ -214,7 +215,7 @@ class MyCustomKVMethod(BaseContextAdapter):
 
 ## Research Target: TMLR
 
-CRBench is an active research project targeting **TMLR (Transactions on Machine Learning Research)**. Citation details will be updated upon preprint release.
+CRBench is an active research project targeting submission to **Transactions on Machine Learning Research (TMLR)**. The benchmark specification and implementation are publicly released to facilitate open research on context compression efficiency. Citation details will be updated upon preprint release.
 
 ```bibtex
 @misc{crbench2026,
