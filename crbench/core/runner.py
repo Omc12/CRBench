@@ -239,6 +239,12 @@ class BenchmarkRunner:
 
         raw_measurements: List[Dict[str, Any]] = []
         query_eval_results: List[QueryEvaluationResult] = []
+
+        completed_groups, replay_queries, replay_measurements = self._load_checkpoint()
+        if replay_measurements:
+            raw_measurements.extend(replay_measurements)
+            query_eval_results.extend(
+                QueryEvaluationResult.from_dict(q) for q in replay_queries)
         # Measured peak device allocation above the weight baseline, per method
         # and context length; feeds the Part 2 system score in place of the
         # bits-per-token proxy it used to be derived from.
@@ -251,7 +257,13 @@ class BenchmarkRunner:
             print(f"\n[+] Running Task: {task_inst.name}", flush=True)
 
             for ctx_len in task_cfg.context_lengths:
+                if (task_inst.name, ctx_len) in completed_groups:
+                    print(f"  --> Context Length: {ctx_len:,} tokens -- already complete, skipping.",
+                          flush=True)
+                    continue
                 print(f"  --> Context Length: {ctx_len:,} tokens (Samples: {task_cfg.num_samples})", flush=True)
+                group_queries_start = len(query_eval_results)
+                group_measurements_start = len(raw_measurements)
                 
                 # Generate samples
                 samples = task_inst.generate_samples(
@@ -515,6 +527,23 @@ class BenchmarkRunner:
                             })
                             print(f"      [{ad_inst.name} | Budget={b_val}] FAILED: Runtime Error ({e})", flush=True)
 
+                # This (task, context length) group is complete, dense anchor and
+                # all methods together. Flush it to disk before starting the next
+                # one so an interruption costs this group and nothing earlier.
+                self._append_checkpoint(
+                    task_inst.name,
+                    ctx_len,
+                    query_eval_results[group_queries_start:],
+                    raw_measurements[group_measurements_start:],
+                )
+
+        # Replayed groups contribute to the scores exactly as freshly measured
+        # ones do; their operating points are rebuilt from the saved manifest.
+        if replay_measurements:
+            self._replay_operating_points(
+                replay_measurements, operating_points,
+                runtime_metrics_by_method, peak_vram_by_method_ctx)
+
         # Dataset Aggregations
         dataset_aggregates = []
         if query_eval_results:
@@ -725,6 +754,109 @@ class BenchmarkRunner:
             b_type = BudgetType(val.get("type", "bits_per_token"))
             return ContextBudget(budget_type=b_type, value=float(val.get("value", 16.0)))
         return ContextBudget.from_bits_per_token(16.0)
+
+
+    # ------------------------------------------------------------------ #
+    # Checkpointing                                                       #
+    # ------------------------------------------------------------------ #
+
+    def _checkpoint_path(self) -> Path:
+        return Path(self.config.output_dir) / "progress.jsonl"
+
+    def _load_checkpoint(self) -> Tuple[set, List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """Replay completed (task, context length) groups from a previous attempt.
+
+        A full sweep is many GPU-hours, and anything that interrupts it -- a
+        reclaimed GPU, a reboot -- should cost one context length, not the run.
+        The unit is the (task, context length) group because that is the unit the
+        dense anchor is established over: resuming mid-group would leave the
+        methods in it normalised against a reference from a different process.
+        """
+        path = self._checkpoint_path()
+        done: set = set()
+        queries: List[Dict[str, Any]] = []
+        measurements: List[Dict[str, Any]] = []
+        if not path.is_file():
+            return done, queries, measurements
+
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rec = json.loads(line)
+                except json.JSONDecodeError:
+                    # A run killed mid-write leaves a partial final line; the
+                    # group it belonged to simply gets redone.
+                    print("[*] Ignoring a truncated checkpoint line "
+                          "(the run it came from was interrupted mid-write).", flush=True)
+                    continue
+                done.add((rec["task_name"], int(rec["context_length"])))
+                queries.extend(rec.get("query_results", []))
+                measurements.extend(rec.get("raw_measurements", []))
+
+        if done:
+            print(f"[*] Resuming: {len(done)} (task, context length) groups already "
+                  f"complete, {len(queries)} query results replayed.", flush=True)
+        return done, queries, measurements
+
+    def _append_checkpoint(
+        self,
+        task_name: str,
+        ctx_len: int,
+        queries: List[QueryEvaluationResult],
+        measurements: List[Dict[str, Any]],
+    ) -> None:
+        path = self._checkpoint_path()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        record = {
+            "task_name": task_name,
+            "context_length": ctx_len,
+            "query_results": [q.to_dict() for q in queries],
+            "raw_measurements": measurements,
+        }
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(record) + "\n")
+            f.flush()
+            os.fsync(f.fileno())
+
+    @staticmethod
+    def _replay_operating_points(
+        measurements: List[Dict[str, Any]],
+        operating_points: Dict[str, Dict[int, List[OperatingPoint]]],
+        runtime_metrics: Dict[str, List[LatencyProfileResult]],
+        peak_vram: Dict[Tuple[str, int], float],
+    ) -> None:
+        """Rebuild the scoring inputs from replayed measurements."""
+        for m in measurements:
+            if m.get("status") != "SUCCESS":
+                continue
+            name, ctx = m["adapter_name"], int(m["context_length"])
+            operating_points.setdefault(name, {}).setdefault(ctx, []).append(
+                OperatingPoint(
+                    method_name=name,
+                    context_length=ctx,
+                    budget_value=m["effective_bpt"],
+                    quality_score=m["normalized_score"],
+                    memory_cost=m["effective_bpt"],
+                    latency_ms=m.get("decode_latency_ms", 0.0),
+                    metadata={"raw_score": m.get("raw_score", 0.0),
+                              "budget_spec": str(m.get("budget_spec"))},
+                )
+            )
+            runtime_metrics.setdefault(name, []).append(LatencyProfileResult(
+                ttft_ms=m.get("ttft_ms", 0.0),
+                prefill_throughput_tok_per_sec=0.0,
+                decode_latency_ms_per_token=m.get("decode_latency_ms", 0.0),
+                decode_throughput_tok_per_sec=m.get("decode_throughput_tok_sec", 0.0),
+                total_time_seconds=0.0,
+                prompt_tokens=ctx,
+                generated_tokens=0,
+                inter_token_latencies_ms=[],
+            ))
+            if m.get("peak_vram_above_weights_mb") is not None:
+                peak_vram[(name, ctx)] = float(m["peak_vram_above_weights_mb"])
 
     def _encode_sample(self, sample: EvaluationSample, context_length: int) -> torch.Tensor:
         """Tokenise one sample's prompt, applying the model's chat template."""
