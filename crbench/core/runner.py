@@ -131,15 +131,20 @@ class BenchmarkRunner:
             # RoPE scaling must be an explicit, recorded decision: Qwen2.5's
             # native window is 32768 and anything beyond it without YaRN
             # measures positional extrapolation, not the KV representation.
-            if self.config.model.rope_scaling:
+            if self.config.model.rope_scaling or self.config.model.config_overrides:
                 from transformers import AutoConfig
                 hf_cfg = AutoConfig.from_pretrained(
                     model_name, trust_remote_code=self.config.model.trust_remote_code
                 )
+                for key, value in (self.config.model.config_overrides or {}).items():
+                    setattr(hf_cfg, key, value)
+                    print(f"[*] Config override: {key} = {value!r}", flush=True)
+                kwargs["config"] = hf_cfg
                 # transformers 5.x keeps RoPE settings in one dict (rope_parameters,
                 # aliased as rope_scaling) that also carries rope_theta. Replacing
                 # it outright drops the base wavelength and YaRN initialisation
                 # fails on `None ** tensor`, so merge into what the model shipped.
+            if self.config.model.rope_scaling:
                 existing = dict(getattr(hf_cfg, "rope_parameters", None)
                                 or getattr(hf_cfg, "rope_scaling", None) or {})
                 existing.update(self.config.model.rope_scaling)
@@ -151,7 +156,6 @@ class BenchmarkRunner:
                     hf_cfg.rope_scaling = existing
                 if self.config.model.max_model_len:
                     hf_cfg.max_position_embeddings = int(self.config.model.max_model_len)
-                kwargs["config"] = hf_cfg
                 self._effective_rope = existing
                 print(f"[*] RoPE scaling enabled: {existing}", flush=True)
 
@@ -281,6 +285,7 @@ class BenchmarkRunner:
                 dense_adapter = DenseAdapter(name="dense_fp16_ref")
                 dense_adapter.prepare_model(self.model, self.tokenizer)
                 dense_kv_meta = dense_adapter.get_kv_metadata(ctx_len)
+                observed_geometry: Dict[str, int] = {}
 
                 dense_sample_map: Dict[str, SampleEvaluationResult] = {}
                 dense_traces: List[GenerationTrace] = []
@@ -292,6 +297,10 @@ class BenchmarkRunner:
                     dense_scores_by_task_len[(task_inst.name, ctx_len)] = dense_ref_val
                     for s_res in dense_task_score.sample_results:
                         dense_sample_map[s_res.sample_id] = s_res
+                    if dense_traces and dense_traces[0].cache_geometry:
+                        observed_geometry = dense_traces[0].cache_geometry
+                        dense_adapter.observed_geometry = observed_geometry
+                        dense_kv_meta = dense_adapter.get_kv_metadata(ctx_len)
                     dense_lat = self._latency_from_traces(dense_traces)
                     peak_gib = max((t.peak_total_bytes for t in dense_traces), default=0) / 2 ** 30
                     print(f"      [Ref] Dense baseline raw score: {dense_ref_val:.1f}% | "
@@ -324,6 +333,8 @@ class BenchmarkRunner:
                 for ad_inst, ad_cfg in zip(adapters, self.config.adapters):
                     if self.model:
                         ad_inst.prepare_model(self.model, self.tokenizer)
+                    if observed_geometry:
+                        ad_inst.observed_geometry = observed_geometry
 
                     if ctx_len not in operating_points[ad_inst.name]:
                         operating_points[ad_inst.name][ctx_len] = []
@@ -921,6 +932,12 @@ class BenchmarkRunner:
             )
         finally:
             adapter.end_query()
+
+        # Hand the adapter the geometry the cache actually had, so its memory
+        # accounting is not built on a config field that does not describe this
+        # architecture (depth recurrence, hybrid or heterogeneous attention).
+        if trace.cache_geometry:
+            adapter.observed_geometry = trace.cache_geometry
 
         prompt_len = int(input_ids.shape[-1])
         text = self.tokenizer.decode(

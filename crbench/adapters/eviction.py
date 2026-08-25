@@ -149,6 +149,10 @@ class EvictionKVAdapter(BaseContextAdapter):
 
     oneshot_transform = True
 
+    #: Upper bound on retained captures per attention module. Only the final
+    #: chunk's are used, and no architecture here runs more passes than this.
+    _MAX_CAPTURES_PER_MODULE = 8
+
     def __init__(
         self,
         name: str = "snapkv",
@@ -170,7 +174,9 @@ class EvictionKVAdapter(BaseContextAdapter):
         self.pooling = self.config.get("pooling", pooling)
         self.retention_ratio = float(self.config.get("retention_ratio", retention_ratio))
         self.max_tokens_retained: Optional[int] = None
-        self._observation: Dict[int, Tuple[torch.Tensor, torch.Tensor, torch.Tensor]] = {}
+        self._observation: Dict[int, List[Tuple[torch.Tensor, torch.Tensor, torch.Tensor]]] = {}
+        self._num_modules: int = 0
+        self._passes: int = 1
 
     @property
     def method_type(self) -> str:
@@ -221,8 +227,30 @@ class EvictionKVAdapter(BaseContextAdapter):
     # SnapKV needs the observation window's post-RoPE queries              #
     # ------------------------------------------------------------------ #
 
+    def _record(self, module_idx: int, hidden: torch.Tensor,
+                cos: torch.Tensor, sin: torch.Tensor) -> None:
+        """Append one observation per call of this attention module.
+
+        A depth-recurrent model reuses each attention module once per loop, and
+        every pass writes a *different* cache layer: Nanbeige4.2 drives 44 cache
+        layers from 22 modules. Keeping only the latest capture would score the
+        first loop's cache entries with the second loop's queries.
+
+        Every prefill chunk also calls each module, so the list holds
+        ``chunks x passes`` entries by the end. Only the final chunk's window is
+        the observation window, so the reader takes the last ``passes`` entries;
+        the pass count is derived from how many cache layers the model actually
+        produced rather than assumed. Older entries are dropped as they go stale
+        to keep this bounded.
+        """
+        captures = self._observation.setdefault(module_idx, [])
+        captures.append((hidden, cos, sin))
+        if len(captures) > self._MAX_CAPTURES_PER_MODULE:
+            del captures[:-self._MAX_CAPTURES_PER_MODULE]
+
     def begin_query(self, model: nn.Module, input_ids: torch.Tensor) -> None:
         self._observation = {}
+        self._num_modules = len(getattr(getattr(model, "model", model), "layers", []) or [])
         if self.strategy == "streaming_llm":
             return
 
@@ -232,21 +260,37 @@ class EvictionKVAdapter(BaseContextAdapter):
             if attn is None:
                 continue
 
-            def capture(module, args, kwargs, _idx=idx):
+            def capture(module, args, kwargs, _idx=idx, _mod=attn):
                 # Keep only the tail of each chunk: after the final prefill chunk
                 # this holds the last window_size prompt positions, which is the
                 # observation window SnapKV scores with.
                 hidden = kwargs.get("hidden_states", args[0] if args else None)
-                pos_emb = kwargs.get("position_embeddings")
-                if hidden is None or pos_emb is None:
+                if hidden is None:
                     return None
                 w = min(self.window_size, hidden.shape[1])
-                cos, sin = pos_emb
-                self._observation[_idx] = (
-                    hidden[:, -w:, :].detach(),
-                    cos[:, -w:, :].detach(),
-                    sin[:, -w:, :].detach(),
-                )
+
+                pos_emb = kwargs.get("position_embeddings")
+                if pos_emb is not None:
+                    cos, sin = pos_emb
+                    self._record(_idx, hidden[:, -w:, :].detach(),
+                                 cos[:, -w:, :].detach(), sin[:, -w:, :].detach())
+                    return None
+
+                # Some architectures hand the attention module `position_ids` and
+                # build cos/sin inside it (Nanbeige4.2 does). Rebuild them from
+                # the module's own rotary embedding rather than giving up: the
+                # alternative used to be a silent fallback to a bare recency
+                # window, which is not SnapKV and scores like a broken method.
+                pos_ids = kwargs.get("position_ids")
+                rotary = getattr(_mod, "rotary_emb", None) or getattr(
+                    getattr(self.model, "model", self.model), "rotary_emb", None)
+                if pos_ids is None or rotary is None:
+                    return None
+                try:
+                    cos, sin = rotary(hidden, pos_ids[:, -w:])
+                except Exception:
+                    return None
+                self._record(_idx, hidden[:, -w:, :].detach(), cos.detach(), sin.detach())
                 return None
 
             self.hooks.append(attn.register_forward_pre_hook(capture, with_kwargs=True))
@@ -260,10 +304,14 @@ class EvictionKVAdapter(BaseContextAdapter):
         here.  Only the last ``window_size`` positions are recomputed, so the
         extra work is negligible against a multi-thousand-token prefill.
         """
-        captured = self._observation.get(layer_idx)
-        if captured is None:
+        n_modules = getattr(self, "_num_modules", 0) or 1
+        module_idx, pass_idx = layer_idx % n_modules, layer_idx // n_modules
+        captures = self._observation.get(module_idx)
+        if not captures:
             return None
-        hidden, cos, sin = captured
+        # The last `passes` entries are the final chunk's, one per loop pass.
+        recent = captures[-self._passes:] if self._passes > 1 else captures[-1:]
+        hidden, cos, sin = recent[pass_idx] if pass_idx < len(recent) else recent[-1]
 
         module_ns = type(attn_module).__module__
         apply_rope = getattr(__import__(module_ns, fromlist=["apply_rotary_pos_emb"]),
@@ -337,16 +385,30 @@ class EvictionKVAdapter(BaseContextAdapter):
         )
 
         out: List[Tuple[torch.Tensor, torch.Tensor]] = []
+        n_modules = len(layers) or 1
+        # How many times the model ran each module: cache layers / modules.
+        # Measured, not assumed from config, so a model that shares KV across
+        # loops (one cache layer per module) resolves to a single pass.
+        self._num_modules = n_modules
+        self._passes = max(1, len(pairs) // n_modules)
         for idx, (k, v) in enumerate(pairs):
-            attn_module = layers[idx].self_attn
+            # Cache layer -> attention module, folding depth-recurrent passes.
+            attn_module = layers[idx % n_modules].self_attn
             q_obs = self._observation_queries(attn_module, idx)
             groups = int(getattr(attn_module, "num_key_value_groups", 1))
 
             if q_obs is None:
-                # No captured window: fall back to the recent window alone, and
-                # say so rather than silently scoring something else.
-                out.append((k[..., -target:, :], v[..., -target:, :]))
-                continue
+                # Refuse to substitute. Without the observation window this is
+                # not SnapKV -- it degenerates to a bare recency window, which
+                # scores like a badly broken method and would be published under
+                # SnapKV's name. Fail loudly so the cause gets fixed instead.
+                raise RuntimeError(
+                    f"SnapKV could not recover the observation-window queries for layer "
+                    f"{idx} of {type(attn_module).__name__}. The capture hook needs either "
+                    f"`position_embeddings` or `position_ids` plus a rotary embedding on "
+                    f"the attention module or the base model. Without them the method "
+                    f"cannot be evaluated on this architecture."
+                )
 
             if groups == 1:
                 # Head counts already match: upstream's own function, verbatim.

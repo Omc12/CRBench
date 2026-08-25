@@ -33,6 +33,8 @@ the fragmentation and the per-token O(L) copy.
 
 from __future__ import annotations
 
+import functools
+import inspect
 import time
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -129,6 +131,55 @@ class PreallocatedCache(Cache):
             layer.crop(max_length)
 
 
+@functools.lru_cache(maxsize=8)
+def _accepts_logits_to_keep(model_cls: type) -> bool:
+    """Does this model's forward accept `logits_to_keep`?
+
+    Prefill only needs the last position's logits; without this argument the
+    model materialises (chunk_size x vocab_size) every chunk, which on a 150K
+    vocabulary is hundreds of MiB of pure waste. Vendored `trust_remote_code`
+    modelling written before the argument existed -- Nanbeige4.2 -- raises
+    TypeError on it, so it is passed only where it is supported.
+    """
+    try:
+        params = inspect.signature(model_cls.forward).parameters
+    except (TypeError, ValueError):
+        return False
+    if any(p.kind is inspect.Parameter.VAR_KEYWORD for p in params.values()):
+        return "logits_to_keep" in params or "num_logits_to_keep" in params
+    return "logits_to_keep" in params
+
+
+def make_cache(model: Any) -> Any:
+    """Build the cache this architecture actually indexes into.
+
+    There is no single right answer, and each wrong answer fails differently:
+
+    * **Hybrid attention** (Qwen3.5's linear-attention layers, Gemma 4's
+      sliding-window layers) needs *typed* layers. A plain ``DynamicCache``
+      gives them ordinary KV slots and the model raises inside
+      ``update_conv_state``. These need ``DynamicCache(config=...)``.
+    * **Depth recurrence** (Nanbeige4.2: ``num_loops = 2``,
+      ``loop_share_kv = False``) indexes 44 slots from 22 decoder modules. A
+      config-built cache allocates one slot per module and the model raises
+      ``IndexError`` on the second loop. These need the grow-on-demand
+      ``DynamicCache()``, which appends a layer per new index -- the same object
+      the model's own code constructs for itself.
+
+    Passing ``None`` and letting the model build its own would cover both, but
+    Nanbeige's vendored modeling then routes through
+    ``DynamicCache.from_legacy_cache``, removed in transformers 5.
+
+    The rule: typed layers only when the model declares heterogeneous ones.
+    """
+    cfg = getattr(model, "config", None)
+    text_cfg = getattr(cfg, "text_config", cfg)
+    layer_types = list(getattr(text_cfg, "layer_types", []) or [])
+    if layer_types and any(t != "full_attention" for t in layer_types):
+        return DynamicCache(config=cfg)
+    return DynamicCache()
+
+
 @dataclass
 class GenerationTrace:
     """Everything measured during one prompt -> generation cycle."""
@@ -152,6 +203,8 @@ class GenerationTrace:
     kv_bytes_after_transform: int = 0    # resident cache storage post-transform
     kv_tokens_after_transform: int = 0   # cache length post-transform
 
+    # KV geometry read off the live cache, not inferred from the config.
+    cache_geometry: Dict[str, int] = field(default_factory=dict)
     method_metadata: Dict[str, Any] = field(default_factory=dict)
 
     @property
@@ -250,6 +303,52 @@ def measure_cache_bytes(cache: Any, valid_length: Optional[int] = None) -> int:
     return int(sum(seen.values()))
 
 
+def observe_cache_geometry(cache: Any) -> Dict[str, int]:
+    """Read the KV geometry off a live cache instead of inferring it from config.
+
+    Config-derived geometry is wrong for a growing share of architectures, and
+    wrong in different directions:
+
+    * **Depth-recurrent models.** Nanbeige4.2 sets ``num_loops = 2`` with
+      ``loop_share_kv = False``, so its 22 decoder layers occupy 44 cache slots.
+      Reading ``num_hidden_layers`` halves its true footprint.
+    * **Hybrid attention.** Qwen3.5 interleaves 24 linear-attention layers with
+      8 full-attention ones, and Gemma 4 interleaves 35 sliding-window layers
+      with 7 full ones. Only the full-attention layers hold a cache that grows
+      with context; counting every layer overstates the footprint four- to
+      six-fold.
+    * **Heterogeneous layers.** Gemma 4's per-layer configs differ in
+      ``head_dim`` between its sliding and full layers, so there is no single
+      global value to read.
+
+    Counting what the model actually allocated sidesteps all of it. Returns the
+    layers that hold a real, growing KV tensor, plus their head geometry.
+    """
+    layers = cache_layers(cache)
+    kv_layers = 0
+    heads = 0
+    head_dim = 0
+    elements = 0
+    for layer in layers:
+        k = getattr(layer, "keys", None)
+        if not torch.is_tensor(k) or k.numel() == 0 or k.dim() < 4:
+            continue
+        kv_layers += 1
+        heads = max(heads, int(k.shape[1]))
+        head_dim = max(head_dim, int(k.shape[-1]))
+        # Keys and values together, per token of this layer's cache.
+        elements += 2 * int(k.shape[1]) * int(k.shape[-1])
+    return {
+        "kv_layers": kv_layers,
+        "num_kv_heads": heads,
+        "head_dim": head_dim,
+        "total_layers": len(layers),
+        # Authoritative for sizing: sums each layer's own geometry, so
+        # heterogeneous layers do not need one global head count.
+        "kv_elements_per_token": elements,
+    }
+
+
 def cache_seq_length(cache: Any) -> int:
     """Number of tokens currently held, as a plain int."""
     try:
@@ -323,6 +422,12 @@ def to_preallocated(cache: Any, reserve: int = REBUILD_RESERVE) -> Any:
         return cache
 
     layers = cache_layers(cache)
+    # Only take over a cache whose every layer is an ordinary growing KV layer.
+    # Hybrid architectures mix in linear-attention or sliding-window layers that
+    # carry their own state and update rules; replacing those with plain
+    # preallocated storage silently breaks the model rather than speeding it up.
+    if not all(type(l).__name__ == "DynamicLayer" for l in layers):
+        return cache
     length = int(layers[0].keys.shape[-2])
     new_cache = PreallocatedCache(len(layers), length + reserve)
     for idx, layer in enumerate(layers):
@@ -377,9 +482,16 @@ def chunked_prefill_generate(
         )
 
     prompt_len = int(input_ids.shape[-1])
-    # Prefill grows a contiguous DynamicCache; see to_preallocated() for why the
-    # two stages use different storage.
-    cache: Any = DynamicCache()
+    # Let the model build its own cache on the first chunk rather than guessing a
+    # class. Which cache is correct is architecture-specific and getting it wrong
+    # fails in different ways: Qwen3.5's linear-attention layers need
+    # LinearAttentionLayer slots and raise on a plain DynamicCache, Gemma 4 needs
+    # sliding-window layers, and Nanbeige4.2 runs its 22 decoder layers twice and
+    # needs 44 slots -- more than a config-built cache allocates. Passing None
+    # lets each model construct exactly what it indexes into.
+    cache: Any = make_cache(model)
+    keep_last: Dict[str, Any] = (
+        {"logits_to_keep": 1} if _accepts_logits_to_keep(type(model)) else {})
 
     if torch.cuda.is_available() and device.type == "cuda":
         torch.cuda.reset_peak_memory_stats(device)
@@ -397,7 +509,7 @@ def chunked_prefill_generate(
             use_cache=True,
             # Only the final position is needed to pick the first token; keeping
             # every chunk's logits would allocate (chunk, vocab) for nothing.
-            logits_to_keep=1,
+            **keep_last,
         )
         logits = out.logits
         del out
@@ -420,6 +532,7 @@ def chunked_prefill_generate(
         else 0
     )
     kv_before = measure_cache_bytes(cache, valid_length=prompt_len)
+    geometry = observe_cache_geometry(cache)
 
     # ---- Stage 2: the method's cache transform -------------------------------
     method_metadata: Dict[str, Any] = {}
@@ -474,7 +587,7 @@ def chunked_prefill_generate(
         cache.crop(kv_tokens_after - 1)
         out = model(input_ids=input_ids[:, -1:], past_key_values=cache,
                     position_ids=_positions(prompt_len - 1),
-                    use_cache=True, logits_to_keep=1)
+                    use_cache=True, **keep_last)
         logits = out.logits
         del out
 
@@ -493,7 +606,7 @@ def chunked_prefill_generate(
         # Generated token `step` occupies original position prompt_len + step.
         out = model(input_ids=next_token, past_key_values=cache,
                     position_ids=_positions(prompt_len + step),
-                    use_cache=True, logits_to_keep=1)
+                    use_cache=True, **keep_last)
         next_token = out.logits[:, -1, :].argmax(dim=-1, keepdim=True)
         del out
         if on_token_end is not None:
@@ -526,6 +639,7 @@ def chunked_prefill_generate(
         kv_bytes_before_transform=kv_before,
         kv_bytes_after_transform=kv_after,
         kv_tokens_after_transform=kv_tokens_after,
+        cache_geometry=geometry,
         method_metadata=method_metadata,
     )
 

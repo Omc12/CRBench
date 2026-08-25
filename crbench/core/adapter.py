@@ -194,20 +194,51 @@ class BaseContextAdapter(ABC):
         """
         pass
 
+    #: KV geometry read off a live cache by the inference core. Set by the runner
+    #: before scoring; empty until the first query has run.
+    observed_geometry: Dict[str, int] = {}
+
     def model_kv_geometry(self) -> Tuple[int, int, int]:
-        """(num_layers, num_kv_heads, head_dim) read from the loaded model config."""
+        """(cache_layers, num_kv_heads, head_dim), preferring what was observed.
+
+        The config is not a reliable source. ``num_hidden_layers`` counts decoder
+        modules, and for a growing set of architectures that is not the number of
+        cache slots: a depth-recurrent model like Nanbeige4.2 (``num_loops = 2``,
+        ``loop_share_kv = False``) runs its 22 layers twice and occupies 44,
+        while hybrid models like Qwen3.5 and Gemma 4 give only 8 of 32 and 7 of
+        42 layers a cache that grows with context. Reading the config would
+        halve the first and quadruple the others.
+        """
+        obs = self.observed_geometry
+        if obs and obs.get("kv_layers"):
+            return int(obs["kv_layers"]), int(obs["num_kv_heads"]), int(obs["head_dim"])
+
         cfg = getattr(self.model, "config", None)
         if cfg is None:
             return 32, 32, 128
+        cfg = getattr(cfg, "text_config", cfg)
         num_layers = getattr(cfg, "num_hidden_layers", 32)
+        # Depth recurrence multiplies cache slots unless the loops share KV.
+        loops = int(getattr(cfg, "num_loops", 1) or 1)
+        if loops > 1 and not getattr(cfg, "loop_share_kv", False):
+            num_layers *= loops
         num_heads = getattr(cfg, "num_attention_heads", 32)
         num_kv_heads = getattr(cfg, "num_key_value_heads", num_heads)
         hidden_size = getattr(cfg, "hidden_size", 4096)
-        head_dim = getattr(cfg, "head_dim", None) or (hidden_size // max(1, num_heads))
+        try:
+            head_dim = getattr(cfg, "head_dim", None) or (hidden_size // max(1, num_heads))
+        except Exception:
+            # Heterogeneous per-layer configs (Gemma 4) refuse a global read.
+            head_dim = hidden_size // max(1, num_heads)
         return int(num_layers), int(num_kv_heads), int(head_dim)
 
     def dense_element_count(self, context_length: int) -> int:
         """Number of KV elements an uncompressed cache would hold at this length."""
+        obs = self.observed_geometry
+        if obs and obs.get("kv_elements_per_token"):
+            # Sums each layer's own head geometry, so heterogeneous layers are
+            # priced individually rather than through one global head count.
+            return int(obs["kv_elements_per_token"]) * context_length
         num_layers, num_kv_heads, head_dim = self.model_kv_geometry()
         return 2 * num_layers * num_kv_heads * head_dim * context_length
 

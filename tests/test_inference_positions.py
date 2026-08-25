@@ -50,6 +50,12 @@ class _RecordingModel(torch.nn.Module):
     def forward(self, input_ids=None, past_key_values=None, position_ids=None,
                 use_cache=True, logits_to_keep=1, **kw):
         b, s = input_ids.shape
+        # Real models build their own cache when handed None; the stub must too,
+        # because that is now how chunked_prefill_generate obtains one.
+        if past_key_values is None and use_cache:
+            from transformers import DynamicCache
+            past_key_values = DynamicCache()
+
         if position_ids is not None:
             self.seen_positions.extend(position_ids.flatten().tolist())
         else:
@@ -62,7 +68,7 @@ class _RecordingModel(torch.nn.Module):
 
         logits = torch.zeros(b, 1, self.config.vocab_size)
         logits[..., 7] = 1.0
-        return type("Out", (), {"logits": logits})()
+        return type("Out", (), {"logits": logits, "past_key_values": past_key_values})()
 
 
 def _keep_last(n: int):

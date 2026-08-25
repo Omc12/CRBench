@@ -31,6 +31,13 @@ class ModelConfig:
     # without it measures positional extrapolation failure, not KV compression,
     # so this must be set deliberately and is recorded in the results manifest.
     rope_scaling: Optional[Dict[str, Any]] = None
+    # Attributes forced onto the HF config before the model is built. Needed for
+    # checkpoints whose vendored `trust_remote_code` modeling was written against
+    # an older transformers: Nanbeige4.2 reads `config.rope_scaling["type"]`, a
+    # key transformers 5 renamed to `rope_type`, so it raises KeyError on a model
+    # that uses no scaling at all. Setting `rope_scaling: null` selects its
+    # unscaled branch, which is what its own config asks for.
+    config_overrides: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
