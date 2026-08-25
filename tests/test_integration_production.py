@@ -27,7 +27,7 @@ from crbench.core.config import BenchmarkConfig, TaskConfig, AdapterConfig, Mode
 from crbench.core.runner import BenchmarkRunner, recompute_scores_from_raw_file
 from crbench.core.query_result import QueryEvaluationResult, QueryEvaluator, QueryAggregationEngine
 from crbench.adapters.dense import DenseAdapter
-from crbench.adapters.quantized import QuantizedKVAdapter, quantize_to_int_simulated
+from crbench.adapters.quantized import QuantizedKVAdapter, quantize_dequantize
 from crbench.adapters.eviction import EvictionKVAdapter
 from crbench.adapters.merging import MergingKVAdapter
 from crbench.adapters.compressed import LowRankCompressedKVAdapter
@@ -65,9 +65,9 @@ def test_backend_capabilities():
 def test_quantization_adapter_transformation():
     """Quantization genuinely perturbs tensor values and reduces state representation."""
     t = torch.randn(2, 4, 128, 64)
-    q_4bit = quantize_to_int_simulated(t, n_bits=4, group_size=32)
-    q_8bit = quantize_to_int_simulated(t, n_bits=8, group_size=32)
-    q_16bit = quantize_to_int_simulated(t, n_bits=16, group_size=32)
+    q_4bit = quantize_dequantize(t, n_bits=4, group_size=32)
+    q_8bit = quantize_dequantize(t, n_bits=8, group_size=32)
+    q_16bit = quantize_dequantize(t, n_bits=16, group_size=32)
 
     # 16-bit returns identical tensor
     assert torch.allclose(t, q_16bit)
@@ -80,12 +80,14 @@ def test_quantization_adapter_transformation():
 
 def test_eviction_adapter_token_budgeting():
     """Eviction adapter accurately reduces retained tokens according to budget."""
-    ad = EvictionKVAdapter(name="snapkv_test", strategy="snapkv", sink_tokens=16, local_tokens=32)
+    ad = EvictionKVAdapter(name="snapkv_test", strategy="snapkv", sink_tokens=4, window_size=32)
     ad.apply_budget(ContextBudget.from_bits_per_token(4.0), context_length=2048)  # 4/16 = 0.25 -> 512 tokens
     meta = ad.get_kv_metadata(context_length=2048)
 
     assert meta.total_tokens_stored == 512
-    assert meta.metadata_overhead_bytes == 512 * 4.0  # 4 bytes int32 per token
+    # Each surviving token records its original position (int32) once per layer,
+    # so RoPE-consistent decoding can address it.
+    assert meta.metadata_overhead_bytes == 512 * 4.0 * meta.num_layers
     assert meta.algorithmic_bytes < (2 * 32 * 32 * 128 * 2048 * 2.0)  # less than dense
 
 
@@ -94,8 +96,13 @@ def test_merging_adapter_metadata_accounting():
     ad = MergingKVAdapter(name="merging_test", merge_ratio=0.5)
     meta = ad.get_kv_metadata(context_length=4096)
 
-    assert meta.total_tokens_stored == 2048
-    assert meta.metadata_overhead_bytes == 2048 * 2.0  # 2 bytes per merged token count
+    # Sinks and the recent window are kept exact, so the stored count is the
+    # merged middle plus those: slightly above the naive context * ratio.
+    stored = meta.custom_metrics["stored_tokens"]
+    assert meta.total_tokens_stored == stored
+    assert 2048 <= stored <= 2048 + meta.custom_metrics["sink_tokens"] + meta.custom_metrics["recent_window_exact"]
+    # Each stored token records the span it represents (int32 start + count).
+    assert meta.metadata_overhead_bytes == stored * 8.0 * meta.num_layers
     assert meta.total_state_bytes == meta.algorithmic_bytes + meta.metadata_overhead_bytes
 
 
@@ -104,15 +111,18 @@ def test_low_rank_compressed_adapter():
     ad = LowRankCompressedKVAdapter(name="low_rank_test", rank_ratio=0.25)
     meta = ad.get_kv_metadata(context_length=4096)
     assert meta.effective_bits_per_element < 16.0
-    assert meta.custom_metrics["effective_head_dim"] == 32  # 128 * 0.25 = 32
+    assert meta.custom_metrics["rank"] == 32  # 128 * 0.25 = 32
 
 
 def test_dkv_custom_adapter():
     """DKV custom adapter decouples shared subspace and dynamic tokens."""
-    ad = DKVContextAdapter(name="dkv_test", subspace_dim_ratio=0.5, token_sparsity=0.5)
+    ad = DKVContextAdapter(name="dkv_test", block_size=256, base_rank=32)
     meta = ad.get_kv_metadata(context_length=4096)
     assert meta.algorithmic_bytes > 0
     assert meta.effective_bits_per_element < 16.0
+    # Before any query has run, the figure is flagged as an estimate; a real run
+    # replaces it with bytes counted from the blocks the compressor produced.
+    assert meta.custom_metrics["source"] == "estimated"
 
 
 # ─── 3. Memory Accounting: Analytical vs. Physical ────────────────────────────

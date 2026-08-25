@@ -1,0 +1,129 @@
+# CRBench 7B/8B Quantized Benchmark Configuration
+# Evaluates long-context KV compression across 2K to 128K context windows.
+
+benchmark_name: "crbench_7b_128k"
+
+model:
+  model_name_or_path: "Qwen/Qwen2.5-7B-Instruct"
+  dtype: "bfloat16"
+  device: "auto"
+  trust_remote_code: true
+  load_in_4bit: true
+  bnb_4bit_compute_dtype: "bfloat16"
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_use_double_quant: true
+  attn_implementation: "sdpa"
+  max_model_len: 131072
+
+tasks:
+  - task_name: "single_niah"
+    context_lengths: [2048, 4096, 8192, 16384, 32768, 65536, 131072]
+    num_samples: 3
+    seed: 42
+
+  - task_name: "multi_niah"
+    context_lengths: [2048, 4096, 8192, 16384, 32768, 65536, 131072]
+    num_samples: 3
+    seed: 42
+
+  - task_name: "ruler_kv"
+    context_lengths: [2048, 4096, 8192, 16384, 32768, 65536, 131072]
+    num_samples: 3
+    seed: 42
+
+  - task_name: "ruler_variable_tracking"
+    context_lengths: [2048, 4096, 8192, 16384, 32768, 65536, 131072]
+    num_samples: 3
+    seed: 42
+
+  - task_name: "multihop_qa"
+    context_lengths: [2048, 4096, 8192, 16384, 32768, 65536, 131072]
+    num_samples: 3
+    seed: 42
+
+adapters:
+  # 1. Uncompressed Reference Baseline
+  - adapter_name: "dense_fp16"
+    adapter_type: "dense"
+    budgets: [16.0]
+
+  # 2. Differential KV (High Preset & Mid Preset)
+  - adapter_name: "dkv_high"
+    adapter_type: "custom"
+    budgets: [5.8]
+    params:
+      subspace_dim_ratio: 0.45
+      token_sparsity: 0.70
+
+  - adapter_name: "dkv_mid"
+    adapter_type: "custom"
+    budgets: [4.25]
+    params:
+      subspace_dim_ratio: 0.35
+      token_sparsity: 0.50
+
+  # 3. Low-Rank Subspace Compression
+  - adapter_name: "low_rank_kv"
+    adapter_type: "compressed"
+    budgets: [4.12]
+    params:
+      rank_ratio: 0.2575
+
+  # 4. KV Quantization (INT8, INT4, INT2)
+  - adapter_name: "kv_quant_int8"
+    adapter_type: "quantized"
+    budgets: [8.0]
+    params:
+      bits: 8
+
+  - adapter_name: "kv_quant_int4"
+    adapter_type: "quantized"
+    budgets: [4.0]
+    params:
+      bits: 4
+
+  - adapter_name: "kv_quant_int2"
+    adapter_type: "quantized"
+    budgets: [2.0]
+    params:
+      bits: 2
+
+  # 5. KV Eviction (SnapKV, StreamingLLM)
+  - adapter_name: "snapkv"
+    adapter_type: "eviction"
+    budgets: [4.0]
+    params:
+      strategy: "snapkv"
+      sink_tokens: 32
+      local_tokens: 128
+
+  - adapter_name: "streaming_llm"
+    adapter_type: "eviction"
+    budgets: [4.0]
+    params:
+      strategy: "streaming_llm"
+      sink_tokens: 32
+      local_tokens: 128
+
+  # 6. KV Merging / Pooling
+  - adapter_name: "kv_merging"
+    adapter_type: "merging"
+    budgets: [4.0]
+
+profiler:
+  track_physical_memory: true
+  track_latency: true
+
+scoring:
+  utility_formula: "linear"
+  utility_alpha: 0.70
+  enable_part2: true
+  standard_budgets_bpt: [2.0, 4.0, 8.0, 16.0]
+  auqc_log_scale: true
+  context_weighting: "logarithmic"
+  min_dynamic_range: 0.05
+  floor_quality: 0.0
+
+output_dir: "results/7b_128k_benchmark"
+save_plots: true
+save_raw_json: true

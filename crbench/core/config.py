@@ -18,6 +18,19 @@ class ModelConfig:
     trust_remote_code: bool = True
     attn_implementation: Optional[str] = None  # "sdpa", "flash_attention_2", "eager"
     max_model_len: Optional[int] = None
+    load_in_4bit: bool = False
+    load_in_8bit: bool = False
+    bnb_4bit_compute_dtype: str = "bfloat16"
+    bnb_4bit_quant_type: str = "nf4"
+    bnb_4bit_use_double_quant: bool = True
+    device_map: Optional[str] = None
+    # RoPE scaling override, applied to the model config at load time.
+    # Qwen2.5 ships max_position_embeddings=32768 and reaches 131072 only via
+    # YaRN, e.g. {"rope_type": "yarn", "factor": 4.0,
+    # "original_max_position_embeddings": 32768}.  Running past the native window
+    # without it measures positional extrapolation failure, not KV compression,
+    # so this must be set deliberately and is recorded in the results manifest.
+    rope_scaling: Optional[Dict[str, Any]] = None
 
 
 @dataclass
@@ -43,6 +56,17 @@ class ProfilerConfig:
     track_latency: bool = True
     warmup_steps: int = 1
     device_synchronize: bool = True
+    # Prompt tokens fed per forward during prefill.  Bounds peak activation
+    # memory independently of context length, so an OOM in the results means the
+    # KV representation did not fit -- not that the prompt was fed too greedily.
+    prefill_chunk_size: int = 4096
+    # Generated tokens per query.  The tasks here answer in a short span; the
+    # dense baseline and every method use the same value on the same query.
+    max_new_tokens: int = 32
+    # Release cached allocator segments between prefill chunks.  Windows has no
+    # expandable_segments, and without this the allocator reserved 13.00 GiB for
+    # 8.69 GiB of live tensors at 65536 tokens and spilled into host memory.
+    empty_cache_between_chunks: bool = True
 
 
 @dataclass

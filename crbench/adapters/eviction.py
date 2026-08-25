@@ -1,182 +1,413 @@
 """
-KV Cache Eviction / Pruning adapter (StreamingLLM, SnapKV, H2O) for CRBench.
-Implements attention sink preservation, local window preservation, and heavy-hitter token selection.
+KV cache eviction adapters (SnapKV, StreamingLLM) for CRBench.
+
+Both methods are driven from their authors' vendored repositories rather than
+reimplemented:
+
+* **SnapKV** -- ``SnapKVCluster.update_kv`` from ``third_party/SnapKV``.  The
+  algorithm scores every prompt key by the attention it receives from the last
+  ``window_size`` prompt queries, smooths those scores with ``avg_pool1d`` over
+  ``kernel_size`` neighbours, keeps the top ``max_capacity_prompt -
+  window_size`` of them, and appends the untouched recent window.
+* **StreamingLLM** -- ``StartRecentKVCache`` from ``third_party/streaming-llm``.
+  Keep the first ``start_size`` attention-sink tokens and the most recent
+  ``recent_size``; drop the middle.
+
+Both are *prompt* compressors: they run once, on the resident prompt cache, and
+what survives is what the generated tokens attend to.  The previous
+implementation instead deleted input tokens before the forward pass, which is a
+different intervention -- it changes the positions the model sees, changes
+prefill cost, and gives the method no access to the attention signal SnapKV is
+defined in terms of.
 """
 
 from __future__ import annotations
-from typing import Any, Dict, List, Optional
+
+import math
+from typing import Any, Dict, List, Optional, Tuple
+
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+
 from crbench.core.adapter import BaseContextAdapter, KVStateMetadata
 from crbench.core.budget import ContextBudget, BudgetType
+from crbench.core.inference import kv_tensors, rebuild_cache, cache_layers
 from crbench.core.registry import Registry
+from crbench.adapters import upstream
+
+
+def _grouped_attention_scores(
+    query_states: torch.Tensor,   # (B, H_q, w, D) post-RoPE observation window
+    key_states: torch.Tensor,     # (B, H_kv, L, D) post-RoPE prompt keys
+    window_size: int,
+    num_key_value_groups: int,
+) -> torch.Tensor:
+    """SnapKV's ``attn_weights_sum``, pooled over each GQA group's query heads.
+
+    This reproduces upstream ``SnapKVCluster.update_kv``'s scoring exactly --
+    scaled dot product, causal mask over the observation window, softmax in
+    float32, sum across the window's query axis -- and then sums the result over
+    the ``num_key_value_groups`` query heads that share one KV head.
+
+    The pooling is required because upstream stores its compressed cache with KV
+    repeated to the full query-head count (``repeat_kv`` is moved ahead of the
+    cache write in every one of their hijacks).  On a model like Qwen2.5-7B,
+    with 28 query heads over 4 KV heads, that would multiply the retained cache
+    by seven and measure an implementation artifact rather than the algorithm.
+    Selecting per KV head keeps the comparison on the representation the model
+    actually needs.  With ``num_key_value_groups == 1`` this is identical to
+    upstream, which ``tests/test_upstream_fidelity.py`` asserts numerically.
+
+    Returns: (B, H_kv, L - window_size) score tensor.
+    """
+    bsz, num_heads, w, head_dim = query_states.shape
+    num_kv_heads = key_states.shape[1]
+
+    # Score the observation window against every prompt key, one KV group at a
+    # time: the full (B, H_q, w, L) tensor is 235 MB at L=64K on a 28-head model
+    # and there is no need to hold all of it at once.
+    scores = torch.zeros(bsz, num_kv_heads, key_states.shape[-2],
+                         device=key_states.device, dtype=torch.float32)
+
+    # Upstream's causal mask over the observation window's own positions.
+    mask = torch.full((w, w), torch.finfo(query_states.dtype).min, device=query_states.device)
+    mask_cond = torch.arange(mask.size(-1), device=query_states.device)
+    mask.masked_fill_(mask_cond < (mask_cond + 1).view(mask.size(-1), 1), 0)
+    mask = mask[None, None, :, :]
+
+    for g in range(num_kv_heads):
+        q_g = query_states[:, g * num_key_value_groups:(g + 1) * num_key_value_groups]  # (B, rep, w, D)
+        k_g = key_states[:, g:g + 1]                                                    # (B, 1, L, D)
+        attn = torch.matmul(q_g, k_g.transpose(2, 3)) / math.sqrt(head_dim)             # (B, rep, w, L)
+        attn[:, :, -w:, -w:] = attn[:, :, -w:, -w:] + mask
+        attn = nn.functional.softmax(attn, dim=-1, dtype=torch.float32)
+        scores[:, g] = attn.sum(dim=-2).sum(dim=1)   # sum over window queries, then over the group
+        del attn, q_g
+
+    return scores[..., :-window_size]
+
+
+def snapkv_compress_gqa(
+    key_states: torch.Tensor,     # (B, H_kv, L, D)
+    value_states: torch.Tensor,   # (B, H_kv, L, D)
+    query_states: torch.Tensor,   # (B, H_q,  w, D)
+    *,
+    window_size: int,
+    max_capacity_prompt: int,
+    kernel_size: int,
+    pooling: str,
+    num_key_value_groups: int,
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """SnapKV prompt compression with per-KV-head selection.
+
+    Everything after the scoring step is upstream's, unchanged: ``avg_pool1d``
+    (or ``max_pool1d``) smoothing with ``kernel_size`` and ``padding =
+    kernel_size // 2``, a top-k of ``max_capacity_prompt - window_size``, a
+    gather over the pre-window keys and values, and the untouched recent window
+    concatenated back on.
+
+    With ``num_key_value_groups == 1`` this is numerically identical to
+    ``SnapKVCluster.update_kv``; ``tests/test_upstream_fidelity.py`` asserts it.
+    """
+    if key_states.shape[-2] < max_capacity_prompt:
+        return key_states, value_states
+
+    scores = _grouped_attention_scores(
+        query_states, key_states, window_size, num_key_value_groups
+    )
+
+    if pooling == "avgpool":
+        pooled = F.avg_pool1d(scores, kernel_size=kernel_size,
+                              padding=kernel_size // 2, stride=1)
+    elif pooling == "maxpool":
+        pooled = F.max_pool1d(scores, kernel_size=kernel_size,
+                              padding=kernel_size // 2, stride=1)
+    else:
+        raise ValueError("Pooling method not supported")
+
+    indices = pooled.topk(max_capacity_prompt - window_size, dim=-1).indices
+    indices = indices.unsqueeze(-1).expand(-1, -1, -1, key_states.shape[-1])
+    k_past = key_states[:, :, :-window_size, :].gather(dim=2, index=indices)
+    v_past = value_states[:, :, :-window_size, :].gather(dim=2, index=indices)
+    return (
+        torch.cat([k_past, key_states[:, :, -window_size:, :]], dim=2),
+        torch.cat([v_past, value_states[:, :, -window_size:, :]], dim=2),
+    )
 
 
 @Registry.register_adapter("eviction")
 @Registry.register_adapter("snapkv")
 @Registry.register_adapter("streaming_llm")
-@Registry.register_adapter("h2o")
 class EvictionKVAdapter(BaseContextAdapter):
+    """Prompt-cache eviction under a bits-per-token budget.
+
+    A budget of ``b`` bits/element on a dense-fp16 (16 bit) baseline means the
+    representation may keep ``b/16`` of the tokens; the retained cache is stored
+    at full precision, so the saving is entirely in token count.
     """
-    KV Token Eviction / Pruning adapter.
-    Selects a subset of tokens to retain in the KV cache:
-    - sink_tokens: initial prompt tokens (StreamingLLM attention sinks)
-    - local_tokens: recent tokens in sliding window
-    - heavy_hitter_tokens: high-attention importance tokens (SnapKV / H2O)
-    """
+
+    oneshot_transform = True
 
     def __init__(
         self,
         name: str = "snapkv",
-        strategy: str = "snapkv",  # "streaming_llm", "snapkv", "h2o"
-        sink_tokens: int = 32,
-        local_tokens: int = 128,
+        strategy: str = "snapkv",
+        sink_tokens: int = 4,
+        window_size: int = 32,
+        kernel_size: int = 5,
+        pooling: str = "avgpool",
         retention_ratio: float = 0.25,
-        config: Optional[Dict[str, Any]] = None
+        config: Optional[Dict[str, Any]] = None,
     ):
         super().__init__(name=name, config=config)
         self.strategy = self.config.get("strategy", strategy)
-        self.sink_tokens = self.config.get("sink_tokens", sink_tokens)
-        self.local_tokens = self.config.get("local_tokens", local_tokens)
-        self.retention_ratio = self.config.get("retention_ratio", retention_ratio)
+        # StreamingLLM's paper and repo default to 4 attention-sink tokens.
+        self.sink_tokens = int(self.config.get("sink_tokens", sink_tokens))
+        # SnapKV's observation window and pooling kernel, at the repo defaults.
+        self.window_size = int(self.config.get("window_size", window_size))
+        self.kernel_size = int(self.config.get("kernel_size", kernel_size))
+        self.pooling = self.config.get("pooling", pooling)
+        self.retention_ratio = float(self.config.get("retention_ratio", retention_ratio))
         self.max_tokens_retained: Optional[int] = None
+        self._observation: Dict[int, Tuple[torch.Tensor, torch.Tensor, torch.Tensor]] = {}
 
     @property
     def method_type(self) -> str:
         return "eviction"
 
+    def provenance(self) -> Dict[str, Any]:
+        key = "streaming_llm" if self.strategy == "streaming_llm" else "snapkv"
+        record = dict(upstream.describe_provenance(key))
+        record["implementation"] = "upstream_reference"
+        if key == "snapkv":
+            record["entry_point"] = "snapkv.monkeypatch.snapkv_utils.SnapKVCluster.update_kv"
+            record["adaptation"] = (
+                "Upstream's monkeypatch targets transformers==4.37 and Llama/Mistral/Mixtral; "
+                "this runs transformers 5.x on Qwen2, so SnapKVCluster is driven directly. "
+                "Attention scores are pooled across each GQA group's query heads so selection "
+                "is per KV head; upstream instead stores KV repeated to the query-head count."
+            )
+        else:
+            record["entry_point"] = "streaming_llm.kv_cache.StartRecentKVCache"
+            record["adaptation"] = "Applied to the resident prompt cache; policy is upstream's, unmodified."
+        return record
+
+    def validate_environment(self, device: torch.device) -> Tuple[bool, str]:
+        try:
+            if self.strategy == "streaming_llm":
+                upstream.load_streaming_llm()
+            else:
+                upstream.load_snapkv()
+        except upstream.UpstreamUnavailable as exc:
+            return False, str(exc)
+        return True, "Supported"
+
     def apply_budget(self, budget: ContextBudget, context_length: int) -> None:
         super().apply_budget(budget, context_length)
         if budget.budget_type == BudgetType.TOKEN_CAPACITY:
             self.max_tokens_retained = int(budget.value)
-            self.retention_ratio = min(1.0, float(self.max_tokens_retained) / max(1, context_length))
+            self.retention_ratio = min(1.0, self.max_tokens_retained / max(1, context_length))
         elif budget.budget_type == BudgetType.COMPRESSION_RATIO:
             self.retention_ratio = float(budget.value)
             self.max_tokens_retained = int(context_length * self.retention_ratio)
         elif budget.budget_type == BudgetType.BITS_PER_TOKEN:
-            # Dense is 16 bpt. If budget is e.g. 4 bpt, retention is 4/16 = 0.25
+            # Retained tokens are stored dense (16 bits/element), so a budget of
+            # b bits/element buys b/16 of the tokens.
             self.retention_ratio = float(budget.value) / 16.0
             self.max_tokens_retained = int(context_length * self.retention_ratio)
 
-    def forward_or_generate(
+    # ------------------------------------------------------------------ #
+    # SnapKV needs the observation window's post-RoPE queries              #
+    # ------------------------------------------------------------------ #
+
+    def begin_query(self, model: nn.Module, input_ids: torch.Tensor) -> None:
+        self._observation = {}
+        if self.strategy == "streaming_llm":
+            return
+
+        layers = getattr(getattr(model, "model", model), "layers", [])
+        for idx, layer in enumerate(layers):
+            attn = getattr(layer, "self_attn", None)
+            if attn is None:
+                continue
+
+            def capture(module, args, kwargs, _idx=idx):
+                # Keep only the tail of each chunk: after the final prefill chunk
+                # this holds the last window_size prompt positions, which is the
+                # observation window SnapKV scores with.
+                hidden = kwargs.get("hidden_states", args[0] if args else None)
+                pos_emb = kwargs.get("position_embeddings")
+                if hidden is None or pos_emb is None:
+                    return None
+                w = min(self.window_size, hidden.shape[1])
+                cos, sin = pos_emb
+                self._observation[_idx] = (
+                    hidden[:, -w:, :].detach(),
+                    cos[:, -w:, :].detach(),
+                    sin[:, -w:, :].detach(),
+                )
+                return None
+
+            self.hooks.append(attn.register_forward_pre_hook(capture, with_kwargs=True))
+
+    def _observation_queries(self, attn_module: nn.Module, layer_idx: int) -> Optional[torch.Tensor]:
+        """Recompute the observation window's post-RoPE queries.
+
+        Uses the model's own ``q_proj`` weights, the model's own rotary
+        embeddings for those exact positions, and the model's own
+        ``apply_rotary_pos_emb``; nothing about the attention maths is restated
+        here.  Only the last ``window_size`` positions are recomputed, so the
+        extra work is negligible against a multi-thousand-token prefill.
+        """
+        captured = self._observation.get(layer_idx)
+        if captured is None:
+            return None
+        hidden, cos, sin = captured
+
+        module_ns = type(attn_module).__module__
+        apply_rope = getattr(__import__(module_ns, fromlist=["apply_rotary_pos_emb"]),
+                             "apply_rotary_pos_emb", None)
+        if apply_rope is None:
+            return None
+
+        head_dim = attn_module.head_dim
+        q = attn_module.q_proj(hidden)
+        q = q.view(*hidden.shape[:-1], -1, head_dim).transpose(1, 2)
+        if hasattr(attn_module, "q_norm") and attn_module.q_norm is not None:
+            q = attn_module.q_norm(q)
+        q, _ = apply_rope(q, q, cos, sin)
+        return q
+
+    # ------------------------------------------------------------------ #
+    # The transform                                                       #
+    # ------------------------------------------------------------------ #
+
+    def transform_cache(
         self,
+        cache: Any,
         input_ids: torch.Tensor,
-        attention_mask: Optional[torch.Tensor] = None,
-        max_new_tokens: int = 32,
-        **kwargs: Any
-    ) -> torch.Tensor:
-        if self.model is None:
-            raise RuntimeError("Model is not attached to EvictionKVAdapter.")
+        valid_length: int,
+    ) -> Tuple[Any, Dict[str, Any]]:
+        target = self.max_tokens_retained or valid_length
+        target = max(self.sink_tokens + self.window_size + 1, min(valid_length, target))
+        if target >= valid_length:
+            return cache, {"retained_tokens": valid_length, "evicted": 0, "applied": False}
 
-        device = input_ids.device
-        seq_len = input_ids.shape[-1]
-        if attention_mask is None:
-            attention_mask = torch.ones_like(input_ids, device=device)
+        pairs = kv_tensors(cache, valid_length=valid_length)
+        if self.strategy == "streaming_llm":
+            new_pairs = self._evict_streaming_llm(pairs, target)
+        else:
+            new_pairs = self._evict_snapkv(pairs, target)
 
-        eff_input_ids = input_ids
-        eff_attn_mask = attention_mask
+        retained = int(new_pairs[0][0].shape[-2])
+        new_cache = rebuild_cache(new_pairs)
+        del pairs, new_pairs
+        return new_cache, {
+            "retained_tokens": retained,
+            "evicted": valid_length - retained,
+            "strategy": self.strategy,
+            "applied": True,
+        }
 
-        # Apply eviction if sequence length exceeds retained budget
-        if self.max_tokens_retained is not None and seq_len > self.max_tokens_retained:
-            target_k = max(32, self.max_tokens_retained)
-            if target_k < seq_len:
-                if self.strategy == "streaming_llm":
-                    sink_n = min(self.sink_tokens, target_k // 4)
-                    recent_n = target_k - sink_n
-                    eff_input_ids = torch.cat([input_ids[:, :sink_n], input_ids[:, -recent_n:]], dim=-1)
-                    eff_attn_mask = torch.cat([attention_mask[:, :sink_n], attention_mask[:, -recent_n:]], dim=-1)
-                elif self.strategy in ("snapkv", "h2o"):
-                    sink_n = min(self.sink_tokens, max(4, target_k // 8))
-                    local_n = min(self.local_tokens, max(8, target_k // 4))
-                    mid_budget = target_k - sink_n - local_n
-                    mid_len = seq_len - sink_n - local_n
+    def _evict_streaming_llm(
+        self, pairs: List[Tuple[torch.Tensor, torch.Tensor]], target: int
+    ) -> List[Tuple[torch.Tensor, torch.Tensor]]:
+        StartRecentKVCache = upstream.load_streaming_llm()
+        start_size = min(self.sink_tokens, max(1, target // 4))
+        evictor = StartRecentKVCache(
+            start_size=start_size,
+            recent_size=target - start_size,
+            k_seq_dim=2,
+            v_seq_dim=2,
+        )
+        out = evictor([list(p) for p in pairs])
+        return [(k, v) for k, v in out]
 
-                    if mid_budget > 0 and mid_len > 0:
-                        try:
-                            embed_layer = self.model.get_input_embeddings() if hasattr(self.model, "get_input_embeddings") else None
-                            if embed_layer is not None:
-                                embeds = embed_layer(input_ids)
-                                query_vec = embeds[:, -32:, :].mean(dim=1, keepdim=True)
-                                mid_vecs = embeds[:, sink_n:-local_n, :]
-                                sim = torch.nn.functional.cosine_similarity(query_vec, mid_vecs, dim=-1)[0]
-                                
-                                # Chunk-level pooling (e.g. window size 16) to preserve intact syntactic phrases
-                                chunk_sz = 16
-                                n_chunks = max(1, mid_len // chunk_sz)
-                                chunk_scores = []
-                                for c in range(n_chunks):
-                                    c_start = c * chunk_sz
-                                    c_end = min(mid_len, (c + 1) * chunk_sz)
-                                    chunk_scores.append(sim[c_start:c_end].max())
-                                chunk_tensor = torch.tensor(chunk_scores, device=device)
-                                k_chunks = max(1, min(n_chunks, mid_budget // chunk_sz))
-                                top_chunk_indices = torch.topk(chunk_tensor, k=k_chunks).indices.sort().values
-                                
-                                selected_tokens = []
-                                for ci in top_chunk_indices.tolist():
-                                    c_start = sink_n + ci * chunk_sz
-                                    c_end = min(seq_len - local_n, c_start + chunk_sz)
-                                    selected_tokens.extend(range(c_start, c_end))
-                                
-                                keep_idx = torch.tensor(
-                                    list(range(sink_n)) + selected_tokens + list(range(seq_len - local_n, seq_len)),
-                                    device=device
-                                )
-                                eff_input_ids = input_ids[:, keep_idx]
-                                eff_attn_mask = attention_mask[:, keep_idx]
-                            else:
-                                eff_input_ids = torch.cat([input_ids[:, :sink_n], input_ids[:, - (target_k - sink_n):]], dim=-1)
-                                eff_attn_mask = torch.cat([attention_mask[:, :sink_n], attention_mask[:, - (target_k - sink_n):]], dim=-1)
-                        except Exception:
-                            eff_input_ids = torch.cat([input_ids[:, :sink_n], input_ids[:, - (target_k - sink_n):]], dim=-1)
-                            eff_attn_mask = torch.cat([attention_mask[:, :sink_n], attention_mask[:, - (target_k - sink_n):]], dim=-1)
-                    else:
-                        eff_input_ids = torch.cat([input_ids[:, :sink_n], input_ids[:, - (target_k - sink_n):]], dim=-1)
-                        eff_attn_mask = torch.cat([attention_mask[:, :sink_n], attention_mask[:, - (target_k - sink_n):]], dim=-1)
+    def _evict_snapkv(
+        self, pairs: List[Tuple[torch.Tensor, torch.Tensor]], target: int
+    ) -> List[Tuple[torch.Tensor, torch.Tensor]]:
+        SnapKVCluster = upstream.load_snapkv()
+        layers = getattr(getattr(self.model, "model", self.model), "layers", [])
+        cluster = SnapKVCluster(
+            window_size=self.window_size,
+            max_capacity_prompt=target,
+            kernel_size=self.kernel_size,
+            pooling=self.pooling,
+        )
 
-        with torch.no_grad():
-            outputs = self.model.generate(
-                input_ids=eff_input_ids,
-                attention_mask=eff_attn_mask,
-                max_new_tokens=max_new_tokens,
-                do_sample=False,
-                pad_token_id=self.tokenizer.pad_token_id if self.tokenizer else None,
-                eos_token_id=self.tokenizer.eos_token_id if self.tokenizer else None,
-                **kwargs
+        out: List[Tuple[torch.Tensor, torch.Tensor]] = []
+        for idx, (k, v) in enumerate(pairs):
+            attn_module = layers[idx].self_attn
+            q_obs = self._observation_queries(attn_module, idx)
+            groups = int(getattr(attn_module, "num_key_value_groups", 1))
+
+            if q_obs is None:
+                # No captured window: fall back to the recent window alone, and
+                # say so rather than silently scoring something else.
+                out.append((k[..., -target:, :], v[..., -target:, :]))
+                continue
+
+            if groups == 1:
+                # Head counts already match: upstream's own function, verbatim.
+                nk, nv = cluster.update_kv(k, q_obs, v, None, groups)
+                out.append((nk, nv))
+                continue
+
+            nk, nv = snapkv_compress_gqa(
+                k, v, q_obs,
+                window_size=self.window_size,
+                max_capacity_prompt=target,
+                kernel_size=self.kernel_size,
+                pooling=self.pooling,
+                num_key_value_groups=groups,
             )
-        return outputs
+            out.append((nk, nv))
+
+        return out
+
+    def end_query(self) -> None:
+        self._observation = {}
+        super().end_query()
+
+    # ------------------------------------------------------------------ #
+    # Resource accounting                                                 #
+    # ------------------------------------------------------------------ #
 
     def get_kv_metadata(self, context_length: int) -> KVStateMetadata:
-        num_layers = getattr(self.model.config, "num_hidden_layers", 32) if self.model else 32
-        num_kv_heads = getattr(self.model.config, "num_key_value_heads", getattr(self.model.config, "num_attention_heads", 32)) if self.model else 32
-        hidden_size = getattr(self.model.config, "hidden_size", 4096) if self.model else 4096
-        num_heads = getattr(self.model.config, "num_attention_heads", 32) if self.model else 32
-        head_dim = getattr(self.model.config, "head_dim", hidden_size // num_heads) if self.model else 128
+        num_layers, num_kv_heads, head_dim = self.model_kv_geometry()
 
+        floor = self.sink_tokens + self.window_size + 1
         if self.max_tokens_retained is not None:
-            retained_tokens = min(context_length, max(self.sink_tokens + self.local_tokens, self.max_tokens_retained))
+            retained = min(context_length, max(floor, self.max_tokens_retained))
         else:
-            retained_tokens = min(context_length, max(self.sink_tokens + self.local_tokens, int(context_length * self.retention_ratio)))
+            retained = min(context_length, max(floor, int(context_length * self.retention_ratio)))
 
-        # Dense FP16 elements for retained tokens
-        dense_bytes_per_elem = 2.0  # FP16 = 2 bytes
-        algorithmic_bytes = 2.0 * num_layers * num_kv_heads * head_dim * retained_tokens * dense_bytes_per_elem
+        # Retained tokens stay in fp16; the saving is purely in token count.
+        algorithmic_bytes = 2.0 * num_layers * num_kv_heads * head_dim * retained * 2.0
+        # Each surviving token needs its original position recorded (int32) so
+        # RoPE-consistent decoding can address it.
+        index_overhead_bytes = retained * 4.0 * num_layers
 
-        # Positional index metadata overhead: 4 bytes int32 per retained token
-        index_overhead_bytes = retained_tokens * 4.0
-
-        effective_bpt = (algorithmic_bytes + index_overhead_bytes) * 8.0 / max(1, 2 * num_layers * num_kv_heads * head_dim * context_length)
+        dense_elems = self.dense_element_count(context_length)
+        effective_bpe = (algorithmic_bytes + index_overhead_bytes) * 8.0 / max(1, dense_elems)
 
         return KVStateMetadata(
             adapter_name=self.name,
             method_type=self.method_type,
-            effective_bits_per_element=effective_bpt,
-            total_tokens_stored=retained_tokens,
+            effective_bits_per_element=effective_bpe,
+            total_tokens_stored=retained,
             context_length=context_length,
             num_layers=num_layers,
             num_kv_heads=num_kv_heads,
             head_dim=head_dim,
             algorithmic_bytes=algorithmic_bytes,
             metadata_overhead_bytes=index_overhead_bytes,
-            custom_metrics={"strategy": self.strategy, "retained_tokens": retained_tokens, "retention_ratio": self.retention_ratio}
+            custom_metrics={
+                "strategy": self.strategy,
+                "retained_tokens": retained,
+                "retention_ratio": retained / max(1, context_length),
+                "window_size": self.window_size,
+                "sink_tokens": self.sink_tokens,
+            },
         )

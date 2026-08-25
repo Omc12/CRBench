@@ -39,7 +39,7 @@ def cli():
 @click.option("--method", "-a", required=True, help="Compression adapter type (e.g. kv_quant_int8, snapkv, custom_dkv, dense).")
 @click.option("--budget", "-b", default=4.0, type=float, help="Resource budget value (e.g. bits/token or ratio).")
 @click.option("--dense/--no-dense", default=True, help="Run uncompressed Dense FP16 reference on the identical query.")
-@click.option("--alpha", default=CRBENCH_ALPHA, type=float, help="Quality weight α in utility formulation.")
+@click.option("--alpha", default=CRBENCH_ALPHA, type=float, help="Quality weight alpha in utility formulation.")
 @click.option("--formula", default="linear", help="Scoring utility formula (linear, cobb_douglas, harmonic, power_mean_2).")
 @click.option("--part2/--part1", default=False, help="Enable Part 2 System runtime profiling (TTFT, throughput).")
 def evaluate_cmd(model, query, context, ground_truth, method, budget, dense, alpha, formula, part2):
@@ -121,7 +121,7 @@ def evaluate_cmd(model, query, context, ground_truth, method, budget, dense, alp
 @click.option("--budget", "-b", default=4.0, type=float, help="Resource budget value.")
 @click.option("--context-lengths", "-l", multiple=True, type=int, default=[2048, 4096], help="Context lengths (tokens).")
 @click.option("--samples", "-s", default=3, type=int, help="Number of query samples per context length.")
-@click.option("--alpha", default=CRBENCH_ALPHA, type=float, help="Quality weight α in utility formulation.")
+@click.option("--alpha", default=CRBENCH_ALPHA, type=float, help="Quality weight alpha in utility formulation.")
 @click.option("--formula", default="linear", help="Scoring utility formula.")
 @click.option("--output-dir", "-o", default="results/cli_dataset_eval", help="Directory to save experimental results.")
 def evaluate_dataset_cmd(model, dataset, method, budget, context_lengths, samples, alpha, formula, output_dir):
@@ -168,12 +168,12 @@ def evaluate_dataset_cmd(model, dataset, method, budget, context_lengths, sample
                 )
                 click.echo("\n" + agg_obj.format_table())
 
-    click.echo(f"\n[✓] Results saved in: {output_dir}")
+    click.echo(f"\n[OK] Results saved in: {output_dir}")
 
 
 @cli.command("recompute")
 @click.option("--raw-file", "-f", required=True, type=click.Path(exists=True), help="Path to raw_results_v1.json file.")
-@click.option("--alpha", default=CRBENCH_ALPHA, type=float, help="Quality weight α.")
+@click.option("--alpha", default=CRBENCH_ALPHA, type=float, help="Quality weight alpha.")
 @click.option("--formula", default="linear", help="Utility formula.")
 @click.option("--weighting", default="logarithmic", help="Context weighting scheme.")
 def recompute_cmd(raw_file, alpha, formula, weighting):
@@ -230,7 +230,7 @@ def run_cmd(config, model, tasks, context_lengths, samples, output_dir):
     runner = BenchmarkRunner(cfg)
     runner.load_model()
     results = runner.run()
-    click.echo(f"\n[✓] CRBench run finished successfully. Results saved in: {output_dir}")
+    click.echo(f"\n[OK] CRBench run finished successfully. Results saved in: {output_dir}")
 
 
 @cli.command("report")
@@ -259,7 +259,7 @@ def compare_cmd(method_a, method_b, scores_a, scores_b):
     click.echo(f"Mean Difference ({method_a} - {method_b}): {res.mean_diff:+.3f}")
     click.echo(f"Cohen's d Effect Size: {res.cohens_d:.3f}")
     click.echo(f"Permutation p-value: {res.p_value:.4f}")
-    click.echo(f"Statistically Significant (alpha=0.05): {'YES [✓]' if res.is_statistically_significant else 'NO [✗]'}")
+    click.echo(f"Statistically Significant (alpha=0.05): {'YES [OK]' if res.is_statistically_significant else 'NO'}")
 
 
 def main():

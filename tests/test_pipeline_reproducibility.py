@@ -10,7 +10,7 @@ import torch
 from crbench.core.adapter import BaseContextAdapter, KVStateMetadata, ExecutionStatus
 from crbench.core.runner import recompute_scores_from_raw_file
 from crbench.adapters.dense import DenseAdapter
-from crbench.adapters.quantized import QuantizedKVAdapter, quantize_to_int_simulated
+from crbench.adapters.quantized import QuantizedKVAdapter, quantize_dequantize
 from crbench.adapters.compressed import LowRankCompressedKVAdapter
 from crbench.scoring.pareto import OperatingPoint
 from crbench.scoring.resource_score import CRBenchResourceScorer
@@ -39,26 +39,26 @@ def test_memory_accounting_fields_and_alignment():
 
 
 def test_quantization_tensor_modification():
-    """Proves that quantize_to_int_simulated genuinely modifies floating point tensor activations."""
+    """Proves that quantize_dequantize genuinely modifies floating point tensor activations."""
     torch.manual_seed(42)
     t = torch.randn(2, 64, 128, dtype=torch.float32)
 
     # 16-bit returns exact identity
-    t_fp16 = quantize_to_int_simulated(t, n_bits=16)
+    t_fp16 = quantize_dequantize(t, n_bits=16)
     assert torch.equal(t, t_fp16)
 
     # 8-bit has small quantization error
-    t_int8 = quantize_to_int_simulated(t, n_bits=8)
+    t_int8 = quantize_dequantize(t, n_bits=8)
     assert not torch.equal(t, t_int8)
     error_8 = torch.norm(t - t_int8).item()
 
     # 4-bit has higher error than 8-bit
-    t_int4 = quantize_to_int_simulated(t, n_bits=4)
+    t_int4 = quantize_dequantize(t, n_bits=4)
     assert not torch.equal(t, t_int4)
     error_4 = torch.norm(t - t_int4).item()
 
     # 2-bit has highest error
-    t_int2 = quantize_to_int_simulated(t, n_bits=2)
+    t_int2 = quantize_dequantize(t, n_bits=2)
     assert not torch.equal(t, t_int2)
     error_2 = torch.norm(t - t_int2).item()
 

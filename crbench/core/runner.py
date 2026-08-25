@@ -7,6 +7,7 @@ import json
 import os
 import math
 from pathlib import Path
+from dataclasses import asdict
 from typing import Any, Dict, List, Optional, Tuple
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -15,6 +16,7 @@ from crbench.core.config import BenchmarkConfig, TaskConfig, AdapterConfig
 from crbench.core.registry import Registry
 from crbench.core.budget import ContextBudget, BudgetType
 from crbench.core.adapter import BaseContextAdapter
+from crbench.core.inference import GenerationTrace, chunked_prefill_generate
 from crbench.adapters.dense import DenseAdapter
 import crbench.adapters  # Registers all adapters
 import crbench.tasks     # Registers all tasks
@@ -59,6 +61,9 @@ class BenchmarkRunner:
         self.device = self._resolve_device(config.model.device)
         self.tokenizer = None
         self.model = None
+        # Device allocation attributable to weights alone; every peak-VRAM
+        # figure downstream is reported relative to this.
+        self._weight_bytes: int = 0
         self.normalizer = QualityNormalizer(
             floor_score=config.scoring.floor_quality,
             min_dynamic_range=config.scoring.min_dynamic_range
@@ -92,7 +97,7 @@ class BenchmarkRunner:
         return torch.device(device_str)
 
     def load_model(self) -> None:
-        """Loads Hugging Face model and tokenizer."""
+        """Loads Hugging Face model and tokenizer with support for 4-bit / 8-bit quantization."""
         model_name = self.config.model.model_name_or_path
         print(f"[*] Loading model: {model_name} on {self.device}...", flush=True)
         
@@ -111,18 +116,85 @@ class BenchmarkRunner:
             }
             torch_dtype = dtype_map.get(self.config.model.dtype, torch.float32)
 
-            self.model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                torch_dtype=torch_dtype,
-                trust_remote_code=self.config.model.trust_remote_code,
-                low_cpu_mem_usage=True
-            ).to(self.device)
+            kwargs: Dict[str, Any] = {
+                "torch_dtype": torch_dtype,
+                "trust_remote_code": self.config.model.trust_remote_code,
+                "low_cpu_mem_usage": True,
+            }
+
+            if self.config.model.attn_implementation:
+                kwargs["attn_implementation"] = self.config.model.attn_implementation
+
+            # RoPE scaling must be an explicit, recorded decision: Qwen2.5's
+            # native window is 32768 and anything beyond it without YaRN
+            # measures positional extrapolation, not the KV representation.
+            if self.config.model.rope_scaling:
+                from transformers import AutoConfig
+                hf_cfg = AutoConfig.from_pretrained(
+                    model_name, trust_remote_code=self.config.model.trust_remote_code
+                )
+                hf_cfg.rope_scaling = dict(self.config.model.rope_scaling)
+                if self.config.model.max_model_len:
+                    hf_cfg.max_position_embeddings = int(self.config.model.max_model_len)
+                kwargs["config"] = hf_cfg
+                print(f"[*] RoPE scaling enabled: {self.config.model.rope_scaling}", flush=True)
+
+            # Quantization support (BitsAndBytes)
+            if self.config.model.load_in_4bit or self.config.model.load_in_8bit:
+                try:
+                    from transformers import BitsAndBytesConfig
+                    compute_dtype = dtype_map.get(self.config.model.bnb_4bit_compute_dtype, torch.bfloat16)
+                    if self.config.model.load_in_4bit:
+                        kwargs["quantization_config"] = BitsAndBytesConfig(
+                            load_in_4bit=True,
+                            bnb_4bit_compute_dtype=compute_dtype,
+                            bnb_4bit_quant_type=self.config.model.bnb_4bit_quant_type,
+                            bnb_4bit_use_double_quant=self.config.model.bnb_4bit_use_double_quant,
+                        )
+                    elif self.config.model.load_in_8bit:
+                        kwargs["quantization_config"] = BitsAndBytesConfig(load_in_8bit=True)
+                except ImportError:
+                    if self.config.model.load_in_4bit:
+                        kwargs["load_in_4bit"] = True
+                    elif self.config.model.load_in_8bit:
+                        kwargs["load_in_8bit"] = True
+
+                device_map = self.config.model.device_map or "auto"
+                kwargs["device_map"] = device_map
+                self.model = AutoModelForCausalLM.from_pretrained(model_name, **kwargs)
+            else:
+                if self.config.model.device_map:
+                    kwargs["device_map"] = self.config.model.device_map
+                    self.model = AutoModelForCausalLM.from_pretrained(model_name, **kwargs)
+                else:
+                    self.model = AutoModelForCausalLM.from_pretrained(model_name, **kwargs).to(self.device)
+
             self.model.eval()
-            print(f"[✓] Model loaded successfully.")
+            import gc, ctypes
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            try:
+                ctypes.windll.psapi.EmptyWorkingSet(ctypes.windll.kernel32.GetCurrentProcess())
+            except Exception:
+                pass
+
+            # Everything allocated at this point is weights; every later peak is
+            # reported relative to it, so the KV figures are not inflated by the
+            # model's own footprint.
+            if torch.cuda.is_available() and self.device.type == "cuda":
+                self._weight_bytes = int(torch.cuda.memory_allocated(self.device))
+                print(f"[OK] Model loaded. Weights resident: "
+                      f"{self._weight_bytes / 2**30:.2f} GiB", flush=True)
+            else:
+                self._weight_bytes = 0
+                print("[OK] Model loaded successfully.")
         except Exception as e:
-            print(f"[!] Warning: Could not load live model from HF ({e}). Initializing mock model for benchmark simulation.")
-            self.tokenizer = None
-            self.model = None
+            # A failed load must not silently degrade into a simulation: every
+            # number downstream would be fabricated. Fail loudly instead.
+            raise RuntimeError(
+                f"Could not load model '{model_name}' on {self.device}: {e}"
+            ) from e
 
     def run(self) -> Dict[str, Any]:
         """
@@ -151,6 +223,10 @@ class BenchmarkRunner:
 
         raw_measurements: List[Dict[str, Any]] = []
         query_eval_results: List[QueryEvaluationResult] = []
+        # Measured peak device allocation above the weight baseline, per method
+        # and context length; feeds the Part 2 system score in place of the
+        # bits-per-token proxy it used to be derived from.
+        peak_vram_by_method_ctx: Dict[Tuple[str, int], float] = {}
 
         # 2. Iterate through Tasks
         for task_cfg in self.config.tasks:
@@ -168,25 +244,53 @@ class BenchmarkRunner:
                     tokenizer=self.tokenizer
                 )
 
-                # First establish dense reference score on this exact batch of queries
+                # Establish the dense reference on this exact batch of queries.
+                # This is the anchor the whole benchmark is defined against, so
+                # it is measured at every context length -- including the long
+                # ones -- rather than assumed. If it cannot run, the context
+                # length is unusable and every method at it is skipped, because
+                # a relative score with no reference is not a score.
                 dense_adapter = DenseAdapter(name="dense_fp16_ref")
-                if self.model:
-                    dense_adapter.prepare_model(self.model, self.tokenizer)
-                
-                dense_sample_map: Dict[str, SampleEvaluationResult] = {}
+                dense_adapter.prepare_model(self.model, self.tokenizer)
                 dense_kv_meta = dense_adapter.get_kv_metadata(ctx_len)
 
+                dense_sample_map: Dict[str, SampleEvaluationResult] = {}
+                dense_traces: List[GenerationTrace] = []
                 try:
-                    dense_task_score = self._evaluate_adapter_on_task(dense_adapter, task_inst, samples)
-                    dense_ref_val = max(1e-2, dense_task_score.mean_score)
+                    dense_task_score, dense_traces = self._evaluate_adapter_on_samples(
+                        dense_adapter, task_inst, samples, ctx_len
+                    )
+                    dense_ref_val = dense_task_score.mean_score
                     dense_scores_by_task_len[(task_inst.name, ctx_len)] = dense_ref_val
                     for s_res in dense_task_score.sample_results:
                         dense_sample_map[s_res.sample_id] = s_res
-                    print(f"      [Ref] Dense Baseline Raw Score: {dense_task_score.mean_score:.2f}%", flush=True)
+                    dense_lat = self._latency_from_traces(dense_traces)
+                    peak_gib = max((t.peak_total_bytes for t in dense_traces), default=0) / 2 ** 30
+                    print(f"      [Ref] Dense baseline raw score: {dense_ref_val:.1f}% | "
+                          f"TTFT {dense_lat.ttft_ms / 1000.0:.1f}s | "
+                          f"decode {dense_lat.decode_latency_ms_per_token:.0f} ms/tok | "
+                          f"peak {peak_gib:.2f} GiB", flush=True)
+                except (torch.cuda.OutOfMemoryError, torch.OutOfMemoryError) as e:
+                    self._release_memory()
+                    raw_measurements.append({
+                        "task_name": task_inst.name, "context_length": ctx_len,
+                        "adapter_name": "dense_fp16_ref", "budget_spec": 16.0,
+                        "status": "OOM",
+                        "error_message": f"Dense reference OOM at {ctx_len} tokens: {e}",
+                    })
+                    print(f"      [Ref] Dense reference OOM at {ctx_len:,} tokens -- "
+                          f"skipping this context length entirely.", flush=True)
+                    continue
                 except Exception as e:
-                    dense_ref_val = 1e-2
-                    dense_scores_by_task_len[(task_inst.name, ctx_len)] = dense_ref_val
-                    print(f"      [!] Dense Reference Error: {e}", flush=True)
+                    self._release_memory()
+                    raw_measurements.append({
+                        "task_name": task_inst.name, "context_length": ctx_len,
+                        "adapter_name": "dense_fp16_ref", "budget_spec": 16.0,
+                        "status": "RUNTIME_ERROR", "error_message": str(e),
+                    })
+                    print(f"      [Ref] Dense reference failed at {ctx_len:,} tokens "
+                          f"({type(e).__name__}: {e}) -- skipping this context length.", flush=True)
+                    continue
 
                 # Now evaluate each configured adapter under budget sweeps
                 for ad_inst, ad_cfg in zip(adapters, self.config.adapters):
@@ -218,8 +322,19 @@ class BenchmarkRunner:
 
                         # Evaluate Task Quality & Profile Latency
                         try:
-                            task_res, lat_res = self._evaluate_adapter_with_profiling(ad_inst, task_inst, samples, ctx_len)
-                            
+                            if ad_inst.method_type == "dense":
+                                # The dense reference above already ran exactly
+                                # this configuration on exactly these samples;
+                                # re-running it would double the most expensive
+                                # pass in the sweep and, worse, let the baseline
+                                # disagree with itself through run-to-run noise.
+                                task_res, traces = dense_task_score, dense_traces
+                            else:
+                                task_res, traces = self._evaluate_adapter_on_samples(
+                                    ad_inst, task_inst, samples, ctx_len
+                                )
+                            lat_res = self._latency_from_traces(traces)
+
                             # Normalize quality against dense baseline
                             dense_ref = dense_scores_by_task_len.get((task_inst.name, ctx_len), 1e-2)
                             norm_q = self.normalizer.normalize(
@@ -234,16 +349,46 @@ class BenchmarkRunner:
                             method_bytes = float(kv_meta.algorithmic_bytes) if kv_meta.algorithmic_bytes > 0 else float(mem_cost * ctx_len * 2)
                             dense_bytes = float(dense_kv_meta.algorithmic_bytes) if dense_kv_meta.algorithmic_bytes > 0 else float(16.0 * ctx_len * 2)
 
-                            # Atomic Query Evaluation Results for each query
+                            # Atomic Query Evaluation Results for each query.
+                            # Dense and method runtime figures come from the two
+                            # runs of *this* query, so the Part 2 comparison is a
+                            # genuine pairing rather than a method's own numbers
+                            # entered on both sides.
                             for s_idx, sample_obj in enumerate(samples):
                                 d_sample_res = dense_sample_map.get(sample_obj.sample_id)
                                 d_raw = float(d_sample_res.score) if d_sample_res else (dense_ref / 100.0)
                                 m_sample_res = task_res.sample_results[s_idx] if s_idx < len(task_res.sample_results) else None
                                 m_raw = float(m_sample_res.score) if m_sample_res else 0.0
 
+                                d_tr = dense_traces[s_idx] if s_idx < len(dense_traces) else None
+                                m_tr = traces[s_idx] if s_idx < len(traces) else None
+
                                 q_norm = self.normalizer.normalize(m_raw, d_raw, task_floor=task_inst.floor_score)
                                 r_eff = compute_query_resource_efficiency(dense_bytes, method_bytes, 16.0, mem_cost)
                                 p1_s = compute_utility(q_norm, r_eff, alpha=self.config.scoring.utility_alpha, formula=self.config.scoring.utility_formula)
+
+                                q_meta: Dict[str, Any] = {
+                                    "kv_state_metadata": kv_meta.custom_metrics,
+                                    "algorithmic_bytes": float(kv_meta.algorithmic_bytes),
+                                    "metadata_overhead_bytes": float(kv_meta.metadata_overhead_bytes),
+                                }
+                                if m_tr is not None:
+                                    q_meta.update({
+                                        "method_prefill_seconds": m_tr.prefill_seconds,
+                                        "method_compression_seconds": m_tr.compression_seconds,
+                                        "method_decode_ms_per_token": m_tr.decode_seconds_per_token * 1000.0,
+                                        "method_latency_jitter_ms": m_tr.latency_jitter_ms,
+                                        "method_peak_prefill_bytes": m_tr.peak_prefill_bytes,
+                                        "method_resident_kv_bytes": m_tr.kv_bytes_after_transform,
+                                        "method_kv_tokens_retained": m_tr.kv_tokens_after_transform,
+                                        "method_prompt_tokens": m_tr.prompt_tokens,
+                                        "transform": m_tr.method_metadata,
+                                    })
+                                if d_tr is not None:
+                                    q_meta.update({
+                                        "dense_prefill_seconds": d_tr.prefill_seconds,
+                                        "dense_resident_kv_bytes": d_tr.kv_bytes_after_transform,
+                                    })
 
                                 query_eval = QueryEvaluationResult(
                                     query_id=sample_obj.sample_id,
@@ -263,15 +408,18 @@ class BenchmarkRunner:
                                     method_effective_bpt=float(mem_cost),
                                     resource_efficiency=float(r_eff),
                                     part1_score=float(p1_s),
-                                    dense_ttft_ms=float(lat_res.ttft_ms),
-                                    method_ttft_ms=float(lat_res.ttft_ms),
-                                    dense_decode_throughput=float(lat_res.decode_throughput_tok_per_sec),
-                                    method_decode_throughput=float(lat_res.decode_throughput_tok_per_sec),
+                                    dense_ttft_ms=float(d_tr.ttft_seconds * 1000.0) if d_tr else None,
+                                    method_ttft_ms=float(m_tr.ttft_seconds * 1000.0) if m_tr else None,
+                                    dense_decode_throughput=float(d_tr.decode_throughput_tok_per_sec) if d_tr else None,
+                                    method_decode_throughput=float(m_tr.decode_throughput_tok_per_sec) if m_tr else None,
+                                    dense_peak_vram_mb=(d_tr.peak_total_bytes - d_tr.weight_baseline_bytes) / 2**20 if d_tr else None,
+                                    method_peak_vram_mb=(m_tr.peak_total_bytes - m_tr.weight_baseline_bytes) / 2**20 if m_tr else None,
                                     dense_prediction=d_sample_res.prediction if d_sample_res else "",
                                     method_prediction=m_sample_res.prediction if m_sample_res else "",
                                     ground_truths=sample_obj.ground_truths,
                                     formula_name=self.config.scoring.utility_formula,
                                     alpha=self.config.scoring.utility_alpha,
+                                    metadata=q_meta,
                                 )
                                 query_eval_results.append(query_eval)
 
@@ -286,6 +434,16 @@ class BenchmarkRunner:
                             )
                             operating_points[ad_inst.name][ctx_len].append(op_pt)
                             runtime_metrics_by_method[ad_inst.name].append(lat_res)
+
+                            peak_kv_mb = (
+                                sum(t.peak_total_bytes - t.weight_baseline_bytes for t in traces)
+                                / max(1, len(traces)) / 2 ** 20
+                            )
+                            resident_kv_mb = (
+                                sum(t.kv_bytes_after_transform for t in traces)
+                                / max(1, len(traces)) / 2 ** 20
+                            )
+                            peak_vram_by_method_ctx[(ad_inst.name, ctx_len)] = peak_kv_mb
 
                             raw_measurements.append({
                                 "task_name": task_inst.name,
@@ -302,12 +460,24 @@ class BenchmarkRunner:
                                 "ttft_ms": float(lat_res.ttft_ms),
                                 "decode_throughput_tok_sec": float(lat_res.decode_throughput_tok_per_sec),
                                 "decode_latency_ms": float(lat_res.decode_latency_ms_per_token),
-                                "predictions": [s.prediction for s in task_res.sample_results]
+                                "latency_jitter_ms": float(lat_res.latency_jitter_ms),
+                                # Measured on the device, not inferred from bits/token.
+                                "peak_vram_above_weights_mb": float(peak_kv_mb),
+                                "resident_kv_bytes_measured": float(resident_kv_mb * 2 ** 20),
+                                "kv_tokens_retained": int(
+                                    sum(t.kv_tokens_after_transform for t in traces) / max(1, len(traces))
+                                ),
+                                "predictions": [s.prediction for s in task_res.sample_results],
                             })
 
-                            print(f"      [{ad_inst.name} | Budget={b_val}] Raw: {task_res.mean_score:.1f}% -> Norm: {norm_q:.1f}% | Eff BPT: {mem_cost:.2f} bpt | Latency: {lat_res.decode_latency_ms_per_token:.1f}ms/tok", flush=True)
+                            print(f"      [{ad_inst.name} | Budget={b_val}] Raw: {task_res.mean_score:.1f}% -> "
+                                  f"Norm: {norm_q:.1f}% | {mem_cost:.2f} bpt | "
+                                  f"TTFT {lat_res.ttft_ms / 1000.0:.1f}s | "
+                                  f"{lat_res.decode_latency_ms_per_token:.0f} ms/tok | "
+                                  f"KV {resident_kv_mb / 1024.0:.2f} GiB | "
+                                  f"peak+ {peak_kv_mb / 1024.0:.2f} GiB", flush=True)
 
-                        except torch.cuda.OutOfMemoryError as e:
+                        except (torch.cuda.OutOfMemoryError, torch.OutOfMemoryError) as e:
                             raw_measurements.append({
                                 "task_name": task_inst.name,
                                 "context_length": ctx_len,
@@ -317,8 +487,7 @@ class BenchmarkRunner:
                                 "error_message": str(e)
                             })
                             print(f"      [{ad_inst.name} | Budget={b_val}] FAILED: Out of Memory (OOM)", flush=True)
-                            if torch.cuda.is_available():
-                                torch.cuda.empty_cache()
+                            self._release_memory()
                         except Exception as e:
                             raw_measurements.append({
                                 "task_name": task_inst.name,
@@ -342,17 +511,47 @@ class BenchmarkRunner:
 
         # Save Raw Measurements JSON Schema v2.0.0 (Atomic Query Level)
         import platform
+        from datetime import datetime
         raw_manifest = {
             "schema_version": "2.0.0",
             "benchmark_name": self.config.benchmark_name,
-            "timestamp": str(os.popen("date").read().strip()),
+            "timestamp": datetime.now().isoformat(),
             "environment": {
                 "python_version": platform.python_version(),
                 "pytorch_version": torch.__version__,
+                "transformers_version": __import__("transformers").__version__,
                 "device": str(self.device),
+                "device_name": (torch.cuda.get_device_name(self.device)
+                                if torch.cuda.is_available() and self.device.type == "cuda" else None),
+                "device_total_memory_bytes": (
+                    torch.cuda.get_device_properties(self.device).total_memory
+                    if torch.cuda.is_available() and self.device.type == "cuda" else None),
                 "os": platform.platform()
             },
             "model_name": self.config.model.model_name_or_path,
+            "model_config": {
+                "dtype": self.config.model.dtype,
+                "load_in_4bit": self.config.model.load_in_4bit,
+                "load_in_8bit": self.config.model.load_in_8bit,
+                "bnb_4bit_quant_type": self.config.model.bnb_4bit_quant_type,
+                "bnb_4bit_use_double_quant": self.config.model.bnb_4bit_use_double_quant,
+                "attn_implementation": self.config.model.attn_implementation,
+                "max_model_len": self.config.model.max_model_len,
+                # Recorded because a scaled RoPE changes what a long-context
+                # score means; a reader must be able to tell the two regimes apart.
+                "rope_scaling": self.config.model.rope_scaling,
+                "weight_bytes_resident": self._weight_bytes,
+            },
+            "execution_config": {
+                "prefill_chunk_size": self.config.profiler.prefill_chunk_size,
+                "max_new_tokens": self.config.profiler.max_new_tokens,
+                "decoding": "greedy",
+                "prefill": "chunked, shared preallocated cache",
+            },
+            # Where each method's implementation came from, straight from the
+            # adapters, so a reader can separate an upstream reference from a
+            # CRBench-internal baseline without reading the source.
+            "method_provenance": {ad.name: ad.provenance() for ad in adapters},
             "scoring_config": {
                 "utility_formula": self.config.scoring.utility_formula,
                 "utility_alpha": self.config.scoring.utility_alpha,
@@ -366,11 +565,11 @@ class BenchmarkRunner:
         raw_json_path = out_dir / "raw_results_v1.json"
         with open(raw_json_path, "w", encoding="utf-8") as f:
             json.dump(raw_manifest, f, indent=2)
-        print(f"[✓] Versioned query-level measurements saved: {raw_json_path}", flush=True)
+        print(f"[OK] Versioned query-level measurements saved: {raw_json_path}", flush=True)
 
         # 3. Part 1 Scoring: CRBench Resource Scores
         print("\n" + "=" * 70, flush=True)
-        print("Computing Part 1 — CRBench Resource Scores (S_res)...", flush=True)
+        print("Computing Part 1 -- CRBench Resource Scores (S_res)...", flush=True)
         print("=" * 70, flush=True)
         
         resource_results: List[CRBenchResourceScoreResult] = []
@@ -388,7 +587,7 @@ class BenchmarkRunner:
 
         # 4. Part 2 Scoring: CRBench System Scores
         print("\n" + "=" * 70, flush=True)
-        print("Computing Part 2 — CRBench System Scores (S_sys)...", flush=True)
+        print("Computing Part 2 -- CRBench System Scores (S_sys)...", flush=True)
         print("=" * 70, flush=True)
 
         system_results: List[CRBenchSystemScoreResult] = []
@@ -414,7 +613,14 @@ class BenchmarkRunner:
             ctx_pts = operating_points.get(ad_name, {})
             all_pts = [pt for pts in ctx_pts.values() for pt in pts]
             mean_mem_cost_bpt = float(sum(p.memory_cost for p in all_pts) / max(1, len(all_pts))) if all_pts else 16.0
-            vram_mb = 1024.0 * (mean_mem_cost_bpt / 16.0)
+
+            # Measured peak device allocation above the weight baseline, averaged
+            # over the context lengths this method completed.  Previously this
+            # was 1024 MB scaled by bits/token, which is not a measurement of
+            # anything -- it restated the Part 1 memory axis as though it were a
+            # hardware observation, so Part 2 could never disagree with Part 1.
+            method_peaks = [v for (m, _), v in peak_vram_by_method_ctx.items() if m == ad_name]
+            vram_mb = float(sum(method_peaks) / len(method_peaks)) if method_peaks else 0.0
 
             sys_metrics = SystemRuntimeMetrics(
                 mean_ttft_ms=mean_ttft,
@@ -462,7 +668,7 @@ class BenchmarkRunner:
             sys_path = str(fig_dir / "resource_vs_system_score.png")
             plot_resource_vs_system_score(system_results, output_path=sys_path)
             plot_paths["Part 1 vs Part 2 System Tradeoff"] = sys_path
-            print(f"[✓] Publication figures saved in {fig_dir}")
+            print(f"[OK] Publication figures saved in {fig_dir}")
 
         # 6. Weighting Sensitivity Analysis
         from crbench.statistics.sensitivity import WeightingSensitivityAnalyzer
@@ -480,7 +686,7 @@ class BenchmarkRunner:
             plot_paths=plot_paths,
             output_file=report_file
         )
-        print(f"[✓] Final Benchmark Report generated: {report_file}")
+        print(f"[OK] Final Benchmark Report generated: {report_file}")
 
         return {
             "resource_results": resource_results,
@@ -504,68 +710,117 @@ class BenchmarkRunner:
             return ContextBudget(budget_type=b_type, value=float(val.get("value", 16.0)))
         return ContextBudget.from_bits_per_token(16.0)
 
-    def _evaluate_adapter_on_task(
-        self,
-        adapter: BaseContextAdapter,
-        task: BaseTask,
-        samples: List[EvaluationSample]
-    ) -> TaskResult:
-        res, _ = self._evaluate_adapter_with_profiling(adapter, task, samples, samples[0].context_length if samples else 0)
-        return res
+    def _encode_sample(self, sample: EvaluationSample, context_length: int) -> torch.Tensor:
+        """Tokenise one sample's prompt, applying the model's chat template."""
+        if self.tokenizer is None:
+            raise RuntimeError("Tokenizer must be loaded for live evaluation.")
 
-    def _evaluate_adapter_with_profiling(
-        self,
-        adapter: BaseContextAdapter,
-        task: BaseTask,
-        samples: List[EvaluationSample],
-        context_length: int
-    ) -> Tuple[TaskResult, LatencyProfileResult]:
-        predictions: List[str] = []
-        prompt_tok_count = context_length
-        
-        def run_inference() -> None:
-            for s in samples:
-                if self.model is None or self.tokenizer is None:
-                    raise RuntimeError("Model and tokenizer must be loaded for live evaluation.")
+        if getattr(self.tokenizer, "chat_template", None):
+            prompt_text = self.tokenizer.apply_chat_template(
+                [{"role": "user", "content": sample.full_prompt}],
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+        else:
+            prompt_text = sample.full_prompt
 
-                if hasattr(self.tokenizer, "apply_chat_template") and getattr(self.tokenizer, "chat_template", None):
-                    prompt_text = self.tokenizer.apply_chat_template(
-                        [{"role": "user", "content": s.full_prompt}],
-                        tokenize=False,
-                        add_generation_prompt=True
-                    )
-                else:
-                    prompt_text = s.full_prompt
+        max_ctx = self.config.model.max_model_len or max(context_length + 256, 4096)
+        enc = self.tokenizer(prompt_text, return_tensors="pt", truncation=True, max_length=max_ctx)
+        target_dev = getattr(self.model, "device", self.device)
+        return enc.input_ids.to(target_dev)
 
-                inputs = self.tokenizer(prompt_text, return_tensors="pt", truncation=True, max_length=min(context_length, 8192)).to(self.device)
-                out_tokens = adapter.forward_or_generate(
-                    input_ids=inputs.input_ids,
-                    attention_mask=inputs.attention_mask,
-                    max_new_tokens=32
-                )
-                gen_text = self.tokenizer.decode(out_tokens[0][inputs.input_ids.shape[-1]:], skip_special_tokens=True)
-                predictions.append(gen_text)
-
-        lat_profile = self.latency_profiler.benchmark_generation(
-            generate_fn=run_inference,
-            prompt_tokens=prompt_tok_count * max(1, len(samples)),
-            max_new_tokens=16 * max(1, len(samples))
-        )
-
-        task_res = task.evaluate_batch(predictions, samples)
-        
-        # Immediate memory cleanup for Mac / GPU safety
+    def _release_memory(self) -> None:
         import gc
         gc.collect()
-        if torch.cuda.is_available():
+        if torch.cuda.is_available() and self.device.type == "cuda":
             torch.cuda.empty_cache()
-        elif hasattr(torch, "mps") and torch.backends.mps.is_available():
+        elif getattr(torch.backends, "mps", None) is not None and torch.backends.mps.is_available():
             try:
                 torch.mps.empty_cache()
             except Exception:
                 pass
 
-        return task_res, lat_profile
+    def _run_query(
+        self,
+        adapter: BaseContextAdapter,
+        sample: EvaluationSample,
+        context_length: int,
+    ) -> Tuple[str, GenerationTrace]:
+        """Run one query end to end under one method, and measure it.
+
+        Prefill is chunked so peak activation memory is bounded by the chunk
+        size rather than the context length.  An OOM recorded here therefore
+        means the *KV representation* did not fit -- a genuine result -- rather
+        than that the prompt was fed to the model too greedily, which is not.
+        """
+        input_ids = self._encode_sample(sample, context_length)
+        prof = self.config.profiler
+
+        adapter.begin_query(self.model, input_ids)
+        try:
+            trace = chunked_prefill_generate(
+                self.model,
+                input_ids,
+                max_new_tokens=prof.max_new_tokens,
+                chunk_size=prof.prefill_chunk_size,
+                eos_token_id=getattr(self.tokenizer, "eos_token_id", None),
+                on_chunk_end=adapter.on_chunk_stored if adapter.streaming_transform else None,
+                on_token_end=adapter.on_token_stored if adapter.streaming_transform else None,
+                transform_cache=adapter.transform_cache if adapter.oneshot_transform else None,
+                weight_baseline_bytes=self._weight_bytes,
+                device=self.device,
+                empty_cache_between_chunks=prof.empty_cache_between_chunks,
+            )
+        finally:
+            adapter.end_query()
+
+        prompt_len = int(input_ids.shape[-1])
+        text = self.tokenizer.decode(
+            trace.generated_ids[0][prompt_len:], skip_special_tokens=True
+        )
+        del input_ids
+        self._release_memory()
+        return text, trace
+
+    def _evaluate_adapter_on_samples(
+        self,
+        adapter: BaseContextAdapter,
+        task: BaseTask,
+        samples: List[EvaluationSample],
+        context_length: int,
+    ) -> Tuple[TaskResult, List[GenerationTrace]]:
+        """Run every sample under one method; returns scores plus per-query traces."""
+        predictions: List[str] = []
+        traces: List[GenerationTrace] = []
+        for sample in samples:
+            text, trace = self._run_query(adapter, sample, context_length)
+            predictions.append(text)
+            traces.append(trace)
+        return task.evaluate_batch(predictions, samples), traces
+
+    @staticmethod
+    def _latency_from_traces(traces: List[GenerationTrace]) -> LatencyProfileResult:
+        """Aggregate per-query traces into the Part 2 latency record.
+
+        Every field is a measurement: prefill and decode were timed as separate
+        device-synchronised stages, and jitter is the spread of real inter-token
+        intervals.  An earlier revision split one wall-clock total between the
+        two stages by a fixed ratio and synthesised the intervals from it.
+        """
+        if not traces:
+            return LatencyProfileResult(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, [])
+
+        n = len(traces)
+        return LatencyProfileResult(
+            ttft_ms=sum(t.ttft_seconds for t in traces) / n * 1000.0,
+            prefill_throughput_tok_per_sec=sum(t.prefill_throughput_tok_per_sec for t in traces) / n,
+            decode_latency_ms_per_token=sum(t.decode_seconds_per_token for t in traces) / n * 1000.0,
+            decode_throughput_tok_per_sec=sum(t.decode_throughput_tok_per_sec for t in traces) / n,
+            total_time_seconds=sum(t.ttft_seconds + t.decode_seconds for t in traces),
+            prompt_tokens=sum(t.prompt_tokens for t in traces),
+            generated_tokens=sum(t.generated_tokens for t in traces),
+            inter_token_latencies_ms=[x * 1000.0 for t in traces for x in t.inter_token_seconds],
+        )
 
 
 def recompute_scores_from_raw_file(

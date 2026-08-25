@@ -1,6 +1,21 @@
 """
 BaseContextAdapter and state metadata specifications for CRBench.
 Provides the standard, method-agnostic interface for evaluating any KV/context representation.
+
+A context-compression method is modelled as a **transform on the KV cache**,
+because that is what these methods physically are.  Two hooks cover the
+published families:
+
+* ``on_chunk_stored`` -- a *streaming* transform.  KV quantization compresses
+  what is written to the cache, so every later prefill chunk must attend to the
+  compressed history, not the original.
+* ``transform_cache`` -- a *one-shot prompt* transform.  SnapKV, StreamingLLM
+  eviction, token merging, low-rank projection and DKV all run once, after the
+  prompt is resident, and may return a shorter cache.
+
+Adapters that need per-query state (SnapKV must capture the observation-window
+queries during prefill) set it up in ``begin_query`` and release it in
+``end_query``.  An adapter that implements neither hook is the dense baseline.
 """
 
 from __future__ import annotations
@@ -65,11 +80,12 @@ class KVStateMetadata:
 class BaseContextAdapter(ABC):
     """
     Abstract Base Class for all context representations and compression methods in CRBench.
-    
+
     To benchmark a new KV cache representation or memory method:
     1. Subclass `BaseContextAdapter` and register via `@Registry.register_adapter("your_name")`.
-    2. Implement `method_type`, `apply_budget()`, `forward_or_generate()`, and `get_kv_metadata()`.
-    3. Use `self.hooks` or module replacement in `prepare_model()` / `cleanup()`.
+    2. Implement `method_type`, `apply_budget()`, `get_kv_metadata()`.
+    3. Implement `transform_cache()` (one-shot prompt compression) and/or
+       `on_chunk_stored()` (streaming compression of what gets written).
     """
 
     def __init__(self, name: str, config: Optional[Dict[str, Any]] = None):
@@ -90,11 +106,24 @@ class BaseContextAdapter(ABC):
         """Type tag: 'dense', 'quantization', 'eviction', 'merging', 'compressed', 'custom'."""
         pass
 
+    # ------------------------------------------------------------------ #
+    # Provenance                                                          #
+    # ------------------------------------------------------------------ #
+
+    def provenance(self) -> Dict[str, Any]:
+        """Where this method's implementation comes from.
+
+        Written verbatim into the results manifest so a reader can tell an
+        upstream reference implementation from a CRBench-internal one.
+        """
+        return {"implementation": "crbench_internal"}
+
+    # ------------------------------------------------------------------ #
+    # Model / budget lifecycle                                            #
+    # ------------------------------------------------------------------ #
+
     def prepare_model(self, model: nn.Module, tokenizer: Optional[Any] = None) -> None:
-        """
-        Attaches hooks, replaces attention/KV cache modules, or prepares model for inference.
-        Default implementation stores model and tokenizer references.
-        """
+        """Stores model and tokenizer references; may install persistent patches."""
         self.model = model
         self.tokenizer = tokenizer
 
@@ -112,19 +141,50 @@ class BaseContextAdapter(ABC):
         """
         self.current_budget = budget
 
-    @abstractmethod
-    def forward_or_generate(
+    # ------------------------------------------------------------------ #
+    # Cache-transform protocol                                            #
+    # ------------------------------------------------------------------ #
+
+    #: True when the method compresses what is *written* to the cache, so that
+    #: later prefill chunks and decode steps attend to the compressed history.
+    streaming_transform: bool = False
+
+    #: True when the method rewrites the prompt cache once, after prefill.
+    oneshot_transform: bool = False
+
+    def begin_query(self, model: nn.Module, input_ids: torch.Tensor) -> None:
+        """Per-query setup, before prefill starts (e.g. install capture hooks)."""
+        return None
+
+    def on_chunk_stored(self, cache: Any, start: int, end: int, valid_length: int) -> None:
+        """Streaming transform, called after each prefill chunk lands in the cache."""
+        return None
+
+    def on_token_stored(self, cache: Any, position: int) -> None:
+        """Streaming transform for a single decoded token's KV."""
+        return None
+
+    def transform_cache(
         self,
+        cache: Any,
         input_ids: torch.Tensor,
-        attention_mask: Optional[torch.Tensor] = None,
-        max_new_tokens: int = 32,
-        **kwargs: Any
-    ) -> torch.Tensor:
+        valid_length: int,
+    ) -> Tuple[Any, Dict[str, Any]]:
+        """One-shot prompt-cache transform.
+
+        Returns the (possibly new and shorter) cache plus a metadata dict
+        describing what the transform actually did -- retained token counts,
+        ranks, block statistics -- which is recorded per query.
         """
-        Executes prefill over the context and generates tokens under the configured representation.
-        Returns generated token IDs tensor of shape (batch, seq_len + max_new_tokens).
-        """
-        pass
+        return cache, {}
+
+    def end_query(self) -> None:
+        """Per-query teardown; always called, including after an exception."""
+        self.cleanup()
+
+    # ------------------------------------------------------------------ #
+    # Resource accounting                                                 #
+    # ------------------------------------------------------------------ #
 
     @abstractmethod
     def get_kv_metadata(self, context_length: int) -> KVStateMetadata:
@@ -133,6 +193,23 @@ class BaseContextAdapter(ABC):
         and effective bits per element.
         """
         pass
+
+    def model_kv_geometry(self) -> Tuple[int, int, int]:
+        """(num_layers, num_kv_heads, head_dim) read from the loaded model config."""
+        cfg = getattr(self.model, "config", None)
+        if cfg is None:
+            return 32, 32, 128
+        num_layers = getattr(cfg, "num_hidden_layers", 32)
+        num_heads = getattr(cfg, "num_attention_heads", 32)
+        num_kv_heads = getattr(cfg, "num_key_value_heads", num_heads)
+        hidden_size = getattr(cfg, "hidden_size", 4096)
+        head_dim = getattr(cfg, "head_dim", None) or (hidden_size // max(1, num_heads))
+        return int(num_layers), int(num_kv_heads), int(head_dim)
+
+    def dense_element_count(self, context_length: int) -> int:
+        """Number of KV elements an uncompressed cache would hold at this length."""
+        num_layers, num_kv_heads, head_dim = self.model_kv_geometry()
+        return 2 * num_layers * num_kv_heads * head_dim * context_length
 
     def compute_algorithmic_memory(
         self,

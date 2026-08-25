@@ -33,8 +33,9 @@ def test_dense_adapter_metadata():
 def test_quantized_adapter_metadata():
     adapter = QuantizedKVAdapter(bits=4, group_size=64)
     meta = adapter.get_kv_metadata(context_length=4096)
-    # Effective bits is 4 + scale overhead (16 / 64 = 0.25) = 4.25
-    assert abs(meta.effective_bits_per_element - 4.25) < 1e-3
+    # Asymmetric quantization stores a scale AND a zero-point per group:
+    # 4 + (16 + 16) / 64 = 4.5 bits/element.
+    assert abs(meta.effective_bits_per_element - 4.5) < 1e-3
     assert meta.compression_ratio < 0.3
 
 
@@ -48,8 +49,9 @@ def test_eviction_adapter_metadata():
 def test_merging_adapter_metadata():
     adapter = MergingKVAdapter(merge_ratio=0.5)
     meta = adapter.get_kv_metadata(context_length=4096)
-    assert meta.total_tokens_stored == 2048
-    assert abs(meta.compression_ratio - 0.5) < 0.05
+    # Sinks and the recent window stay exact, so a few more than context/2.
+    assert 2048 <= meta.total_tokens_stored <= 2100
+    assert abs(meta.compression_ratio - 0.5) < 0.06
 
 
 def test_compressed_adapter_metadata():
@@ -59,6 +61,6 @@ def test_compressed_adapter_metadata():
 
 
 def test_dkv_adapter_metadata():
-    adapter = DKVContextAdapter(subspace_dim_ratio=0.5, token_sparsity=0.5)
+    adapter = DKVContextAdapter(block_size=256, base_rank=32)
     meta = adapter.get_kv_metadata(context_length=4096)
     assert meta.compression_ratio < 0.6

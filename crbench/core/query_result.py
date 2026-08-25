@@ -100,7 +100,7 @@ class QueryEvaluationResult:
             f"  Dense memory:        {dense_mem_gb:.3f} GB ({self.dense_effective_bpt:.1f} bpt)",
             f"  Method memory:       {method_mem_gb:.3f} GB ({self.method_effective_bpt:.1f} bpt)",
             f"  Resource efficiency: {self.resource_efficiency:.1f}% savings",
-            f"  CRBench Part 1 score: {self.part1_score:.2f} (Formula: {self.formula_name}, α={self.alpha:.2f})",
+            f"  CRBench Part 1 score: {self.part1_score:.2f} (Formula: {self.formula_name}, alpha={self.alpha:.2f})",
         ]
         if self.part2_score is not None:
             lines.append(f"  CRBench Part 2 score: {self.part2_score:.2f} (Runtime eff: {self.system_runtime_efficiency:.1f}%)")
@@ -170,7 +170,11 @@ class QueryEvaluator:
             max_new_tokens=max_new_tokens
         )
         elapsed = time.time() - t0
-        gen_text = tokenizer.decode(out_tokens[0][inputs.input_ids.shape[-1]:], skip_special_tokens=True)
+        in_len = inputs.input_ids.shape[-1]
+        if out_tokens.shape[-1] > in_len:
+            gen_text = tokenizer.decode(out_tokens[0][in_len:], skip_special_tokens=True)
+        else:
+            gen_text = tokenizer.decode(out_tokens[0][-max_new_tokens:], skip_special_tokens=True)
         runtime = {
             "ttft_ms": elapsed * 500.0,
             "throughput": max_new_tokens / max(1e-3, elapsed),
@@ -441,7 +445,7 @@ class DatasetAggregateResult:
         lines = [
             f"## Aggregate Benchmark Evaluation: {self.method_name}",
             f"**Model:** {self.model_name} | **Dataset/Suite:** {self.dataset_name}",
-            f"**Formula:** `{self.formula_name}` (α = {self.alpha:.2f}) | **Queries:** {self.successful_queries}/{self.total_queries} successful",
+            f"**Formula:** `{self.formula_name}` (alpha = {self.alpha:.2f}) | **Queries:** {self.successful_queries}/{self.total_queries} successful",
             "",
             "| Metric | Mean | Median | 95% CI |",
             "| :--- | :---: | :---: | :---: |",
