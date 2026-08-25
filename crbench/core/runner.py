@@ -64,6 +64,9 @@ class BenchmarkRunner:
         # Device allocation attributable to weights alone; every peak-VRAM
         # figure downstream is reported relative to this.
         self._weight_bytes: int = 0
+        # The RoPE parameters actually handed to the model, recorded in the
+        # manifest so a long-context score can be read in the right regime.
+        self._effective_rope: Optional[Dict[str, Any]] = None
         self.normalizer = QualityNormalizer(
             floor_score=config.scoring.floor_quality,
             min_dynamic_range=config.scoring.min_dynamic_range
@@ -133,11 +136,24 @@ class BenchmarkRunner:
                 hf_cfg = AutoConfig.from_pretrained(
                     model_name, trust_remote_code=self.config.model.trust_remote_code
                 )
-                hf_cfg.rope_scaling = dict(self.config.model.rope_scaling)
+                # transformers 5.x keeps RoPE settings in one dict (rope_parameters,
+                # aliased as rope_scaling) that also carries rope_theta. Replacing
+                # it outright drops the base wavelength and YaRN initialisation
+                # fails on `None ** tensor`, so merge into what the model shipped.
+                existing = dict(getattr(hf_cfg, "rope_parameters", None)
+                                or getattr(hf_cfg, "rope_scaling", None) or {})
+                existing.update(self.config.model.rope_scaling)
+                if existing.get("rope_theta") is None and getattr(hf_cfg, "rope_theta", None):
+                    existing["rope_theta"] = hf_cfg.rope_theta
+                if hasattr(hf_cfg, "rope_parameters"):
+                    hf_cfg.rope_parameters = existing
+                else:
+                    hf_cfg.rope_scaling = existing
                 if self.config.model.max_model_len:
                     hf_cfg.max_position_embeddings = int(self.config.model.max_model_len)
                 kwargs["config"] = hf_cfg
-                print(f"[*] RoPE scaling enabled: {self.config.model.rope_scaling}", flush=True)
+                self._effective_rope = existing
+                print(f"[*] RoPE scaling enabled: {existing}", flush=True)
 
             # Quantization support (BitsAndBytes)
             if self.config.model.load_in_4bit or self.config.model.load_in_8bit:
@@ -539,7 +555,7 @@ class BenchmarkRunner:
                 "max_model_len": self.config.model.max_model_len,
                 # Recorded because a scaled RoPE changes what a long-context
                 # score means; a reader must be able to tell the two regimes apart.
-                "rope_scaling": self.config.model.rope_scaling,
+                "rope_scaling": self._effective_rope or self.config.model.rope_scaling,
                 "weight_bytes_resident": self._weight_bytes,
             },
             "execution_config": {

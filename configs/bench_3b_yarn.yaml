@@ -1,0 +1,112 @@
+# CRBench -- Qwen2.5-3B-Instruct (NF4), long window under YaRN.
+#
+# The 64K/128K half of the 3B sweep. Qwen2.5's native window is 32768; reaching
+# 131072 is Qwen's documented YaRN configuration (factor 4.0 over the original
+# 32768 positions). Without it the model is extrapolating past its trained
+# positions and a long-context score measures that failure, not the KV
+# representation. This is a separate run from the native config precisely so the
+# two regimes stay distinguishable in the results; the manifest records the
+# rope_scaling block verbatim.
+#
+# Measured on this card (RTX 4070 SUPER, 11.99 GiB): weights 1.92 GiB, KV
+# 36 KiB/token, peak 5.81 GiB at 65536 and 9.69 GiB at 131072 -- fits with room
+# to spare, which is why the 3B and not the 7B carries the long end.
+# Cost per query at 131072: ~97 s prefill plus ~810 ms per decoded token.
+
+benchmark_name: "crbench_3b_yarn_long"
+
+model:
+  model_name_or_path: "Qwen/Qwen2.5-3B-Instruct"
+  dtype: "bfloat16"
+  device: "auto"
+  trust_remote_code: true
+  load_in_4bit: true
+  bnb_4bit_compute_dtype: "bfloat16"
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_use_double_quant: true
+  attn_implementation: "sdpa"
+  max_model_len: 131072
+  rope_scaling:
+    rope_type: "yarn"
+    factor: 4.0
+    original_max_position_embeddings: 32768
+
+tasks:
+  - task_name: "single_niah"
+    context_lengths: [65536, 131072]
+    num_samples: 3
+    seed: 42
+  - task_name: "multi_niah"
+    context_lengths: [65536, 131072]
+    num_samples: 3
+    seed: 42
+  - task_name: "ruler_kv"
+    context_lengths: [65536, 131072]
+    num_samples: 3
+    seed: 42
+  - task_name: "ruler_variable_tracking"
+    context_lengths: [65536, 131072]
+    num_samples: 3
+    seed: 42
+  - task_name: "multihop_qa"
+    context_lengths: [65536, 131072]
+    num_samples: 3
+    seed: 42
+
+# One adapter per method family, swept over two budgets, so Part 1's AUQC
+# integrates a real quality-vs-budget curve instead of extrapolating a point.
+adapters:
+  - adapter_name: "dense_fp16"
+    adapter_type: "dense"
+    budgets: [16.0]
+
+  - adapter_name: "kv_quant"
+    adapter_type: "quantized"
+    budgets: [4.0, 8.0]
+    params: {group_size: 64}
+
+  - adapter_name: "snapkv"
+    adapter_type: "eviction"
+    budgets: [4.0, 8.0]
+    params: {strategy: "snapkv", window_size: 32, kernel_size: 5, pooling: "avgpool"}
+
+  - adapter_name: "streaming_llm"
+    adapter_type: "eviction"
+    budgets: [4.0, 8.0]
+    params: {strategy: "streaming_llm", sink_tokens: 4}
+
+  - adapter_name: "kv_merging"
+    adapter_type: "merging"
+    budgets: [4.0, 8.0]
+    params: {sink_tokens: 4, recent_window: 32}
+
+  - adapter_name: "low_rank_kv"
+    adapter_type: "compressed"
+    budgets: [4.0, 8.0]
+    params: {recent_window: 32}
+
+  - adapter_name: "dkv"
+    adapter_type: "dkv"
+    budgets: [4.0, 8.0]
+    params: {block_size: 256, residual_budget: 128, recent_window: 256}
+
+profiler:
+  track_physical_memory: true
+  track_latency: true
+  prefill_chunk_size: 4096
+  max_new_tokens: 32
+  empty_cache_between_chunks: true
+
+scoring:
+  utility_formula: "linear"
+  utility_alpha: 0.70
+  enable_part2: true
+  standard_budgets_bpt: [2.0, 4.0, 8.0, 16.0]
+  auqc_log_scale: true
+  context_weighting: "logarithmic"
+  min_dynamic_range: 0.05
+  floor_quality: 0.0
+
+output_dir: "results/bench_3b_yarn_long"
+save_plots: true
+save_raw_json: true

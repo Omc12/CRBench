@@ -208,3 +208,48 @@ def test_every_vendored_repo_reports_a_commit():
         assert record["present"], f"{key} repository is missing from third_party/"
         assert record["commit"], f"{key} checkout reports no commit"
         assert record["upstream_repository"].startswith("https://")
+
+
+def test_key_channel_outliers_survive_per_channel_grouping():
+    """Per-channel key grouping must protect small channels from large ones.
+
+    KIVI's finding, and the one that decided this adapter's grouping axis: key
+    channels carry channel-specific outliers, so grouping a key's head-dimension
+    entries into one scale lets a few large channels set the range for all of
+    them.  Measured on Qwen2.5-7B at 2048 tokens, single-needle retrieval scored
+    0% with per-token keys at 4 bits and 100% with per-channel keys.
+    """
+    from crbench.adapters.quantized import quantize_dequantize_per_channel
+
+    tokens, dim = 256, 128
+    x = torch.randn(1, 2, tokens, dim) * 0.05
+    # One channel two orders of magnitude larger, as real key caches show.
+    x[..., 7] *= 200.0
+
+    per_token = quantize_dequantize(x, n_bits=4, group_size=64)
+    per_channel, n_full = quantize_dequantize_per_channel(x, n_bits=4, group_size=64)
+    assert n_full == tokens
+
+    small = [c for c in range(dim) if c != 7]
+    err_token = (per_token[..., small] - x[..., small]).abs().mean()
+    err_channel = (per_channel[..., small] - x[..., small]).abs().mean()
+    # The outlier channel should not be setting the scale for its neighbours.
+    assert err_channel < err_token / 10
+
+
+def test_per_channel_quantization_leaves_a_full_precision_residual():
+    """Tokens that do not fill a group stay exact, and are charged as such."""
+    from crbench.adapters.quantized import (QuantizedKVAdapter,
+                                            quantize_dequantize_per_channel)
+
+    x = torch.randn(1, 2, 100, 64)
+    y, n_full = quantize_dequantize_per_channel(x, n_bits=4, group_size=64)
+    assert n_full == 64
+    torch.testing.assert_close(y[..., 64:, :], x[..., 64:, :], rtol=0, atol=0)
+    assert not torch.equal(y[..., :64, :], x[..., :64, :])
+
+    ad = QuantizedKVAdapter(bits=4, group_size=64)
+    meta = ad.get_kv_metadata(context_length=4096)   # exact multiple: no residual
+    assert meta.custom_metrics["full_precision_residual_tokens"] == 0
+    assert abs(meta.effective_bits_per_element - 4.5) < 1e-3
+    assert meta.custom_metrics["key_grouping"] == "per_channel"
