@@ -58,6 +58,14 @@ model:
   # selects its unscaled branch, which is what its own config asks for.
   config_overrides:
     rope_scaling: null
+  # This is a reasoning model: its generation prompt ends in an open `<think>`
+  # tag and it
+  # answers only after closing that block. With max_new_tokens=32 the benchmark
+  # would otherwise score the first 32 tokens of its deliberation, which is why
+  # the dense baseline first measured 0.0% on every needle. Its template accepts
+  # this flag and emits a closed, empty thinking block instead.
+  chat_template_kwargs:
+    enable_thinking: false
 
 tasks:
   - task_name: "single_niah"

@@ -596,6 +596,7 @@ class BenchmarkRunner:
                 # Recorded because a scaled RoPE changes what a long-context
                 # score means; a reader must be able to tell the two regimes apart.
                 "rope_scaling": self._effective_rope or self.config.model.rope_scaling,
+                "chat_template_kwargs": self.config.model.chat_template_kwargs,
                 "weight_bytes_resident": self._weight_bytes,
             },
             "execution_config": {
@@ -879,6 +880,7 @@ class BenchmarkRunner:
                 [{"role": "user", "content": sample.full_prompt}],
                 tokenize=False,
                 add_generation_prompt=True,
+                **(self.config.model.chat_template_kwargs or {}),
             )
         else:
             prompt_text = sample.full_prompt

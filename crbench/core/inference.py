@@ -374,7 +374,13 @@ def kv_tensors(cache: Any, valid_length: Optional[int] = None) -> List[Tuple[tor
 
 #: Decode headroom reserved when a method rebuilds the cache.  Must exceed the
 #: benchmark's ``max_new_tokens`` plus the one re-forwarded prompt token.
-REBUILD_RESERVE = 128
+#:
+#: Sized for reasoning models, which answer only after closing a chain-of-thought
+#: block and so need a far larger generation budget than the ~32 tokens an
+#: extractive task otherwise wants.  The cost is one padded allocation per
+#: rebuilt cache: at Nanbeige4.2's 176 KiB/token that is 88 MiB, which is cheap
+#: against the several GiB such a cache already occupies.
+REBUILD_RESERVE = 512
 
 
 def rebuild_cache(

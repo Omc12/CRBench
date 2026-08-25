@@ -38,6 +38,13 @@ class ModelConfig:
     # that uses no scaling at all. Setting `rope_scaling: null` selects its
     # unscaled branch, which is what its own config asks for.
     config_overrides: Dict[str, Any] = field(default_factory=dict)
+    # Extra arguments for `tokenizer.apply_chat_template`. Reasoning models open
+    # a chain-of-thought block in their generation prompt and only answer after
+    # closing it, so with a short `max_new_tokens` the benchmark would score the
+    # first 32 tokens of deliberation instead of an answer. Nanbeige4.2's
+    # template ends in an open `<think>` tag and accepts `enable_thinking: false`,
+    # which emits a closed, empty block so the model answers directly.
+    chat_template_kwargs: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
