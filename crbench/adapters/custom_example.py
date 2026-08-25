@@ -38,7 +38,7 @@ import torch
 
 from crbench.core.adapter import BaseContextAdapter, KVStateMetadata
 from crbench.core.budget import ContextBudget, BudgetType
-from crbench.core.inference import kv_tensors, rebuild_cache
+from crbench.core.inference import kv_tensors
 from crbench.core.registry import Registry
 from crbench.adapters import upstream
 
@@ -156,11 +156,12 @@ class DKVContextAdapter(BaseContextAdapter):
         n_residuals = 0
         rank_sum = 0
 
-        new_pairs: List[Tuple[torch.Tensor, torch.Tensor]] = []
+        # Written in place, one layer at a time: the tensors from kv_tensors are
+        # views onto the live cache, so the compressed state replaces the
+        # original without a second full cache ever existing. At 131072 tokens a
+        # cloned cache would be another 4.5 GiB and would not fit beside it.
         for layer_idx, (k, v) in enumerate(kv_tensors(cache, valid_length=valid_length)):
             rank = _layer_rank(self.base_rank, layer_idx, num_layers)
-            k_new = k.clone()
-            v_new = v.clone()
 
             if compressible > self.block_size:
                 # (1, H, L, D) -> (L, H*D) for K and V, concatenated as [K | V]
@@ -197,17 +198,16 @@ class DKVContextAdapter(BaseContextAdapter):
                     del lr, recon, deltas
 
                 k_flat, v_flat = feats[:, :half], feats[:, half:]
-                k_new[0, :, :compressible, :] = (
+                k[0, :, :compressible, :] = (
                     k_flat.reshape(compressible, num_kv_heads, head_dim).permute(1, 0, 2).to(k.dtype)
                 )
-                v_new[0, :, :compressible, :] = (
+                v[0, :, :compressible, :] = (
                     v_flat.reshape(compressible, num_kv_heads, head_dim).permute(1, 0, 2).to(v.dtype)
                 )
                 del feats, k_flat, v_flat
 
             # The dense recency window is stored exactly, at fp16.
             total_bytes += window * feat_dim * 2
-            new_pairs.append((k_new, v_new))
 
         total_bytes += anchor_bytes + factor_bytes + residual_bytes
         self._measured = {
@@ -222,9 +222,7 @@ class DKVContextAdapter(BaseContextAdapter):
             "residual_tokens": n_residuals,
         }
 
-        new_cache = rebuild_cache(new_pairs)
-        del new_pairs
-        return new_cache, {
+        return cache, {
             "applied": n_blocks > 0,
             "blocks": n_blocks,
             "base_rank": self.base_rank,

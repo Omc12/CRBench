@@ -31,7 +31,7 @@ import torch
 
 from crbench.core.adapter import BaseContextAdapter, KVStateMetadata
 from crbench.core.budget import ContextBudget, BudgetType
-from crbench.core.inference import kv_tensors, rebuild_cache
+from crbench.core.inference import kv_tensors
 from crbench.core.registry import Registry
 
 
@@ -116,19 +116,17 @@ class LowRankCompressedKVAdapter(BaseContextAdapter):
         window = min(self.recent_window, max(0, valid_length - 1))
         split = valid_length - window
 
-        new_pairs: List[Tuple[torch.Tensor, torch.Tensor]] = []
+        # Written in place, one layer at a time. The tensors from kv_tensors are
+        # views onto the live cache, so this rewrites the cache without ever
+        # holding a second copy of it -- at 131072 tokens a cloned cache would
+        # be another 4.5 GiB, which does not fit beside the original.
         for k, v in kv_tensors(cache, valid_length=valid_length):
-            k_new = k.clone()
-            v_new = v.clone()
             if split > rank:
-                k_new[0, :, :split, :] = low_rank_reconstruct(k[0, :, :split, :], rank)
-                v_new[0, :, :split, :] = low_rank_reconstruct(v[0, :, :split, :], rank)
-            new_pairs.append((k_new, v_new))
+                k[0, :, :split, :] = low_rank_reconstruct(k[0, :, :split, :], rank)
+                v[0, :, :split, :] = low_rank_reconstruct(v[0, :, :split, :], rank)
 
-        new_cache = rebuild_cache(new_pairs)
-        del new_pairs
-        return new_cache, {"rank": rank, "head_dim": head_dim,
-                           "recent_window_exact": window, "applied": True}
+        return cache, {"rank": rank, "head_dim": head_dim,
+                       "recent_window_exact": window, "applied": True}
 
     def get_kv_metadata(self, context_length: int) -> KVStateMetadata:
         num_layers, num_kv_heads, head_dim = self.model_kv_geometry()
