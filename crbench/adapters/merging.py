@@ -115,7 +115,7 @@ class MergingKVAdapter(BaseContextAdapter):
             new_pairs.append((torch.cat(parts_k, dim=-2), torch.cat(parts_v, dim=-2)))
 
         retained = int(new_pairs[0][0].shape[-2])
-        new_cache = rebuild_cache(new_pairs)
+        new_cache = rebuild_cache(new_pairs, cache=cache)
         del new_pairs
         return new_cache, {
             "applied": True,

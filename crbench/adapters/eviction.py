@@ -32,9 +32,33 @@ import torch.nn.functional as F
 
 from crbench.core.adapter import BaseContextAdapter, KVStateMetadata
 from crbench.core.budget import ContextBudget, BudgetType
-from crbench.core.inference import kv_tensors, rebuild_cache, cache_layers
+from crbench.core.inference import (kv_tensors, rebuild_cache, cache_layers,
+                                    growing_layer_indices)
 from crbench.core.registry import Registry
 from crbench.adapters import upstream
+
+
+def decoder_layers(model: nn.Module) -> List[nn.Module]:
+    """The decoder layer list, wherever this architecture keeps it.
+
+    ``model.model.layers`` covers plain causal LMs, but multimodal wrappers nest
+    the text stack further down -- Gemma 4 loads as
+    ``Gemma4ForConditionalGeneration`` -- and returning an empty list there made
+    SnapKV index into nothing and raise "list index out of range".
+    """
+    for path in (("model", "layers"),
+                 ("model", "language_model", "layers"),
+                 ("language_model", "model", "layers"),
+                 ("model", "text_model", "layers"),
+                 ("layers",)):
+        node: Any = model
+        for attr in path:
+            node = getattr(node, attr, None)
+            if node is None:
+                break
+        if node is not None and len(node) > 0:
+            return list(node)
+    return []
 
 
 def _grouped_attention_scores(
@@ -250,11 +274,11 @@ class EvictionKVAdapter(BaseContextAdapter):
 
     def begin_query(self, model: nn.Module, input_ids: torch.Tensor) -> None:
         self._observation = {}
-        self._num_modules = len(getattr(getattr(model, "model", model), "layers", []) or [])
+        self._num_modules = len(decoder_layers(model))
         if self.strategy == "streaming_llm":
             return
 
-        layers = getattr(getattr(model, "model", model), "layers", [])
+        layers = decoder_layers(model)
         for idx, layer in enumerate(layers):
             attn = getattr(layer, "self_attn", None)
             if attn is None:
@@ -346,10 +370,10 @@ class EvictionKVAdapter(BaseContextAdapter):
         if self.strategy == "streaming_llm":
             new_pairs = self._evict_streaming_llm(pairs, target)
         else:
-            new_pairs = self._evict_snapkv(pairs, target)
+            new_pairs = self._evict_snapkv(pairs, target, growing_layer_indices(cache))
 
         retained = int(new_pairs[0][0].shape[-2])
-        new_cache = rebuild_cache(new_pairs)
+        new_cache = rebuild_cache(new_pairs, cache=cache)
         del pairs, new_pairs
         return new_cache, {
             "retained_tokens": retained,
@@ -373,10 +397,13 @@ class EvictionKVAdapter(BaseContextAdapter):
         return [(k, v) for k, v in out]
 
     def _evict_snapkv(
-        self, pairs: List[Tuple[torch.Tensor, torch.Tensor]], target: int
+        self,
+        pairs: List[Tuple[torch.Tensor, torch.Tensor]],
+        target: int,
+        cache_indices: Optional[List[int]] = None,
     ) -> List[Tuple[torch.Tensor, torch.Tensor]]:
         SnapKVCluster = upstream.load_snapkv()
-        layers = getattr(getattr(self.model, "model", self.model), "layers", [])
+        layers = decoder_layers(self.model)
         cluster = SnapKVCluster(
             window_size=self.window_size,
             max_capacity_prompt=target,
@@ -391,7 +418,12 @@ class EvictionKVAdapter(BaseContextAdapter):
         # loops (one cache layer per module) resolves to a single pass.
         self._num_modules = n_modules
         self._passes = max(1, len(pairs) // n_modules)
-        for idx, (k, v) in enumerate(pairs):
+        # `cache_indices` are the layer's real positions in the cache. On a
+        # hybrid model the growing layers are scattered (Gemma 4: 3, 7, 11, ...),
+        # so a position within the compacted list is not the module index.
+        indices = cache_indices if cache_indices is not None else list(range(len(pairs)))
+        for pos, (k, v) in enumerate(pairs):
+            idx = indices[pos]
             # Cache layer -> attention module, folding depth-recurrent passes.
             attn_module = layers[idx % n_modules].self_attn
             q_obs = self._observation_queries(attn_module, idx)

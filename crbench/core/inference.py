@@ -303,6 +303,41 @@ def measure_cache_bytes(cache: Any, valid_length: Optional[int] = None) -> int:
     return int(sum(seen.values()))
 
 
+def growing_layer_indices(cache: Any) -> List[int]:
+    """Indices of cache layers whose size grows with context length.
+
+    Modern architectures mix layer kinds inside one cache, and only some of them
+    hold state that scales with the prompt:
+
+    * **Sliding-window layers** (Gemma 4: 35 of 42) keep a fixed window -- 512
+      tokens -- no matter how long the context is.
+    * **Linear-attention layers** (Qwen3.5: 24 of 32) hold a fixed-size
+      recurrent state and no per-token keys at all.
+
+    Compression methods have nothing to do on either: their cost does not grow,
+    so there is no saving available, and rewriting them corrupts state the model
+    depends on. Everything that scales -- and everything CRBench scores -- lives
+    in the remaining layers.
+
+    Assuming a uniform cache is what broke every transform on Gemma 4: layer 0
+    is a 512-token sliding layer while layer 3 holds the full 1930, so sizing a
+    rebuilt cache from layer 0 raised "PreallocatedLayer overflow: 0 + 1930 >
+    1023", reshaping by a single length raised a shape error, and cropping a
+    sliding layer raised outright.
+    """
+    out: List[int] = []
+    for idx, layer in enumerate(cache_layers(cache)):
+        k = getattr(layer, "keys", None)
+        if not torch.is_tensor(k) or k.numel() == 0 or k.dim() < 4:
+            continue
+        if getattr(layer, "is_sliding", False):
+            continue
+        if "Sliding" in type(layer).__name__ or "Linear" in type(layer).__name__:
+            continue
+        out.append(idx)
+    return out
+
+
 def observe_cache_geometry(cache: Any) -> Dict[str, int]:
     """Read the KV geometry off a live cache instead of inferring it from config.
 
@@ -325,11 +360,14 @@ def observe_cache_geometry(cache: Any) -> Dict[str, int]:
     layers that hold a real, growing KV tensor, plus their head geometry.
     """
     layers = cache_layers(cache)
+    growing = set(growing_layer_indices(cache))
     kv_layers = 0
     heads = 0
     head_dim = 0
     elements = 0
-    for layer in layers:
+    for idx, layer in enumerate(layers):
+        if idx not in growing:
+            continue
         k = getattr(layer, "keys", None)
         if not torch.is_tensor(k) or k.numel() == 0 or k.dim() < 4:
             continue
@@ -350,7 +388,19 @@ def observe_cache_geometry(cache: Any) -> Dict[str, int]:
 
 
 def cache_seq_length(cache: Any) -> int:
-    """Number of tokens currently held, as a plain int."""
+    """Number of tokens currently held by the layers that grow with context.
+
+    ``Cache.get_seq_length()`` reports layer 0, which on a hybrid model is often
+    a sliding-window layer pinned at its window size -- 512 on Gemma 4 -- rather
+    than the prompt length.
+    """
+    growing = growing_layer_indices(cache)
+    if growing:
+        layers = cache_layers(cache)
+        first = layers[growing[0]]
+        if hasattr(first, "pos"):
+            return int(first.pos)
+        return int(first.keys.shape[-2])
     try:
         n = cache.get_seq_length()
         return int(n.item()) if torch.is_tensor(n) else int(n)
@@ -362,9 +412,16 @@ def cache_seq_length(cache: Any) -> int:
 
 
 def kv_tensors(cache: Any, valid_length: Optional[int] = None) -> List[Tuple[torch.Tensor, torch.Tensor]]:
-    """(key, value) per layer, sliced to the written region for static caches."""
+    """(key, value) for every layer whose cache grows with context.
+
+    Sliding-window and linear-attention layers are skipped: their state does not
+    scale with the prompt, so there is no compression to measure on them, and
+    they do not share the growing layers' sequence length. Use
+    :func:`growing_layer_indices` to map positions back onto the cache.
+    """
     out: List[Tuple[torch.Tensor, torch.Tensor]] = []
-    for layer in cache_layers(cache):
+    for idx in growing_layer_indices(cache):
+        layer = cache_layers(cache)[idx]
         k, v = layer.keys, layer.values
         if valid_length is not None:
             k, v = k[..., :valid_length, :], v[..., :valid_length, :]
@@ -386,22 +443,43 @@ REBUILD_RESERVE = 512
 def rebuild_cache(
     kv_pairs: List[Tuple[torch.Tensor, torch.Tensor]],
     reserve: int = REBUILD_RESERVE,
-) -> PreallocatedCache:
-    """Pack per-layer (k, v) tensors into a fresh preallocated cache.
+    cache: Any = None,
+) -> Any:
+    """Install rewritten (k, v) tensors for the growing layers.
 
-    Used after a method shortens or rewrites the prompt cache.  ``reserve``
-    leaves room for the tokens still to be decoded, so the compressed cache is
-    never reallocated mid-generation either.  Source tensors are released layer
-    by layer as they are copied: the caller is typically holding a cache several
-    GiB in size and materialising a second full copy would defeat the point.
+    ``kv_pairs`` is positional over :func:`growing_layer_indices`, matching what
+    :func:`kv_tensors` returned.
+
+    When ``cache`` is given the tensors are written back into it, leaving
+    sliding-window and linear-attention layers untouched. That matters for
+    hybrid models: those layers hold state the model needs and have a different
+    length from the growing ones, so replacing the whole cache with a uniform
+    one both corrupts them and mis-sizes everything.
+
+    Without a ``cache`` the pairs are packed into a fresh preallocated cache, the
+    uniform-architecture path. ``reserve`` leaves room for the tokens still to
+    be decoded so nothing is reallocated mid-generation. Source tensors are
+    released as they are copied: the caller is typically holding several GiB and
+    materialising a second full copy would defeat the point.
     """
+    if cache is not None:
+        for pos, idx in enumerate(growing_layer_indices(cache)):
+            k, v = kv_pairs[pos]
+            layer = cache_layers(cache)[idx]
+            layer.keys = k.contiguous()
+            layer.values = v.contiguous()
+            if hasattr(layer, "pos"):
+                layer.pos = int(k.shape[-2])
+            kv_pairs[pos] = (None, None)
+        return cache
+
     length = int(kv_pairs[0][0].shape[-2])
-    cache = PreallocatedCache(len(kv_pairs), length + reserve)
+    fresh = PreallocatedCache(len(kv_pairs), length + reserve)
     for idx in range(len(kv_pairs)):
         k, v = kv_pairs[idx]
-        cache.layers[idx].update(k, v)
+        fresh.layers[idx].update(k, v)
         kv_pairs[idx] = (None, None)  # drop our reference so the source can free
-    return cache
+    return fresh
 
 
 def to_preallocated(cache: Any, reserve: int = REBUILD_RESERVE) -> Any:
@@ -434,6 +512,8 @@ def to_preallocated(cache: Any, reserve: int = REBUILD_RESERVE) -> Any:
     # preallocated storage silently breaks the model rather than speeding it up.
     if not all(type(l).__name__ == "DynamicLayer" for l in layers):
         return cache
+    if len(growing_layer_indices(cache)) != len(layers):
+        return cache
     length = int(layers[0].keys.shape[-2])
     new_cache = PreallocatedCache(len(layers), length + reserve)
     for idx, layer in enumerate(layers):
@@ -441,6 +521,22 @@ def to_preallocated(cache: Any, reserve: int = REBUILD_RESERVE) -> Any:
         layer.keys = None
         layer.values = None
     return new_cache
+
+
+def _crop_growing(cache: Any, length: int) -> None:
+    """Crop only the layers whose cache grows with context."""
+    layers = cache_layers(cache)
+    growing = growing_layer_indices(cache)
+    if len(growing) == len(layers):
+        cache.crop(length)
+        return
+    for idx in growing:
+        layer = layers[idx]
+        if hasattr(layer, "pos"):
+            layer.pos = min(layer.pos, length)
+        else:
+            layer.keys = layer.keys[..., :length, :]
+            layer.values = layer.values[..., :length, :]
 
 
 @torch.no_grad()
@@ -590,7 +686,12 @@ def chunked_prefill_generate(
         # Re-forward the final prompt token so it attends to the transformed
         # history.  It is already the last entry of the cache (every method here
         # preserves the recent window), so drop it first to avoid duplication.
-        cache.crop(kv_tokens_after - 1)
+        #
+        # Only the growing layers are cropped. A sliding-window layer refuses
+        # outright ("`crop` was called, but the current layer does not track past
+        # states"), and it has no need of it: its window is bounded, so the
+        # re-forwarded token simply advances it by one.
+        _crop_growing(cache, kv_tokens_after - 1)
         out = model(input_ids=input_ids[:, -1:], past_key_values=cache,
                     position_ids=_positions(prompt_len - 1),
                     use_cache=True, **keep_last)

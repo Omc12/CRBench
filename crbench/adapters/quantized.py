@@ -42,7 +42,7 @@ import torch
 
 from crbench.core.adapter import BaseContextAdapter, KVStateMetadata
 from crbench.core.budget import ContextBudget, BudgetType
-from crbench.core.inference import cache_layers
+from crbench.core.inference import cache_layers, growing_layer_indices
 from crbench.core.registry import Registry
 
 
@@ -176,7 +176,12 @@ class QuantizedKVAdapter(BaseContextAdapter):
         if self.bits >= 16 or end <= start:
             return
         residual = 0
-        for layer in cache_layers(cache):
+        layers = cache_layers(cache)
+        # Sliding-window and linear-attention layers hold bounded state that does
+        # not grow with context, so quantizing them saves nothing and their
+        # length does not match the span being written.
+        for idx in growing_layer_indices(cache):
+            layer = layers[idx]
             k, v = layer.keys, layer.values
             if k is None or v is None:
                 continue
@@ -208,8 +213,9 @@ class QuantizedKVAdapter(BaseContextAdapter):
         if not self.key_per_channel:
             self._quantize_span(cache, position, position + 1)
             return
-        for layer in cache_layers(cache):
-            v = layer.values
+        layers = cache_layers(cache)
+        for idx in growing_layer_indices(cache):
+            v = layers[idx].values
             if v is None:
                 continue
             v[..., position:position + 1, :] = quantize_dequantize(
