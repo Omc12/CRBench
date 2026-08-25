@@ -210,7 +210,18 @@ class DKVContextAdapter(BaseContextAdapter):
         prev_energy = os.environ.get("DKV_SVD_ENERGY")
         os.environ["DKV_SVD_ENERGY"] = repr(self.svd_energy)
 
-        num_layers, num_kv_heads, head_dim = self.model_kv_geometry()
+        # Read the joint K|V width off the tensors rather than from the config.
+        # The observed geometry is not available on a query's first transform --
+        # it is measured after prefill -- and the config fallback is meaningless
+        # on a heterogeneous model: Gemma 4's growing layers are 2 heads x 512,
+        # while its global attributes describe something else entirely, which
+        # produced "shape '[6026, 640]' is invalid for input of size 6170624".
+        pairs_preview = kv_tensors(cache, valid_length=valid_length)
+        if not pairs_preview:
+            return cache, {"applied": False, "reason": "no growing KV layers"}
+        k0 = pairs_preview[0][0]
+        num_layers = len(pairs_preview)
+        num_kv_heads, head_dim = int(k0.shape[1]), int(k0.shape[-1])
         feat_dim = 2 * num_kv_heads * head_dim
         half = feat_dim // 2
 

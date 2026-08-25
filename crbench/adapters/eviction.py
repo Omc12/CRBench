@@ -348,7 +348,21 @@ class EvictionKVAdapter(BaseContextAdapter):
         q = q.view(*hidden.shape[:-1], -1, head_dim).transpose(1, 2)
         if hasattr(attn_module, "q_norm") and attn_module.q_norm is not None:
             q = attn_module.q_norm(q)
-        q, _ = apply_rope(q, q, cos, sin)
+        # Architectures disagree on this function's shape. Llama/Qwen take
+        # (q, k, cos, sin, position_ids=None, unsqueeze_dim=1) and return a pair;
+        # Gemma 4 takes (x, cos, sin, unsqueeze_dim=1) and returns one tensor.
+        # Calling the pair form on Gemma passes `sin` where `unsqueeze_dim` is
+        # expected and raises "unsqueeze(): argument 'dim' must be int, not
+        # Tensor", so the signature decides the call.
+        import inspect as _inspect
+        try:
+            params = list(_inspect.signature(apply_rope).parameters)
+        except (TypeError, ValueError):
+            params = []
+        if len(params) >= 4 and params[1] in ("k", "key", "key_states"):
+            q, _ = apply_rope(q, q, cos, sin)
+        else:
+            q = apply_rope(q, cos, sin)
         return q
 
     # ------------------------------------------------------------------ #
