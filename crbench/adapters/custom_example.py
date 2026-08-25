@@ -32,6 +32,7 @@ rank is data-dependent, and an analytical formula would miss that entirely.
 
 from __future__ import annotations
 
+import os
 from typing import Any, Dict, List, Optional, Tuple
 
 import torch
@@ -41,6 +42,41 @@ from crbench.core.budget import ContextBudget, BudgetType
 from crbench.core.inference import kv_tensors
 from crbench.core.registry import Registry
 from crbench.adapters import upstream
+
+
+#: The repository's own presets, mirrored from
+#: ``third_party/Differential-KV/ACTIVE_RUNTIME/native_core/config.py``.
+#:
+#: ``svd_energy`` is the load-bearing dial, not ``rank``. The repository is
+#: explicit about this: "`rank` is only a CEILING: the compressor keeps the
+#: smallest k whose singular values carry this fraction of the total energy",
+#: and it records that asking for rank 32 against rank 128 moved the realised
+#: median rank only 24 -> 34. An earlier version of this adapter set a rank and
+#: never touched the energy target, which left every preset compressing to the
+#: same realised rank.
+#:
+#: ``max_active_dense_tokens`` is the uncompressed recency window, and
+#: ``kv_quant`` is the precision that window is held at -- both are charged in
+#: ``get_kv_metadata``.
+DKV_PRESETS: Dict[str, Dict[str, Any]] = {
+    "low":  {"rank": 32,  "svd_energy": 0.999,   "max_residual_tokens": 40,
+             "max_active_dense_tokens": 1024, "kv_quant": "q4_0"},
+    "mid":  {"rank": 64,  "svd_energy": 0.9999,  "max_residual_tokens": 40,
+             "max_active_dense_tokens": 2048, "kv_quant": "q8_0"},
+    "high": {"rank": 128, "svd_energy": 0.99999, "max_residual_tokens": 128,
+             "max_active_dense_tokens": 4096, "kv_quant": "f16"},
+}
+
+#: Effective bits per element of the quantized formats the presets name for the
+#: dense recency window. q4_0 / q8_0 carry one fp16 scale per 32-value block.
+_KV_QUANT_BITS: Dict[str, float] = {
+    "f16": 16.0,
+    "q8_0": 8.0 + 16.0 / 32.0,
+    "q4_0": 4.0 + 16.0 / 32.0,
+}
+
+#: The repository's default micro-block: one anchor plus 256 active tokens.
+DKV_MICRO_BLOCK_SIZE = 256
 
 
 #: Layer-adaptive rank multipliers, from the repository's README: early layers
@@ -69,17 +105,38 @@ class DKVContextAdapter(BaseContextAdapter):
     def __init__(
         self,
         name: str = "dkv",
-        block_size: int = 256,
-        base_rank: int = 32,
-        residual_budget: int = 128,
-        recent_window: int = 256,
+        preset: str = "mid",
         config: Optional[Dict[str, Any]] = None,
+        **_legacy: Any,
     ):
         super().__init__(name=name, config=config)
-        self.block_size = int(self.config.get("block_size", block_size))
-        self.base_rank = int(self.config.get("base_rank", base_rank))
-        self.residual_budget = int(self.config.get("residual_budget", residual_budget))
-        self.recent_window = int(self.config.get("recent_window", recent_window))
+
+        # The preset is the operating point. DKV's knobs interact -- energy sets
+        # the realised rank, residuals cost a full-width token each, and the
+        # dense window's precision is part of the deal -- so picking them
+        # individually to hit a bits-per-token target produces a configuration
+        # the authors never characterised. CRBench takes the preset as given and
+        # reports where on the quality/size plane it lands.
+        # An explicit `preset:` in the config wins; otherwise the adapter name
+        # selects it ("dkv_high" -> high), and only then does the default apply.
+        # Reading the default first would shadow the name, which silently ran
+        # every adapter as `mid`.
+        explicit = self.config.get("preset")
+        if explicit and str(explicit).lower() in DKV_PRESETS:
+            chosen = str(explicit).lower()
+        else:
+            chosen = next((c for c in DKV_PRESETS if c in name.lower()), preset.lower())
+            if chosen not in DKV_PRESETS:
+                chosen = "mid"
+        self.preset = chosen
+        p = DKV_PRESETS[self.preset]
+
+        self.block_size = int(self.config.get("block_size", DKV_MICRO_BLOCK_SIZE))
+        self.base_rank = int(self.config.get("base_rank", p["rank"]))
+        self.svd_energy = float(self.config.get("svd_energy", p["svd_energy"]))
+        self.residual_budget = int(self.config.get("residual_budget", p["max_residual_tokens"]))
+        self.recent_window = int(self.config.get("recent_window", p["max_active_dense_tokens"]))
+        self.kv_quant = str(self.config.get("kv_quant", p["kv_quant"]))
         # Filled in by transform_cache; get_kv_metadata reports what was counted.
         self._measured: Dict[str, float] = {}
 
@@ -99,6 +156,17 @@ class DKVContextAdapter(BaseContextAdapter):
             "runtime's sparse-decode speedup."
         )
         record["measured_memory"] = True
+        record["preset"] = self.preset
+        record["preset_source"] = (
+            "third_party/Differential-KV/ACTIVE_RUNTIME/native_core/config.py")
+        record["preset_values"] = {
+            "rank_ceiling": self.base_rank,
+            "svd_energy": self.svd_energy,
+            "max_residual_tokens": self.residual_budget,
+            "max_active_dense_tokens": self.recent_window,
+            "kv_quant": self.kv_quant,
+            "micro_block_size": self.block_size,
+        }
         return record
 
     def validate_environment(self, device: torch.device) -> Tuple[bool, str]:
@@ -109,23 +177,18 @@ class DKVContextAdapter(BaseContextAdapter):
         return True, "Supported"
 
     def apply_budget(self, budget: ContextBudget, context_length: int) -> None:
+        """Record the budget without overriding the preset.
+
+        Every other adapter here is budget-driven, because quantization,
+        eviction, merging and low-rank all expose one monotone dial. DKV does
+        not: its rank follows a spectral-energy target rather than the rank
+        ceiling, an exact residual token costs as much as an uncompressed one,
+        and the dense window has its own precision. Solving those jointly for a
+        bits-per-token target invents a configuration the authors never
+        characterised, so the preset stands and CRBench reports the b_eff it
+        actually produces.
+        """
         super().apply_budget(budget, context_length)
-        _, num_kv_heads, head_dim = self.model_kv_geometry()
-        feat_dim = 2 * num_kv_heads * head_dim
-
-        if budget.budget_type == BudgetType.BITS_PER_TOKEN:
-            target_ratio = float(budget.value) / 16.0
-        elif budget.budget_type == BudgetType.COMPRESSION_RATIO:
-            target_ratio = float(budget.value)
-        else:
-            return
-
-        # Per compressed token the representation costs one r-vector (U row);
-        # the block's V factor (r x feat) and anchor (feat) amortise over the
-        # block. Solving ratio ~= (r + (r*feat + feat)/block) / feat for r:
-        block = max(2, self.block_size)
-        r = (target_ratio * feat_dim - feat_dim / block) / (1.0 + feat_dim / block)
-        self.base_rank = max(4, min(feat_dim // 2, int(round(r))))
 
     # ------------------------------------------------------------------ #
     # The transform                                                       #
@@ -141,12 +204,19 @@ class DKVContextAdapter(BaseContextAdapter):
         compress = mod.compress_lowrank
         exact_keys = bool(mod._exact_keys_enabled(None))
 
+        # compress_lowrank reads its energy target from DKV_SVD_ENERGY on every
+        # call (deliberately, so tests can toggle it per process), which is the
+        # only way to hand it the preset's value.
+        prev_energy = os.environ.get("DKV_SVD_ENERGY")
+        os.environ["DKV_SVD_ENERGY"] = repr(self.svd_energy)
+
         num_layers, num_kv_heads, head_dim = self.model_kv_geometry()
         feat_dim = 2 * num_kv_heads * head_dim
         half = feat_dim // 2
 
         window = min(self.recent_window, max(0, valid_length - 1))
         compressible = valid_length - window
+        window_bits = _KV_QUANT_BITS.get(self.kv_quant, 16.0)
 
         total_bytes = 0.0
         anchor_bytes = 0.0
@@ -206,16 +276,23 @@ class DKVContextAdapter(BaseContextAdapter):
                 )
                 del feats, k_flat, v_flat
 
-            # The dense recency window is stored exactly, at fp16.
-            total_bytes += window * feat_dim * 2
+            # The dense recency window, at the precision the preset names for
+            # it (`kv_quant`): `mid` holds it at q8_0, `high` at f16. Charging it
+            # at f16 for every preset would overstate `mid` by half the window.
+            total_bytes += window * feat_dim * window_bits / 8.0
 
         total_bytes += anchor_bytes + factor_bytes + residual_bytes
+        if prev_energy is None:
+            os.environ.pop("DKV_SVD_ENERGY", None)
+        else:
+            os.environ["DKV_SVD_ENERGY"] = prev_energy
+
         self._measured = {
             "total_bytes": total_bytes,
             "anchor_bytes": anchor_bytes,
             "factor_bytes": factor_bytes,
             "residual_bytes": residual_bytes,
-            "recency_bytes": window * feat_dim * 2 * num_layers,
+            "recency_bytes": window * feat_dim * window_bits / 8.0 * num_layers,
             "context_length": valid_length,
             "blocks": n_blocks,
             "mean_dynamic_rank": rank_sum / max(1, n_blocks),
@@ -224,6 +301,11 @@ class DKVContextAdapter(BaseContextAdapter):
 
         return cache, {
             "applied": n_blocks > 0,
+            "preset": self.preset,
+            "svd_energy": self.svd_energy,
+            "residual_budget": self.residual_budget,
+            "dense_window_tokens": window,
+            "dense_window_bits": window_bits,
             "blocks": n_blocks,
             "base_rank": self.base_rank,
             "mean_dynamic_rank": self._measured["mean_dynamic_rank"],
@@ -270,7 +352,14 @@ class DKVContextAdapter(BaseContextAdapter):
         dense_elems = self.dense_element_count(context_length)
 
         m = self._measured
-        if m and m.get("context_length") == context_length and m.get("total_bytes", 0) > 0:
+        # The transform records the *tokenised* prompt length, which is a little
+        # under the nominal grid value (the task trims the context to leave room
+        # for the question). Requiring exact equality here meant the measured
+        # size was silently discarded on every single query and the estimate
+        # below was reported instead -- an estimate that omitted residual tokens,
+        # the largest component. Accept anything within one block.
+        if m and m.get("total_bytes", 0) > 0 and \
+                abs(int(m.get("context_length", -1)) - context_length) <= self.block_size:
             algorithmic_bytes = float(m["total_bytes"] - m["residual_bytes"])
             metadata_bytes = float(m["residual_bytes"])
             custom = {
@@ -283,19 +372,26 @@ class DKVContextAdapter(BaseContextAdapter):
                 "recency_bytes": m["recency_bytes"],
             }
         else:
-            # Pre-run estimate, used only for planning; replaced once a query runs.
+            # Pre-run estimate, used only for planning; replaced once a query
+            # runs. It must include the exact residual tokens: at a residual
+            # budget of 128 against a 256-token block they were 7.95 of the
+            # 11.63 bits/element actually stored, so leaving them out does not
+            # produce a rough estimate, it produces a wrong one.
             window = min(self.recent_window, max(0, context_length - 1))
             compressible = max(0, context_length - window)
             blocks = max(1, compressible // max(1, self.block_size))
+            residuals = blocks * min(self.residual_budget, self.block_size - 1)
             per_layer = (
                 blocks * feat_dim * 2                                   # anchors
                 + max(0, compressible - blocks) * self.base_rank * 2    # U rows
                 + blocks * self.base_rank * feat_dim * 2                # V factors
-                + window * feat_dim * 2                                 # recency window
+                + residuals * (feat_dim * 2 + 2)                        # exact residual tokens
+                + window * feat_dim * _KV_QUANT_BITS.get(self.kv_quant, 16.0) / 8.0
             )
             algorithmic_bytes = float(per_layer * num_layers)
             metadata_bytes = 0.0
-            custom = {"source": "estimated", "base_rank": self.base_rank}
+            custom = {"source": "estimated", "base_rank": self.base_rank,
+                      "residual_budget": self.residual_budget}
 
         effective_bpe = (algorithmic_bytes + metadata_bytes) * 8.0 / max(1, dense_elems)
 
@@ -312,8 +408,11 @@ class DKVContextAdapter(BaseContextAdapter):
             metadata_overhead_bytes=metadata_bytes,
             custom_metrics={
                 **custom,
+                "preset": self.preset,
+                "svd_energy": self.svd_energy,
                 "block_size": self.block_size,
                 "residual_budget": self.residual_budget,
                 "recent_window": self.recent_window,
+                "dense_window_quant": self.kv_quant,
             },
         )

@@ -85,10 +85,22 @@ adapters:
     budgets: [4.0, 8.0]
     params: {recent_window: 32}
 
-  - adapter_name: "dkv"
+  # DKV is preset-driven, not budget-driven. Its knobs interact -- the spectral
+  # energy target sets the realised rank (the rank field is only a ceiling), an
+  # exact residual token costs as much as an uncompressed one, and the dense
+  # recency window has its own precision -- so solving them for a bits-per-token
+  # target would invent a configuration its authors never characterised. The
+  # repository's own `mid` and `high` presets are used verbatim, and CRBench
+  # reports the b_eff each one actually produces.
+  - adapter_name: "dkv_mid"
     adapter_type: "dkv"
-    budgets: [4.0, 8.0]
-    params: {block_size: 256, residual_budget: 128, recent_window: 256}
+    budgets: [16.0]
+    params: {preset: "mid"}
+
+  - adapter_name: "dkv_high"
+    adapter_type: "dkv"
+    budgets: [16.0]
+    params: {preset: "high"}
 
 profiler:
   track_physical_memory: true
