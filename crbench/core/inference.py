@@ -445,6 +445,27 @@ def chunked_prefill_generate(
     if empty_cache_between_chunks and torch.cuda.is_available() and device.type == "cuda":
         torch.cuda.empty_cache()
 
+    # Positions continue from the ORIGINAL prompt length, never from the
+    # compressed cache length.
+    #
+    # A method that evicts or merges leaves the surviving keys carrying the
+    # rotary phase they were written with -- their true positions in the prompt.
+    # transformers derives position_ids from `past_key_values.get_seq_length()`
+    # when they are not supplied, so after eviction the next query would be
+    # rotated at the *compressed* length, thousands of positions behind the keys
+    # it has to match, and RoPE's relative offsets would go negative.
+    #
+    # Upstream SnapKV handles this by tracking the uncompressed `kv_seq_len` and
+    # feeding it to `prepare_inputs_for_generation`; the same convention is used
+    # here. Measured on Qwen2.5-0.5B with a 1229-token prompt, keeping the last
+    # 60% (with the needle inside the retained window): the passkey came back as
+    # "366" instead of "361659" without this, and correctly with it.
+    #
+    # When no transform ran, the cache length equals the prompt length and these
+    # position_ids are exactly what transformers would have derived anyway.
+    def _positions(index: int) -> torch.Tensor:
+        return torch.tensor([[index]], device=input_ids.device, dtype=torch.long)
+
     # ---- Stage 3: first generated token (completes TTFT) ---------------------
     if transformed:
         # Re-forward the final prompt token so it attends to the transformed
@@ -452,6 +473,7 @@ def chunked_prefill_generate(
         # preserves the recent window), so drop it first to avoid duplication.
         cache.crop(kv_tokens_after - 1)
         out = model(input_ids=input_ids[:, -1:], past_key_values=cache,
+                    position_ids=_positions(prompt_len - 1),
                     use_cache=True, logits_to_keep=1)
         logits = out.logits
         del out
@@ -464,11 +486,13 @@ def chunked_prefill_generate(
     # ---- Stage 4: remaining decode steps -------------------------------------
     inter_token: List[float] = []
     t_decode_start = time.perf_counter()
-    for _ in range(max_new_tokens - 1):
+    for step in range(max_new_tokens - 1):
         if eos_token_id is not None and generated[-1] == eos_token_id:
             break
         t0 = time.perf_counter()
+        # Generated token `step` occupies original position prompt_len + step.
         out = model(input_ids=next_token, past_key_values=cache,
+                    position_ids=_positions(prompt_len + step),
                     use_cache=True, logits_to_keep=1)
         next_token = out.logits[:, -1, :].argmax(dim=-1, keepdim=True)
         del out
