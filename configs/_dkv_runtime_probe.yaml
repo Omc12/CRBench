@@ -32,7 +32,7 @@ model:
 
 tasks:
   - task_name: "single_niah"
-    context_lengths: [8192, 16384]
+    context_lengths: [8192]
     num_samples: 2
     seed: 42
 

@@ -1,0 +1,43 @@
+{
+ "test": "DKV runtime torch.compile A/B",
+ "model": "Qwen/Qwen2.5-7B-Instruct NF4",
+ "preset": "mid",
+ "task": "single_niah @8192",
+ "device": "RTX 4070 SUPER 11.99 GiB usable",
+ "env": {
+  "torch": "2.6.0+cu124",
+  "triton": "triton-windows 3.2.0",
+  "expandable_segments": "NOT SUPPORTED on Windows"
+ },
+ "arms": {
+  "compile_on": [
+   {
+    "seconds": 192.61803569999938,
+    "score": 1.0,
+    "b_eff": 6.052878675562145,
+    "peak_gib": 15.494222640991211
+   },
+   {
+    "seconds": 185.49624050000057,
+    "score": 0.5,
+    "b_eff": 6.052878675562145,
+    "peak_gib": 15.489499568939209
+   }
+  ],
+  "compile_off": [
+   {
+    "seconds": 224.32886359999975,
+    "score": 1.0,
+    "b_eff": 6.052878675562145,
+    "peak_gib": 15.492192268371582
+   },
+   {
+    "seconds": 227.94060600000012,
+    "score": 0.5,
+    "b_eff": 6.052878675562145,
+    "peak_gib": 15.489844799041748
+   }
+  ]
+ },
+ "conclusion": "torch.compile exonerated: disabling it is SLOWER (224/228s vs 193/186s). Peak allocated is 15.49 GiB against an 11.99 GiB card in both arms, so the run pages to host memory over PCIe and that is what the ~195s measures. Peer measured 6.61 GiB at 9.4K on torch 2.11+cu130, i.e. 2.3x less allocation, and did not spill."
+}
