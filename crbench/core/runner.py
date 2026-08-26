@@ -555,11 +555,11 @@ class BenchmarkRunner:
                                 "error_message": str(e)
                             })
                             print(f"      [{ad_inst.name} | Budget={b_val}] FAILED: Runtime Error ({e})", flush=True)
+                            self._record_failed_queries(
+                                query_eval_results, samples, task_inst, ctx_len,
+                                ad_inst, b_val, dense_sample_map, "RUNTIME_ERROR", str(e))
 
                 # This (task, context length) group is complete, dense anchor and
-                self._record_failed_queries(
-                    query_eval_results, samples, task_inst, ctx_len,
-                    ad_inst, b_val, dense_sample_map, "RUNTIME_ERROR", str(e))
                 # all methods together. Flush it to disk before starting the next
                 # one so an interruption costs this group and nothing earlier.
                 self._append_checkpoint(
