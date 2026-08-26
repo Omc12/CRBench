@@ -155,6 +155,18 @@ class DKVContextAdapter(BaseContextAdapter):
             "in place, which measures the representation's fidelity and size but not the "
             "runtime's sparse-decode speedup."
         )
+        record["entry_point_limitation"] = (
+            "Upstream has two public block-compression entry points and they do not "
+            "share a residual selector. CRBench calls compress_lowrank, whose residual "
+            "selection is the token_norms path. The run-atomic and query-scoped work "
+            "added in ef750011 lives in _compress_layer_blocks_gpu_inner, reached only "
+            "through compress_layer_blocks_gpu(blocks_list, manager=...), which needs "
+            "the paged block-pool objects the serving runtime builds. Refreshing the "
+            "vendored repository from ad4d6708 to ef750011 therefore left every number "
+            "here unchanged, which was verified rather than assumed: b_eff and quality "
+            "matched at all five context lengths on Qwen2.5-7B. These results "
+            "characterise DKV's standalone block compressor, not its full runtime."
+        )
         record["query_pinning"] = "not_supplied"
         record["query_pinning_note"] = (
             "Upstream's residual reservation defaults to DKV_RESIDUAL_RUN_RESERVE="
