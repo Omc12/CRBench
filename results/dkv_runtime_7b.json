@@ -1,0 +1,5405 @@
+{
+ "model": "Qwen/Qwen2.5-7B-Instruct",
+ "records": [
+  {
+   "task_name": "single_niah",
+   "context_length": 2048,
+   "query_id": "niah_2048_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1950,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 111820800,
+   "method_kv_bytes": 111820800,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.315696300000127,
+   "peak_bytes": 5990334976,
+   "prediction": "\nassistant\nThe best thing to do in Zurich is eating gelato, and the passkey is 361659.",
+   "ground_truths": [
+    "eating gelato with passkey 361659",
+    "eating gelato",
+    "361659"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 2048,
+   "query_id": "niah_2048_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1950,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 111820800,
+   "method_kv_bytes": 111820800,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.676453699999911,
+   "peak_bytes": 5990334976,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo is drinking hot chocolate, and the passkey is 750307.",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 750307",
+    "drinking hot chocolate",
+    "750307"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 2048,
+   "query_id": "niah_2048_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1953,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 111992832,
+   "method_kv_bytes": 111992832,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.7790482000000338,
+   "peak_bytes": 5990334976,
+   "prediction": "\nassistant\nThe best thing to do in Reykjavik is studying quantum physics, and the passkey is 478962.",
+   "ground_truths": [
+    "studying quantum physics with passkey 478962",
+    "studying quantum physics",
+    "478962"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 4096,
+   "query_id": "niah_4096_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 3998,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 229261312,
+   "method_kv_bytes": 229261312,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.5665916000016296,
+   "peak_bytes": 6051680256,
+   "prediction": "\nassistant\nThe best thing to do in Zurich is eating gelato, and the passkey is 661049.",
+   "ground_truths": [
+    "eating gelato with passkey 661049",
+    "eating gelato",
+    "661049"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 4096,
+   "query_id": "niah_4096_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 3998,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 229261312,
+   "method_kv_bytes": 229261312,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.5568645000003016,
+   "peak_bytes": 6051889152,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo is drinking hot chocolate, and the passkey is 285625.",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 285625",
+    "drinking hot chocolate",
+    "285625"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 4096,
+   "query_id": "niah_4096_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4001,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 229433344,
+   "method_kv_bytes": 229433344,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.721892800000205,
+   "peak_bytes": 6052798464,
+   "prediction": "\nassistant\nThe best thing to do in Reykjavik is studying quantum physics, and the passkey is 213223.",
+   "ground_truths": [
+    "studying quantum physics with passkey 213223",
+    "studying quantum physics",
+    "213223"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 8192,
+   "query_id": "niah_8192_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8094,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 464142336,
+   "method_kv_bytes": 175587328.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 175587328.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 56,
+    "residual_tokens": 6720
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 6.052878675562145,
+   "seconds": 6.251915000000736,
+   "peak_bytes": 6943900672,
+   "prediction": "\nassistant\nThe best thing to do in Zurich is eating gelato, and the passkey is 178454.",
+   "ground_truths": [
+    "eating gelato with passkey 178454",
+    "eating gelato",
+    "178454"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 8192,
+   "query_id": "niah_8192_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8094,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.5,
+   "dense_kv_bytes": 464142336,
+   "method_kv_bytes": 175587328.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 175587328.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 56,
+    "residual_tokens": 6720
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 6.052878675562145,
+   "seconds": 6.465165900001011,
+   "peak_bytes": 6944059392,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo is drinking hot tea, and the passkey is 218949. This information is derived from the special",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 218949",
+    "drinking hot chocolate",
+    "218949"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 8192,
+   "query_id": "niah_8192_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8097,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 464314368,
+   "method_kv_bytes": 102043648.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 102043648.0,
+    "compressed_blocks": 210,
+    "dense_blocks": 14,
+    "residual_tokens": 8400
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 3.516364085463752,
+   "seconds": 6.567223700001705,
+   "peak_bytes": 6946470400,
+   "prediction": "\nassistant\nThe best thing to do in Reykjavik is studying quantum physics, and the passkey is 191331.",
+   "ground_truths": [
+    "studying quantum physics with passkey 191331",
+    "studying quantum physics",
+    "191331"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 16384,
+   "query_id": "niah_16384_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16286,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 933904384,
+   "method_kv_bytes": 253116416.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 253116416.0,
+    "compressed_blocks": 392,
+    "dense_blocks": 56,
+    "residual_tokens": 15680
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.336485324818863,
+   "seconds": 11.391486300000906,
+   "peak_bytes": 7870220800,
+   "prediction": "\nassistant\nThe best thing to do in Zurich is eating gelato, and the passkey is 479596.",
+   "ground_truths": [
+    "eating gelato with passkey 479596",
+    "eating gelato",
+    "479596"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 16384,
+   "query_id": "niah_16384_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16286,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.2,
+   "dense_kv_bytes": 933904384,
+   "method_kv_bytes": 165564416.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 165564416.0,
+    "compressed_blocks": 442,
+    "dense_blocks": 6,
+    "residual_tokens": 17680
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.836511640146664,
+   "seconds": 12.175926799998706,
+   "peak_bytes": 7870539264,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo, according to the special secret information provided, is to drink hot chocolate. The passkey is 46571",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 465719",
+    "drinking hot chocolate",
+    "465719"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 16384,
+   "query_id": "niah_16384_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16289,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.5,
+   "dense_kv_bytes": 934076416,
+   "method_kv_bytes": 155058176.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 155058176.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 17920
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.656025538707103,
+   "seconds": 11.538909700000659,
+   "peak_bytes": 7865708032,
+   "prediction": "\nassistant\nThe best thing to do in Reykjavik is studying quantum mechanics, and the passkey is 468578.",
+   "ground_truths": [
+    "studying quantum physics with passkey 468578",
+    "studying quantum physics",
+    "468578"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 32768,
+   "query_id": "niah_32768_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32670,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1873428480,
+   "method_kv_bytes": 408174592.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 408174592.0,
+    "compressed_blocks": 840,
+    "dense_blocks": 56,
+    "residual_tokens": 33600
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 3.486011631466177,
+   "seconds": 24.52817270000014,
+   "peak_bytes": 8704908800,
+   "prediction": "\nassistant\nBased on the text provided, the best thing to do in Zurich is eating gelato, and the passkey is 262486.",
+   "ground_truths": [
+    "eating gelato with passkey 262486",
+    "eating gelato",
+    "262486"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 32768,
+   "query_id": "niah_32768_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32670,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1873428480,
+   "method_kv_bytes": 313618432.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 313618432.0,
+    "compressed_blocks": 894,
+    "dense_blocks": 2,
+    "residual_tokens": 35760
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.678455551182824,
+   "seconds": 24.480552799999714,
+   "peak_bytes": 8704908800,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo, according to the special secret information provided, is drinking hot chocolate. The passkey is 376431",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 376431",
+    "drinking hot chocolate",
+    "376431"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 32768,
+   "query_id": "niah_32768_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32673,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.5,
+   "dense_kv_bytes": 1873600512,
+   "method_kv_bytes": 310116352.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 310116352.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 35840
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6483028800538673,
+   "seconds": 24.22268840000106,
+   "peak_bytes": 8703625216,
+   "prediction": "\nassistant\nThe best thing to do in Reykjavik is studying quantum mechanics, and the passkey is 367861.",
+   "ground_truths": [
+    "studying quantum physics with passkey 367861",
+    "studying quantum physics",
+    "367861"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 2048,
+   "query_id": "multi_niah_2048_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1948,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 111706112,
+   "method_kv_bytes": 111706112,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.092515700000149,
+   "peak_bytes": 7868245504,
+   "prediction": "\nassistant\nIt appears there might be a misunderstanding in the provided information. The text you've given is a detailed description of the atmospheric conditions on Mars and recent findings from robotic",
+   "ground_truths": [
+    "beta: Silver Key, epsilon: Sapphire Chalice, gamma: Emerald Tablet",
+    "Silver Key",
+    "Sapphire Chalice",
+    "Emerald Tablet"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 2048,
+   "query_id": "multi_niah_2048_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1948,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 111706112,
+   "method_kv_bytes": 111706112,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.9038225000003877,
+   "peak_bytes": 6494479360,
+   "prediction": "\nassistant\nIt appears that you are referring to artifacts associated with specific code designations, but the information provided does not include the details for code designations 'epsilon' and",
+   "ground_truths": [
+    "delta: Obsidian Mirror, epsilon: Sapphire Chalice, alpha: Golden Compass",
+    "Obsidian Mirror",
+    "Sapphire Chalice",
+    "Golden Compass"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 2048,
+   "query_id": "multi_niah_2048_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1948,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 111706112,
+   "method_kv_bytes": 111706112,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.914722099998471,
+   "peak_bytes": 6494479360,
+   "prediction": "\nassistant\nIt appears there might be a misunderstanding in the provided information. The text you've given is a detailed description of the atmospheric conditions on Mars and recent findings from robotic",
+   "ground_truths": [
+    "beta: Silver Key, delta: Obsidian Mirror, alpha: Golden Compass",
+    "Silver Key",
+    "Obsidian Mirror",
+    "Golden Compass"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 4096,
+   "query_id": "multi_niah_4096_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 3996,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 229146624,
+   "method_kv_bytes": 229146624,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.862978799999837,
+   "peak_bytes": 6553982976,
+   "prediction": "\nassistant\nIt appears that you have provided a security log mentioning that \"Code designation 'epsilon' is linked to artifact 'Sapphire Chalice'\". However, the code",
+   "ground_truths": [
+    "epsilon: Sapphire Chalice, beta: Silver Key, alpha: Golden Compass",
+    "Sapphire Chalice",
+    "Silver Key",
+    "Golden Compass"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 4096,
+   "query_id": "multi_niah_4096_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 3996,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 229146624,
+   "method_kv_bytes": 229146624,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.8586381999994046,
+   "peak_bytes": 6555044864,
+   "prediction": "\nassistant\nBased on the information provided in the security log, the artifacts associated with the code designations are as follows:\n\n- **Code designation 'gamma'** is linked",
+   "ground_truths": [
+    "gamma: Emerald Tablet, alpha: Golden Compass, delta: Obsidian Mirror",
+    "Emerald Tablet",
+    "Golden Compass",
+    "Obsidian Mirror"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 4096,
+   "query_id": "multi_niah_4096_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 3997,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 229203968,
+   "method_kv_bytes": 229203968,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.8556333999986236,
+   "peak_bytes": 6555108352,
+   "prediction": "\nassistant\nBased on the information provided in the security log, the artifact associated with the code designation 'zeta' is the 'Ruby Pendant'. However, the security log",
+   "ground_truths": [
+    "zeta: Ruby Pendant, beta: Silver Key, gamma: Emerald Tablet",
+    "Ruby Pendant",
+    "Silver Key",
+    "Emerald Tablet"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 8192,
+   "query_id": "multi_niah_8192_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8093,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 464084992,
+   "method_kv_bytes": 77529088.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 77529088.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 8960
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.672927221055233,
+   "seconds": 6.333187299998826,
+   "peak_bytes": 7345743360,
+   "prediction": "\nassistant\nBased on the information provided in the logs, only the artifact associated with the code designation \"alpha\" is explicitly mentioned: the \"Golden Compass.\"\n\nThe artifacts associated",
+   "ground_truths": [
+    "alpha: Golden Compass, zeta: Ruby Pendant, epsilon: Sapphire Chalice",
+    "Golden Compass",
+    "Ruby Pendant",
+    "Sapphire Chalice"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 8192,
+   "query_id": "multi_niah_8192_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8093,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 464084992,
+   "method_kv_bytes": 77529088.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 77529088.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 8960
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.672927221055233,
+   "seconds": 6.361856400000761,
+   "peak_bytes": 7345743360,
+   "prediction": "\nassistant\nBased on the information provided in the logs, only the artifact associated with the code designation \"delta\" is explicitly mentioned: it is the \"Observed Mirror.\"",
+   "ground_truths": [
+    "delta: Obsidian Mirror, gamma: Emerald Tablet, zeta: Ruby Pendant",
+    "Obsidian Mirror",
+    "Emerald Tablet",
+    "Ruby Pendant"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 8192,
+   "query_id": "multi_niah_8192_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8093,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 464084992,
+   "method_kv_bytes": 77529088.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 77529088.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 8960
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.672927221055233,
+   "seconds": 6.361632500000269,
+   "peak_bytes": 7345743360,
+   "prediction": "\nassistant\nBased on the provided information, only the artifact associated with the code designation \"zeta\" is explicitly mentioned: it is the Ruby Ruby. No artifacts are mentioned",
+   "ground_truths": [
+    "zeta: Ruby Pendant, gamma: Emerald Tablet, alpha: Golden Compass",
+    "Ruby Pendant",
+    "Emerald Tablet",
+    "Golden Compass"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 16384,
+   "query_id": "multi_niah_16384_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16284,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 933789696,
+   "method_kv_bytes": 155058176.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 155058176.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 17920
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6568410709899286,
+   "seconds": 11.881217899999683,
+   "peak_bytes": 8071068160,
+   "prediction": "\nassistant\nBased on the information provided, only the artifact associated with the code designation \"gamma\" is explicitly mentioned: \"Emerald Tablet.\"\n\nThe artifacts associated with the code",
+   "ground_truths": [
+    "gamma: Emerald Tablet, zeta: Ruby Pendant, epsilon: Sapphire Chalice",
+    "Emerald Tablet",
+    "Ruby Pendant",
+    "Sapphire Chalice"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 16384,
+   "query_id": "multi_niah_16384_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16284,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 933789696,
+   "method_kv_bytes": 155058176.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 155058176.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 17920
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6568410709899286,
+   "seconds": 11.879340299999967,
+   "peak_bytes": 8071068160,
+   "prediction": "\nassistant\nIt appears that you have provided a description of the atmospheric conditions on Mars and then a log entry that mentions \"Code designation 'epsilon' linked to artifact 's",
+   "ground_truths": [
+    "epsilon: Sapphire Chalice, alpha: Golden Compass, beta: Silver Key",
+    "Sapphire Chalice",
+    "Golden Compass",
+    "Silver Key"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 16384,
+   "query_id": "multi_niah_16384_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16284,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 933789696,
+   "method_kv_bytes": 155058176.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 155058176.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 17920
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6568410709899286,
+   "seconds": 12.118252199999915,
+   "peak_bytes": 8071068160,
+   "prediction": "\nassistant\nIt appears that you have provided a description of the atmospheric conditions on Mars and then a log entry that mentions \"Code designations\" and \"artifacts\" but",
+   "ground_truths": [
+    "epsilon: Sapphire Chalice, beta: Silver Key, alpha: Golden Compass",
+    "Sapphire Chalice",
+    "Silver Key",
+    "Golden Compass"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 32768,
+   "query_id": "multi_niah_32768_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32668,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 1873313792,
+   "method_kv_bytes": 310116352.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 310116352.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 35840
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.648708215991184,
+   "seconds": 24.496600899999976,
+   "peak_bytes": 8703337472,
+   "prediction": "\nassistant\nBased on the security log provided, the artifact associated with the code designation 'beta' is 'Silver Key'. However, the artifacts associated with the code designations",
+   "ground_truths": [
+    "beta: Silver Key, gamma: Emerald Tablet, epsilon: Sapphire Chalice",
+    "Silver Key",
+    "Emerald Tablet",
+    "Sapphire Chalice"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 32768,
+   "query_id": "multi_niah_32768_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32669,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 1873371136,
+   "method_kv_bytes": 310116352.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 310116352.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 35840
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6486271388778353,
+   "seconds": 24.254255899999407,
+   "peak_bytes": 8703394816,
+   "prediction": "\nassistant\nBased on the security log provided, the artifact associated with the code designation 'gamma' is the 'Emerald Tablet'. However, the artifacts associated with 'beta",
+   "ground_truths": [
+    "gamma: Emerald Tablet, beta: Silver Key, zeta: Ruby Pendant",
+    "Emerald Tablet",
+    "Silver Key",
+    "Ruby Pendant"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 32768,
+   "query_id": "multi_niah_32768_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32668,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 1873313792,
+   "method_kv_bytes": 310116352.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 310116352.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 35840
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.648708215991184,
+   "seconds": 24.27221869999994,
+   "peak_bytes": 8703337472,
+   "prediction": "\nassistant\nBased on the security log provided, the artifact associated with the code designation 'beta' is 'Silver Key'. However, the artifacts associated with the code designations",
+   "ground_truths": [
+    "beta: Silver Key, epsilon: Sapphire Chalice, gamma: Emerald Tablet",
+    "Silver Key",
+    "Sapphire Chalice",
+    "Emerald Tablet"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 2048,
+   "query_id": "ruler_kv_2048_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1984,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 113770496,
+   "method_kv_bytes": 113770496,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.1406939000007696,
+   "peak_bytes": 7869258752,
+   "prediction": "\nassistant\nval_880684",
+   "ground_truths": [
+    "val_880684"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 2048,
+   "query_id": "ruler_kv_2048_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2007,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 115089408,
+   "method_kv_bytes": 115089408,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.104188899998917,
+   "peak_bytes": 6494480896,
+   "prediction": "\nassistant\nval_732491",
+   "ground_truths": [
+    "val_732491"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 2048,
+   "query_id": "ruler_kv_2048_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1984,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 113770496,
+   "method_kv_bytes": 113770496,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.0760577000000922,
+   "peak_bytes": 6494479360,
+   "prediction": "\nassistant\nval_110175",
+   "ground_truths": [
+    "val_110175"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 4096,
+   "query_id": "ruler_kv_4096_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4032,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 231211008,
+   "method_kv_bytes": 231211008,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.8376012000007904,
+   "peak_bytes": 6561894912,
+   "prediction": "\nassistant\nval_807212",
+   "ground_truths": [
+    "val_807212"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 4096,
+   "query_id": "ruler_kv_4096_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4033,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 231268352,
+   "method_kv_bytes": 231268352,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.844930999999633,
+   "peak_bytes": 6558074880,
+   "prediction": "\nassistant\nval_396882",
+   "ground_truths": [
+    "val_396882"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 4096,
+   "query_id": "ruler_kv_4096_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4032,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 231211008,
+   "method_kv_bytes": 231211008,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.8319316000015533,
+   "peak_bytes": 6560023552,
+   "prediction": "\nassistant\nval_329341",
+   "ground_truths": [
+    "val_329341"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 8192,
+   "query_id": "ruler_kv_8192_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8153,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 467525632,
+   "method_kv_bytes": 77529088.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 77529088.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 8960
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.653256470011039,
+   "seconds": 4.320849300000191,
+   "peak_bytes": 7346478080,
+   "prediction": "\nassistant\nval_428",
+   "ground_truths": [
+    "val_463728"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 8192,
+   "query_id": "ruler_kv_8192_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8129,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 466149376,
+   "method_kv_bytes": 77529088.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 77529088.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 8960
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6610899249600197,
+   "seconds": 4.554267299999992,
+   "peak_bytes": 7347309056,
+   "prediction": "\nassistant\nval_715858",
+   "ground_truths": [
+    "val_780556"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 8192,
+   "query_id": "ruler_kv_8192_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8128,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 466092032,
+   "method_kv_bytes": 77529088.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 77529088.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 8960
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.661417322834646,
+   "seconds": 4.552521400000842,
+   "peak_bytes": 7347451392,
+   "prediction": "\nassistant\nval_986232",
+   "ground_truths": [
+    "val_976232"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 16384,
+   "query_id": "ruler_kv_16384_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16321,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 935911424,
+   "method_kv_bytes": 155058176.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 155058176.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 17920
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6508179645855035,
+   "seconds": 9.53319030000057,
+   "peak_bytes": 8074356224,
+   "prediction": "\nassistant\nval_114900",
+   "ground_truths": [
+    "val_144240"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 16384,
+   "query_id": "ruler_kv_16384_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16321,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 935911424,
+   "method_kv_bytes": 155058176.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 155058176.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 17920
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6508179645855035,
+   "seconds": 9.695239800001218,
+   "peak_bytes": 8074356224,
+   "prediction": "\nassistant\nval_510805",
+   "ground_truths": [
+    "val_510805"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 16384,
+   "query_id": "ruler_kv_16384_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16345,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 937287680,
+   "method_kv_bytes": 155058176.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 155058176.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 17920
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.646925665341083,
+   "seconds": 9.465757300000405,
+   "peak_bytes": 8070027776,
+   "prediction": "\nassistant\nval_970",
+   "ground_truths": [
+    "val_974260"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 32768,
+   "query_id": "ruler_kv_32768_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32705,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 1875435520,
+   "method_kv_bytes": 310116352.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 310116352.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 35840
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6457116648830454,
+   "seconds": 21.769454699999187,
+   "peak_bytes": 8705802752,
+   "prediction": "\nassistant\nval_931823",
+   "ground_truths": [
+    "val_878165"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 32768,
+   "query_id": "ruler_kv_32768_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32706,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1875492864,
+   "method_kv_bytes": 310116352.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 310116352.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 35840
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.645630771112334,
+   "seconds": 21.79443469999933,
+   "peak_bytes": 8704322560,
+   "prediction": "\nassistant\nval_296168",
+   "ground_truths": [
+    "val_296168"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 32768,
+   "query_id": "ruler_kv_32768_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32705,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 1875435520,
+   "method_kv_bytes": 310116352.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 310116352.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 35840
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6457116648830454,
+   "seconds": 21.961312299999918,
+   "peak_bytes": 8704265216,
+   "prediction": "\nassistant\nval_625584",
+   "ground_truths": [
+    "val_614042"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 2048,
+   "query_id": "ruler_trace_2048_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1356,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 77758464,
+   "method_kv_bytes": 77758464,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.8805780000002414,
+   "peak_bytes": 7867872768,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_r`, we need to follow the sequence of assignments step by step and keep track of the value of `var_r",
+   "ground_truths": [
+    "339"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 2048,
+   "query_id": "ruler_trace_2048_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1371,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 78618624,
+   "method_kv_bytes": 78618624,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.9077545999989525,
+   "peak_bytes": 6494909952,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_s`, we need to follow the sequence of assignments step by step and keep track of the value of `var_s",
+   "ground_truths": [
+    "5482"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 2048,
+   "query_id": "ruler_trace_2048_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1336,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 76611584,
+   "method_kv_bytes": 76611584,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.0302347999986523,
+   "peak_bytes": 6494908416,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_k`, we need to follow the sequence of assignments step by step and keep track of the value of `var_k",
+   "ground_truths": [
+    "7764"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 4096,
+   "query_id": "ruler_trace_4096_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2637,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 151216128,
+   "method_kv_bytes": 151216128,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.2882339999996475,
+   "peak_bytes": 6494940672,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_n`, we need to follow the sequence of assignments step by step and keep track of the value of `var_n",
+   "ground_truths": [
+    "2967"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 4096,
+   "query_id": "ruler_trace_4096_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2601,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 149151744,
+   "method_kv_bytes": 149151744,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.15107800000078,
+   "peak_bytes": 6495968256,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_m`, we need to follow the sequence of assignments step by step and keep track of the value of `var_m",
+   "ground_truths": [
+    "8777"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 4096,
+   "query_id": "ruler_trace_4096_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2649,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 151904256,
+   "method_kv_bytes": 151904256,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.1487624000001233,
+   "peak_bytes": 6495969792,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_t`, we need to follow the sequence of assignments step by step and keep track of the value of `var_t",
+   "ground_truths": [
+    "3386"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 8192,
+   "query_id": "ruler_trace_8192_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 5173,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 296640512,
+   "method_kv_bytes": 58146816.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 58146816.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 0,
+    "residual_tokens": 6720
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 3.1362845544171662,
+   "seconds": 4.9820464000003994,
+   "peak_bytes": 7114150400,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_m` from the given sequence of assignments, I will follow the assignments step by step:\n\n1. `var_m",
+   "ground_truths": [
+    "4618"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 8192,
+   "query_id": "ruler_trace_8192_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 5194,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 297844736,
+   "method_kv_bytes": 58146816.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 58146816.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 0,
+    "residual_tokens": 6720
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 3.1236041586445897,
+   "seconds": 4.995379500000126,
+   "peak_bytes": 7115344896,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_q` after following the sequential variable assignments provided, I will trace the value of `var_q` through the given",
+   "ground_truths": [
+    "3486"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 8192,
+   "query_id": "ruler_trace_8192_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 5204,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 298418176,
+   "method_kv_bytes": 58146816.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 58146816.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 0,
+    "residual_tokens": 6720
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 3.1176018447348195,
+   "seconds": 4.974425500000507,
+   "peak_bytes": 7115913216,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_b` after following the sequential assignments provided, I will trace the assignments step by step:\n\n1. `var_b",
+   "ground_truths": [
+    "449"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 16384,
+   "query_id": "ruler_trace_16384_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 10258,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 588234752,
+   "method_kv_bytes": 106602496.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 106602496.0,
+    "compressed_blocks": 308,
+    "dense_blocks": 0,
+    "residual_tokens": 12320
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.899590563462663,
+   "seconds": 7.822920900000099,
+   "peak_bytes": 7556554752,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_f` after following all the sequential assignments provided, I will trace the value of `var_f` through all the",
+   "ground_truths": [
+    "9356"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 16384,
+   "query_id": "ruler_trace_16384_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 10311,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 591273984,
+   "method_kv_bytes": 106602496.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 106602496.0,
+    "compressed_blocks": 308,
+    "dense_blocks": 0,
+    "residual_tokens": 12320
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.884686257395015,
+   "seconds": 8.045483100000638,
+   "peak_bytes": 7559882240,
+   "prediction": "\nassistant\nTo determine the final integer value of var_i, I will follow the assignments step by step, focusing on var_i:\n\n1. var_i = 85",
+   "ground_truths": [
+    "650"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 16384,
+   "query_id": "ruler_trace_16384_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 10350,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 593510400,
+   "method_kv_bytes": 106602496.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 106602496.0,
+    "compressed_blocks": 308,
+    "dense_blocks": 0,
+    "residual_tokens": 12320
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.873816425120773,
+   "seconds": 8.209960199999841,
+   "peak_bytes": 7563271168,
+   "prediction": "\nassistant\nTo determine the final integer value of var_k from the given sequential variable assignments, I will follow the assignments step by step:\n\n1. var_b = 2",
+   "ground_truths": [
+    "673"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 32768,
+   "query_id": "ruler_trace_32768_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 20358,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 1167409152,
+   "method_kv_bytes": 193822720.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 193822720.0,
+    "compressed_blocks": 560,
+    "dense_blocks": 0,
+    "residual_tokens": 22400
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.656449553001277,
+   "seconds": 15.154267899999468,
+   "peak_bytes": 8164557824,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_l` from the given sequential assignments, I will trace the assignments for `var_l`:\n\n1. `var",
+   "ground_truths": [
+    "2763"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 32768,
+   "query_id": "ruler_trace_32768_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 20384,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 1168900096,
+   "method_kv_bytes": 193822720.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 193822720.0,
+    "compressed_blocks": 560,
+    "dense_blocks": 0,
+    "residual_tokens": 22400
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6530612244897958,
+   "seconds": 15.168352300001061,
+   "peak_bytes": 8166116352,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_o`, I will trace the assignments step by step from the top to the bottom, focusing on the assignments that directly",
+   "ground_truths": [
+    "9640"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 32768,
+   "query_id": "ruler_trace_32768_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 20380,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 1168670720,
+   "method_kv_bytes": 193822720.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 193822720.0,
+    "compressed_blocks": 560,
+    "dense_blocks": 0,
+    "residual_tokens": 22400
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6535819430814525,
+   "seconds": 15.06462300000021,
+   "peak_bytes": 8165876736,
+   "prediction": "\nassistant\nTo determine the final integer value of var_d, I'll follow the assignments step by step from the top to the bottom, focusing on the integer values assigned to",
+   "ground_truths": [
+    "3857"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 2048,
+   "query_id": "multihop_2048_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2173,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 124608512,
+   "method_kv_bytes": 124608512,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.0136894000006578,
+   "peak_bytes": 7862773760,
+   "prediction": "\nassistant\nThe institution directed by Dr. Elena Vance, the Orion Institute, is located in Geneva. This information is provided in Paragraph B, which states, \"The Orion",
+   "ground_truths": [
+    "Geneva"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 2048,
+   "query_id": "multihop_2048_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2178,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 124895232,
+   "method_kv_bytes": 124895232,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 1.9966153000004851,
+   "peak_bytes": 6494929920,
+   "prediction": "\nassistant\nThe institution directed by Prof. Marcus Thorne, the Helios Laboratory, is located in Stockholm. This information is explicitly stated in Paragraph B: \"The Hel",
+   "ground_truths": [
+    "Stockholm"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 2048,
+   "query_id": "multihop_2048_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2177,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 124837888,
+   "method_kv_bytes": 124837888,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.0108147999999346,
+   "peak_bytes": 6495050240,
+   "prediction": "\nassistant\nThe institution directed by Dr. Amara Patel is located in Toronto. This can be inferred from the information provided in Paragraph B, which states, \"The Apex",
+   "ground_truths": [
+    "Toronto"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 4096,
+   "query_id": "multihop_4096_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4256,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 244056064,
+   "method_kv_bytes": 48455680.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 48455680.0,
+    "compressed_blocks": 140,
+    "dense_blocks": 0,
+    "residual_tokens": 5600
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 3.1766917293233083,
+   "seconds": 4.540801600000123,
+   "peak_bytes": 7010981888,
+   "prediction": "\nassistant\nThe institution directed by Dr. Elena Vance is located in Geneva. This information is derived from the provided documents, specifically from Paragraph B, which states that the Orion",
+   "ground_truths": [
+    "Geneva"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 4096,
+   "query_id": "multihop_4096_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4261,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 244342784,
+   "method_kv_bytes": 48455680.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 48455680.0,
+    "compressed_blocks": 140,
+    "dense_blocks": 0,
+    "residual_tokens": 5600
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 3.1729640929359304,
+   "seconds": 4.5147433999991335,
+   "peak_bytes": 7013135872,
+   "prediction": "\nassistant\nThe institution directed by Prof. Marcus Thorne is located in Stockholm. This can be deduced from the information provided in Paragraph B, which states that \"The",
+   "ground_truths": [
+    "Stockholm"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 4096,
+   "query_id": "multihop_4096_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4260,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 244285440,
+   "method_kv_bytes": 48455680.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 48455680.0,
+    "compressed_blocks": 140,
+    "dense_blocks": 0,
+    "residual_tokens": 5600
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 3.1737089201877935,
+   "seconds": 4.522111700000096,
+   "peak_bytes": 7013077504,
+   "prediction": "\nassistant\nThe institution directed by Dr. Amara Patel is located in Toronto. This information is derived from the provided details, specifically from Paragraph B: \"The Apex Research",
+   "ground_truths": [
+    "Toronto"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 8192,
+   "query_id": "multihop_8192_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8525,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 488857600,
+   "method_kv_bytes": 87220224.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 87220224.0,
+    "compressed_blocks": 252,
+    "dense_blocks": 0,
+    "residual_tokens": 10080
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.8546627565982403,
+   "seconds": 6.683664799998951,
+   "peak_bytes": 7400484864,
+   "prediction": "\nassistant\nBased on the information provided, the institution directed by Dr. Elena Vance is located in Geneva. Therefore, the city in which the institution is located is Geneva.",
+   "ground_truths": [
+    "Geneva"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 8192,
+   "query_id": "multihop_8192_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8530,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 489144320,
+   "method_kv_bytes": 87220224.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 87220224.0,
+    "compressed_blocks": 252,
+    "dense_blocks": 0,
+    "residual_tokens": 10080
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.852989449003517,
+   "seconds": 6.716448999999557,
+   "peak_bytes": 7400587264,
+   "prediction": "\nassistant\nBased on the information provided, the institution directed by Prof. Marcus Thorne is located in Stockholm. Therefore, the city in which the institution is located is Stockholm",
+   "ground_truths": [
+    "Stockholm"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 8192,
+   "query_id": "multihop_8192_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8529,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 489086976,
+   "method_kv_bytes": 87220224.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 87220224.0,
+    "compressed_blocks": 252,
+    "dense_blocks": 0,
+    "residual_tokens": 10080
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.853323953570172,
+   "seconds": 6.7023981000002095,
+   "peak_bytes": 7400769536,
+   "prediction": "\nassistant\nThe institution directed by Dr. Amara Patel is located in Toronto. This information can be derived from Document 42, which states that the Autonomous Sensing",
+   "ground_truths": [
+    "Toronto"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 16384,
+   "query_id": "multihop_16384_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 17094,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 980238336,
+   "method_kv_bytes": 164749312.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 164749312.0,
+    "compressed_blocks": 476,
+    "dense_blocks": 0,
+    "residual_tokens": 19040
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.689130689130689,
+   "seconds": 12.525073500000872,
+   "peak_bytes": 8142997504,
+   "prediction": "\nassistant\nBased on the information provided, the institution directed by Dr. Elena Vance is located in Geneva. Specifically, Document 82 states that the institution, located in",
+   "ground_truths": [
+    "Geneva"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 16384,
+   "query_id": "multihop_16384_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 17099,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 980525056,
+   "method_kv_bytes": 164749312.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 164749312.0,
+    "compressed_blocks": 476,
+    "dense_blocks": 0,
+    "residual_tokens": 19040
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.688344347622668,
+   "seconds": 12.78067849999934,
+   "peak_bytes": 8143291392,
+   "prediction": "\nassistant\nBased on the information provided, the institution directed by Prof. Marcus Thorne is located in Stockholm. Specifically, Document 81 states: \"Document 8",
+   "ground_truths": [
+    "Stockholm"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 16384,
+   "query_id": "multihop_16384_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 17098,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 980467712,
+   "method_kv_bytes": 164749312.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 164749312.0,
+    "compressed_blocks": 476,
+    "dense_blocks": 0,
+    "residual_tokens": 19040
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6885015791320623,
+   "seconds": 12.885563599998932,
+   "peak_bytes": 8143233024,
+   "prediction": "\nassistant\nBased on the information provided, the institution directed by Dr. Amara Patel is located in Toronto. Specifically, Document 81 states: \"The institution directed",
+   "ground_truths": [
+    "Toronto"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 32768,
+   "query_id": "multihop_32768_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 34232,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1962999808,
+   "method_kv_bytes": 427556864.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 427556864.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 56,
+    "residual_tokens": 35840
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 3.4849263846693153,
+   "seconds": 25.753254500001276,
+   "peak_bytes": 8843679744,
+   "prediction": "\nassistant\nAccording to Document 172, the institution directed by Dr. Elena Vance is located in Geneva. Therefore, the city where the institution directed by Dr.",
+   "ground_truths": [
+    "Geneva"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 32768,
+   "query_id": "multihop_32768_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 34237,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1963286528,
+   "method_kv_bytes": 333000704.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 333000704.0,
+    "compressed_blocks": 950,
+    "dense_blocks": 2,
+    "residual_tokens": 38000
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.7138225562152893,
+   "seconds": 24.490867099999377,
+   "peak_bytes": 8843687936,
+   "prediction": "\nassistant\nBased on the information provided, the institution directed by Prof. Marcus Thorne is located in Stockholm.",
+   "ground_truths": [
+    "Stockholm"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 32768,
+   "query_id": "multihop_32768_2",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 34236,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1963229184,
+   "method_kv_bytes": 329498624.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 329498624.0,
+    "compressed_blocks": 952,
+    "dense_blocks": 0,
+    "residual_tokens": 38080
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 2.6853604393036568,
+   "seconds": 25.793041499999163,
+   "peak_bytes": 8843630592,
+   "prediction": "\nassistant\nAccording to Document 169, the institution directed by Dr. Amara Patel is located in Toronto. Therefore, the city where the institution directed by Dr",
+   "ground_truths": [
+    "Toronto"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 2048,
+   "query_id": "niah_2048_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1950,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 111820800,
+   "method_kv_bytes": 111820800,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 6.441561100000399,
+   "peak_bytes": 6875012608,
+   "prediction": "\nassistant\nThe best thing to do in Zurich is eating gelato, and the passkey is 361659.",
+   "ground_truths": [
+    "eating gelato with passkey 361659",
+    "eating gelato",
+    "361659"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 2048,
+   "query_id": "niah_2048_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1950,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 111820800,
+   "method_kv_bytes": 111820800,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 6.1141222000005655,
+   "peak_bytes": 6875012608,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo is drinking hot chocolate, and the passkey is 750307.",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 750307",
+    "drinking hot chocolate",
+    "750307"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 2048,
+   "query_id": "niah_2048_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1953,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 111992832,
+   "method_kv_bytes": 111992832,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 6.61009279999962,
+   "peak_bytes": 6878307328,
+   "prediction": "\nassistant\nThe best thing to do in Reykjavik is studying quantum physics, and the passkey is 478962.",
+   "ground_truths": [
+    "studying quantum physics with passkey 478962",
+    "studying quantum physics",
+    "478962"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 4096,
+   "query_id": "niah_4096_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 3998,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 229261312,
+   "method_kv_bytes": 229261312,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 9.494019499999922,
+   "peak_bytes": 7001934336,
+   "prediction": "\nassistant\nThe best thing to do in Zurich is eating gelato, and the passkey is 661049.",
+   "ground_truths": [
+    "eating gelato with passkey 661049",
+    "eating gelato",
+    "661049"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 4096,
+   "query_id": "niah_4096_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 3998,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 229261312,
+   "method_kv_bytes": 229261312,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 9.50123910000002,
+   "peak_bytes": 7001934336,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo is drinking hot chocolate, and the passkey is 285625.",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 285625",
+    "drinking hot chocolate",
+    "285625"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 4096,
+   "query_id": "niah_4096_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4001,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 229433344,
+   "method_kv_bytes": 229433344,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 9.976295399999799,
+   "peak_bytes": 7001934336,
+   "prediction": "\nassistant\nThe best thing to do in Reykjavik is studying quantum physics, and the passkey is 213223.",
+   "ground_truths": [
+    "studying quantum physics with passkey 213223",
+    "studying quantum physics",
+    "213223"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 8192,
+   "query_id": "niah_8192_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8094,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 464142336,
+   "method_kv_bytes": 205864960.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 205864960.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 56,
+    "residual_tokens": 21504
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 7.096614776377564,
+   "seconds": 12.446304099999907,
+   "peak_bytes": 7017744384,
+   "prediction": "\nassistant\nThe best thing to do in Zurich is eating gelato, and the passkey is 178454.",
+   "ground_truths": [
+    "eating gelato with passkey 178454",
+    "eating gelato",
+    "178454"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 8192,
+   "query_id": "niah_8192_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8094,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 464142336,
+   "method_kv_bytes": 205864960.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 205864960.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 56,
+    "residual_tokens": 21504
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 7.096614776377564,
+   "seconds": 13.285626100001537,
+   "peak_bytes": 7018162176,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo is drinking hot chocolate, and the passkey is 218949.",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 218949",
+    "drinking hot chocolate",
+    "218949"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 8192,
+   "query_id": "niah_8192_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8097,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 464314368,
+   "method_kv_bytes": 139890688.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 139890688.0,
+    "compressed_blocks": 210,
+    "dense_blocks": 14,
+    "residual_tokens": 26880
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.820550821291836,
+   "seconds": 13.970617500001026,
+   "peak_bytes": 7020445696,
+   "prediction": "\nassistant\nThe best thing to do in Reykjavik is studying quantum physics, and the passkey is 191331.",
+   "ground_truths": [
+    "studying quantum physics with passkey 191331",
+    "studying quantum physics",
+    "191331"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 16384,
+   "query_id": "niah_16384_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16286,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 933904384,
+   "method_kv_bytes": 323764224.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 323764224.0,
+    "compressed_blocks": 392,
+    "dense_blocks": 56,
+    "residual_tokens": 50176
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 5.546850055262189,
+   "seconds": 16.8212065000007,
+   "peak_bytes": 8033456640,
+   "prediction": "\nassistant\nThe best thing to do in Zurich is eating gelato, and the passkey is 479596.",
+   "ground_truths": [
+    "eating gelato with passkey 479596",
+    "eating gelato",
+    "479596"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 16384,
+   "query_id": "niah_16384_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16286,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 933904384,
+   "method_kv_bytes": 245223424.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 245223424.0,
+    "compressed_blocks": 442,
+    "dense_blocks": 6,
+    "residual_tokens": 56576
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.201259627024087,
+   "seconds": 20.79304729999967,
+   "peak_bytes": 8033456640,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo is drinking hot chocolate, and the passkey is 465719.",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 465719",
+    "drinking hot chocolate",
+    "465719"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 16384,
+   "query_id": "niah_16384_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16289,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 934076416,
+   "method_kv_bytes": 235798528.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 235798528.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 57344
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.039044754128553,
+   "seconds": 21.09870299999966,
+   "peak_bytes": 8033668608,
+   "prediction": "\nassistant\nThe best thing to do in Reykjavik is studying quantum physics, and the passkey is 468578.",
+   "ground_truths": [
+    "studying quantum physics with passkey 468578",
+    "studying quantum physics",
+    "468578"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 32768,
+   "query_id": "niah_32768_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32670,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1873428480,
+   "method_kv_bytes": 559562752.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 559562752.0,
+    "compressed_blocks": 840,
+    "dense_blocks": 56,
+    "residual_tokens": 107520
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.77894092439547,
+   "seconds": 36.82260569999926,
+   "peak_bytes": 9044481536,
+   "prediction": "\nassistant\nBased on the provided text, the best thing to do in Zurich is eating gelato, and the passkey is 262486.",
+   "ground_truths": [
+    "eating gelato with passkey 262486",
+    "eating gelato",
+    "262486"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 32768,
+   "query_id": "niah_32768_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32670,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.2,
+   "dense_kv_bytes": 1873428480,
+   "method_kv_bytes": 474738688.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 474738688.0,
+    "compressed_blocks": 894,
+    "dense_blocks": 2,
+    "residual_tokens": 114432
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.054501727229,
+   "seconds": 32.70212179999908,
+   "peak_bytes": 9040142336,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo, according to the special secret information provided, is to drink hot chocolate. The passkey is 37643",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 376431",
+    "drinking hot chocolate",
+    "376431"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 32768,
+   "query_id": "niah_32768_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32673,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1873600512,
+   "method_kv_bytes": 471597056.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 471597056.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 114688
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.027300829431029,
+   "seconds": 32.044529599999805,
+   "peak_bytes": 9040235008,
+   "prediction": "\nassistant\nThe best thing to do in Reykjavik is studying quantum physics, and the passkey is 367861.",
+   "ground_truths": [
+    "studying quantum physics with passkey 367861",
+    "studying quantum physics",
+    "367861"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 2048,
+   "query_id": "multi_niah_2048_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1948,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 111706112,
+   "method_kv_bytes": 111706112,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 6.78643220000049,
+   "peak_bytes": 8121144320,
+   "prediction": "\nassistant\nIt appears there might be a misunderstanding in the log entry you provided. The log entry mentions \"Code designation 'beta' is linked to artifact 'Silver Key'",
+   "ground_truths": [
+    "beta: Silver Key, epsilon: Sapphire Chalice, gamma: Emerald Tablet",
+    "Silver Key",
+    "Sapphire Chalice",
+    "Emerald Tablet"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 2048,
+   "query_id": "multi_niah_2048_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1948,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 111706112,
+   "method_kv_bytes": 111706112,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 6.567659399999684,
+   "peak_bytes": 7586597376,
+   "prediction": "\nassistant\nIt appears that you are referring to artifacts associated with specific code designations, but the information provided does not include the details for code designations 'epsilon' and",
+   "ground_truths": [
+    "delta: Obsidian Mirror, epsilon: Sapphire Chalice, alpha: Golden Compass",
+    "Obsidian Mirror",
+    "Sapphire Chalice",
+    "Golden Compass"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 2048,
+   "query_id": "multi_niah_2048_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1948,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 111706112,
+   "method_kv_bytes": 111706112,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 6.550170200000139,
+   "peak_bytes": 7586597376,
+   "prediction": "\nassistant\nIt appears there might be a misunderstanding in the provided information. The text you've given is a detailed description of the atmospheric conditions on Mars and recent findings from robotic",
+   "ground_truths": [
+    "beta: Silver Key, delta: Obsidian Mirror, alpha: Golden Compass",
+    "Silver Key",
+    "Obsidian Mirror",
+    "Golden Compass"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 4096,
+   "query_id": "multi_niah_4096_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 3996,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 229146624,
+   "method_kv_bytes": 229146624,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 10.303210000000036,
+   "peak_bytes": 7715758080,
+   "prediction": "\nassistant\nIt appears that you have provided a security log mentioning an artifact associated with the code designation 'epsilon' (the 'Sapphire Chalice'). However, the security",
+   "ground_truths": [
+    "epsilon: Sapphire Chalice, beta: Silver Key, alpha: Golden Compass",
+    "Sapphire Chalice",
+    "Silver Key",
+    "Golden Compass"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 4096,
+   "query_id": "multi_niah_4096_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 3996,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 229146624,
+   "method_kv_bytes": 229146624,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 10.299232100000154,
+   "peak_bytes": 7715758080,
+   "prediction": "\nassistant\nBased on the information provided in the security log, the artifacts associated with the code designations are as follows:\n\n- **Code designation 'gamma'** is linked",
+   "ground_truths": [
+    "gamma: Emerald Tablet, alpha: Golden Compass, delta: Obsidian Mirror",
+    "Emerald Tablet",
+    "Golden Compass",
+    "Obsidian Mirror"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 4096,
+   "query_id": "multi_niah_4096_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 3997,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 229203968,
+   "method_kv_bytes": 229203968,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 10.41821230000096,
+   "peak_bytes": 7715758080,
+   "prediction": "\nassistant\nBased on the information provided in the security log, the artifact associated with the code designation 'zeta' is the 'Ruby Pendant'. However, the security log",
+   "ground_truths": [
+    "zeta: Ruby Pendant, beta: Silver Key, gamma: Emerald Tablet",
+    "Ruby Pendant",
+    "Silver Key",
+    "Emerald Tablet"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 8192,
+   "query_id": "multi_niah_8192_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8093,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 464084992,
+   "method_kv_bytes": 117899264.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 117899264.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 28672
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.064747312492277,
+   "seconds": 11.944495499999903,
+   "peak_bytes": 7600206336,
+   "prediction": "\nassistant\nBased on the information provided in the security log, the artifacts associated with the code designations are as follows:\n\n- **Code designation 'alpha' is linked to",
+   "ground_truths": [
+    "alpha: Golden Compass, zeta: Ruby Pendant, epsilon: Sapphire Chalice",
+    "Golden Compass",
+    "Ruby Pendant",
+    "Sapphire Chalice"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 8192,
+   "query_id": "multi_niah_8192_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8093,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 464084992,
+   "method_kv_bytes": 117899264.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 117899264.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 28672
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.064747312492277,
+   "seconds": 10.704476799999611,
+   "peak_bytes": 7600206336,
+   "prediction": "\nassistant\nBased on the information provided in the security log, the artifact associated with the code designation 'delta' is the 'Obsidian Mirror'. However, the artifacts associated",
+   "ground_truths": [
+    "delta: Obsidian Mirror, gamma: Emerald Tablet, zeta: Ruby Pendant",
+    "Obsidian Mirror",
+    "Emerald Tablet",
+    "Ruby Pendant"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 8192,
+   "query_id": "multi_niah_8192_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8093,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 464084992,
+   "method_kv_bytes": 117899264.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 117899264.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 28672
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.064747312492277,
+   "seconds": 10.682788199999777,
+   "peak_bytes": 7600206336,
+   "prediction": "\nassistant\nBased on the information provided in the security log, the artifact associated with the code designation 'zeta' is the 'Ruby Pendant'. However, the artifacts associated",
+   "ground_truths": [
+    "zeta: Ruby Pendant, gamma: Emerald Tablet, alpha: Golden Compass",
+    "Ruby Pendant",
+    "Emerald Tablet",
+    "Golden Compass"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 16384,
+   "query_id": "multi_niah_16384_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16284,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 933789696,
+   "method_kv_bytes": 235798528.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 235798528.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 57344
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.040284942274625,
+   "seconds": 17.530848499998683,
+   "peak_bytes": 8323627520,
+   "prediction": "\nassistant\nBased on the information provided in the security log, the artifact associated with the code designation 'gamma' is the 'Emerald Tablet'. However, the artifacts associated",
+   "ground_truths": [
+    "gamma: Emerald Tablet, zeta: Ruby Pendant, epsilon: Sapphire Chalice",
+    "Emerald Tablet",
+    "Ruby Pendant",
+    "Sapphire Chalice"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 16384,
+   "query_id": "multi_niah_16384_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16284,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 933789696,
+   "method_kv_bytes": 235798528.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 235798528.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 57344
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.040284942274625,
+   "seconds": 17.660715100000743,
+   "peak_bytes": 8323627520,
+   "prediction": "\nassistant\nIt appears that you have provided a security log mentioning \"Code designation 'epsilon' is linked to artifact 'Sapphire Chalice'\". However, the artifacts associated",
+   "ground_truths": [
+    "epsilon: Sapphire Chalice, alpha: Golden Compass, beta: Silver Key",
+    "Sapphire Chalice",
+    "Golden Compass",
+    "Silver Key"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 16384,
+   "query_id": "multi_niah_16384_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16284,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 933789696,
+   "method_kv_bytes": 235798528.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 235798528.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 57344
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.040284942274625,
+   "seconds": 17.96160670000063,
+   "peak_bytes": 8323627520,
+   "prediction": "\nassistant\nIt appears that you have provided a security log mentioning a code designation 'epsilon' and an artifact 'Sapphire Chalice'. However, the artifacts associated with the",
+   "ground_truths": [
+    "epsilon: Sapphire Chalice, beta: Silver Key, alpha: Golden Compass",
+    "Sapphire Chalice",
+    "Silver Key",
+    "Golden Compass"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 32768,
+   "query_id": "multi_niah_32768_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32668,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 1873313792,
+   "method_kv_bytes": 471597056.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 471597056.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 114688
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.02791722786825,
+   "seconds": 30.598300100000415,
+   "peak_bytes": 9047562752,
+   "prediction": "\nassistant\nBased on the security log provided, the artifact associated with the code designation 'beta' is 'Silver Key'. However, the log does not provide information about the",
+   "ground_truths": [
+    "beta: Silver Key, gamma: Emerald Tablet, epsilon: Sapphire Chalice",
+    "Silver Key",
+    "Emerald Tablet",
+    "Sapphire Chalice"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 32768,
+   "query_id": "multi_niah_32768_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32669,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 1873371136,
+   "method_kv_bytes": 471597056.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 471597056.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 114688
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.0277939330864125,
+   "seconds": 30.763878899999327,
+   "peak_bytes": 9047656448,
+   "prediction": "\nassistant\nBased on the information provided in the security log, the artifact associated with the code designation 'gamma' is the 'Emerald Tablet'. However, the artifacts associated",
+   "ground_truths": [
+    "gamma: Emerald Tablet, beta: Silver Key, zeta: Ruby Pendant",
+    "Emerald Tablet",
+    "Silver Key",
+    "Ruby Pendant"
+   ]
+  },
+  {
+   "task_name": "multi_niah",
+   "context_length": 32768,
+   "query_id": "multi_niah_32768_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32668,
+   "dense_raw_score": 0.3333333333333333,
+   "method_raw_score": 0.3333333333333333,
+   "dense_kv_bytes": 1873313792,
+   "method_kv_bytes": 471597056.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 471597056.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 114688
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.02791722786825,
+   "seconds": 30.600240399999166,
+   "peak_bytes": 9047562752,
+   "prediction": "\nassistant\nBased on the security log provided, the artifact associated with the code designation 'beta' is 'Silver Key'. However, the artifacts associated with the code designations",
+   "ground_truths": [
+    "beta: Silver Key, epsilon: Sapphire Chalice, gamma: Emerald Tablet",
+    "Silver Key",
+    "Sapphire Chalice",
+    "Emerald Tablet"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 2048,
+   "query_id": "ruler_kv_2048_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1984,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 113770496,
+   "method_kv_bytes": 113770496,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.8403665000005276,
+   "peak_bytes": 8121088512,
+   "prediction": "\nassistant\nval_880684",
+   "ground_truths": [
+    "val_880684"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 2048,
+   "query_id": "ruler_kv_2048_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2007,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 115089408,
+   "method_kv_bytes": 115089408,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.8487757000002603,
+   "peak_bytes": 7655234048,
+   "prediction": "\nassistant\nval_732491",
+   "ground_truths": [
+    "val_732491"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 2048,
+   "query_id": "ruler_kv_2048_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1984,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 113770496,
+   "method_kv_bytes": 113770496,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 2.8145578000003297,
+   "peak_bytes": 7629427200,
+   "prediction": "\nassistant\nval_110175",
+   "ground_truths": [
+    "val_110175"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 4096,
+   "query_id": "ruler_kv_4096_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4032,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 231211008,
+   "method_kv_bytes": 231211008,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 4.241624599999341,
+   "peak_bytes": 7715758080,
+   "prediction": "\nassistant\nval_807212",
+   "ground_truths": [
+    "val_807212"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 4096,
+   "query_id": "ruler_kv_4096_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4033,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 231268352,
+   "method_kv_bytes": 231268352,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 4.323748200000409,
+   "peak_bytes": 7715759616,
+   "prediction": "\nassistant\nval_396882",
+   "ground_truths": [
+    "val_396882"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 4096,
+   "query_id": "ruler_kv_4096_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4032,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 231211008,
+   "method_kv_bytes": 231211008,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 4.24243160000151,
+   "peak_bytes": 7715758080,
+   "prediction": "\nassistant\nval_329341",
+   "ground_truths": [
+    "val_329341"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 8192,
+   "query_id": "ruler_kv_8192_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8153,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 467525632,
+   "method_kv_bytes": 117899264.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 117899264.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 28672
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.034833803507911,
+   "seconds": 5.668461899998874,
+   "peak_bytes": 7600735232,
+   "prediction": "\nassistant\nval_428",
+   "ground_truths": [
+    "val_463728"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 8192,
+   "query_id": "ruler_kv_8192_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8129,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 466149376,
+   "method_kv_bytes": 117899264.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 117899264.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 28672
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.046746217246894,
+   "seconds": 6.256226600000446,
+   "peak_bytes": 7602416128,
+   "prediction": "\nassistant\nval_780556",
+   "ground_truths": [
+    "val_780556"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 8192,
+   "query_id": "ruler_kv_8192_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8128,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 466092032,
+   "method_kv_bytes": 117899264.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 117899264.0,
+    "compressed_blocks": 224,
+    "dense_blocks": 0,
+    "residual_tokens": 28672
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.047244094488189,
+   "seconds": 6.224967000000106,
+   "peak_bytes": 7602340352,
+   "prediction": "\nassistant\nval_976232",
+   "ground_truths": [
+    "val_976232"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 16384,
+   "query_id": "ruler_kv_16384_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16321,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 935911424,
+   "method_kv_bytes": 235798528.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 235798528.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 57344
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.0311255437779545,
+   "seconds": 11.716765399998621,
+   "peak_bytes": 8325286400,
+   "prediction": "\nassistant\nval_140940",
+   "ground_truths": [
+    "val_144240"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 16384,
+   "query_id": "ruler_kv_16384_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16321,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 935911424,
+   "method_kv_bytes": 235798528.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 235798528.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 57344
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.0311255437779545,
+   "seconds": 11.702392099999997,
+   "peak_bytes": 8325286400,
+   "prediction": "\nassistant\nval_589033",
+   "ground_truths": [
+    "val_510805"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 16384,
+   "query_id": "ruler_kv_16384_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 16345,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 937287680,
+   "method_kv_bytes": 235798528.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 235798528.0,
+    "compressed_blocks": 448,
+    "dense_blocks": 0,
+    "residual_tokens": 57344
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.025206485163658,
+   "seconds": 11.719478199998775,
+   "peak_bytes": 8327075840,
+   "prediction": "\nassistant\nval_979106",
+   "ground_truths": [
+    "val_974260"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 32768,
+   "query_id": "ruler_kv_32768_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32705,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 1875435520,
+   "method_kv_bytes": 471597056.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 471597056.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 114688
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.023360342455282,
+   "seconds": 24.95490080000127,
+   "peak_bytes": 9052286464,
+   "prediction": "\nassistant\nval_968164",
+   "ground_truths": [
+    "val_878165"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 32768,
+   "query_id": "ruler_kv_32768_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32706,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1875492864,
+   "method_kv_bytes": 471597056.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 471597056.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 114688
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.023237326484437,
+   "seconds": 24.381087199999456,
+   "peak_bytes": 9045106176,
+   "prediction": "\nassistant\nval_296168",
+   "ground_truths": [
+    "val_296168"
+   ]
+  },
+  {
+   "task_name": "ruler_kv",
+   "context_length": 32768,
+   "query_id": "ruler_kv_32768_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 32705,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 1875435520,
+   "method_kv_bytes": 471597056.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 471597056.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 0,
+    "residual_tokens": 114688
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.023360342455282,
+   "seconds": 24.42437070000051,
+   "peak_bytes": 9041643008,
+   "prediction": "\nassistant\nval_625049",
+   "ground_truths": [
+    "val_614042"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 2048,
+   "query_id": "ruler_trace_2048_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1356,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 77758464,
+   "method_kv_bytes": 77758464,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 6.538032500000554,
+   "peak_bytes": 8125309952,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_r`, we need to follow the sequence of assignments step by step and keep track of the value of `var_r",
+   "ground_truths": [
+    "339"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 2048,
+   "query_id": "ruler_trace_2048_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1371,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 78618624,
+   "method_kv_bytes": 78618624,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 7.066519899999548,
+   "peak_bytes": 7017332224,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_s`, we need to follow the sequence of assignments step by step and keep track of the value of `var_s",
+   "ground_truths": [
+    "5482"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 2048,
+   "query_id": "ruler_trace_2048_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 1336,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 76611584,
+   "method_kv_bytes": 76611584,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 6.7392552999990585,
+   "peak_bytes": 6982783488,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_k`, we need to follow the sequence of assignments step by step and keep track of the value of `var_k",
+   "ground_truths": [
+    "7764"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 4096,
+   "query_id": "ruler_trace_4096_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2637,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 151216128,
+   "method_kv_bytes": 151216128,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 7.729435499999454,
+   "peak_bytes": 7715742208,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_n`, we need to follow the sequence of assignments step by step and keep track of the value of `var_n",
+   "ground_truths": [
+    "2967"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 4096,
+   "query_id": "ruler_trace_4096_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2601,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 149151744,
+   "method_kv_bytes": 149151744,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 7.516532500001631,
+   "peak_bytes": 7715740672,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_m`, we need to follow the sequence of assignments step by step and keep track of the value of `var_m",
+   "ground_truths": [
+    "8777"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 4096,
+   "query_id": "ruler_trace_4096_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2649,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 151904256,
+   "method_kv_bytes": 151904256,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 8.39405269999952,
+   "peak_bytes": 7715742208,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_t`, we need to follow the sequence of assignments step by step and keep track of the value of `var_t",
+   "ground_truths": [
+    "3386"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 8192,
+   "query_id": "ruler_trace_8192_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 5173,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 296640512,
+   "method_kv_bytes": 88424448.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 88424448.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 0,
+    "residual_tokens": 21504
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.7693794703266965,
+   "seconds": 9.35342639999908,
+   "peak_bytes": 7358012928,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_m` from the given sequence of assignments, I will follow the assignments step by step:\n\n1. `var_m",
+   "ground_truths": [
+    "4618"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 8192,
+   "query_id": "ruler_trace_8192_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 5194,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 297844736,
+   "method_kv_bytes": 88424448.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 88424448.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 0,
+    "residual_tokens": 21504
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.750096264921063,
+   "seconds": 9.37878769999952,
+   "peak_bytes": 7359519232,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_q` after following the sequential variable assignments provided, I will trace the path of `var_q` through the assignments",
+   "ground_truths": [
+    "3486"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 8192,
+   "query_id": "ruler_trace_8192_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 5204,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 298418176,
+   "method_kv_bytes": 88424448.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 88424448.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 0,
+    "residual_tokens": 21504
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.7409684857801695,
+   "seconds": 9.382723200000328,
+   "peak_bytes": 7360236032,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_b` after following all the sequential assignments from top to bottom, I will trace the value of `var_b`",
+   "ground_truths": [
+    "449"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 16384,
+   "query_id": "ruler_trace_16384_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 10258,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 588234752,
+   "method_kv_bytes": 162111488.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 162111488.0,
+    "compressed_blocks": 308,
+    "dense_blocks": 0,
+    "residual_tokens": 39424
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.409436537336712,
+   "seconds": 12.883847999999489,
+   "peak_bytes": 7869624832,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_f` after following all the sequential assignments provided, I will trace the value of `var_f` through all the",
+   "ground_truths": [
+    "9356"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 16384,
+   "query_id": "ruler_trace_16384_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 10311,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 591273984,
+   "method_kv_bytes": 162111488.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 162111488.0,
+    "compressed_blocks": 308,
+    "dense_blocks": 0,
+    "residual_tokens": 39424
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.386771409174668,
+   "seconds": 13.186552200000733,
+   "peak_bytes": 7873333760,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_i`, I will follow the given sequence of assignments step by step, focusing on `var_i`:\n\n1.",
+   "ground_truths": [
+    "650"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 16384,
+   "query_id": "ruler_trace_16384_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 10350,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 593510400,
+   "method_kv_bytes": 162111488.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 162111488.0,
+    "compressed_blocks": 308,
+    "dense_blocks": 0,
+    "residual_tokens": 39424
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.37024154589372,
+   "seconds": 13.33992920000128,
+   "peak_bytes": 7876341760,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_k` from the given sequential variable assignments, I will follow the assignments step by step:\n\n1. `var_b",
+   "ground_truths": [
+    "673"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 32768,
+   "query_id": "ruler_trace_32768_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 20358,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 1167409152,
+   "method_kv_bytes": 294748160.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 294748160.0,
+    "compressed_blocks": 560,
+    "dense_blocks": 0,
+    "residual_tokens": 71680
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.039689556930936,
+   "seconds": 20.43372939999972,
+   "peak_bytes": 8420614144,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_l` from the given sequential assignments, I will trace the assignments for `var_l`:\n\n1. `var",
+   "ground_truths": [
+    "2763"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 32768,
+   "query_id": "ruler_trace_32768_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 20384,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 1168900096,
+   "method_kv_bytes": 294748160.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 294748160.0,
+    "compressed_blocks": 560,
+    "dense_blocks": 0,
+    "residual_tokens": 71680
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.034536891679749,
+   "seconds": 20.678529800001343,
+   "peak_bytes": 8422543360,
+   "prediction": "\nassistant\nTo determine the final integer value of `var_o` from the given sequence of assignments, I will trace the value of `var_o` through the assignments step",
+   "ground_truths": [
+    "9640"
+   ]
+  },
+  {
+   "task_name": "ruler_variable_tracking",
+   "context_length": 32768,
+   "query_id": "ruler_trace_32768_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 20380,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 1168670720,
+   "method_kv_bytes": 294748160.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 294748160.0,
+    "compressed_blocks": 560,
+    "dense_blocks": 0,
+    "residual_tokens": 71680
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.035328753680078,
+   "seconds": 20.835039499999766,
+   "peak_bytes": 8422247424,
+   "prediction": "\nassistant\nTo determine the final integer value of var_d, I will follow the sequential assignments and track the value of var_d step by step:\n\n1. var_d =",
+   "ground_truths": [
+    "3857"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 2048,
+   "query_id": "multihop_2048_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2173,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 124608512,
+   "method_kv_bytes": 124608512,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 7.1027047999996284,
+   "peak_bytes": 8117675008,
+   "prediction": "\nassistant\nThe institution directed by Dr. Elena Vance, the Orion Institute, is located in Geneva. This information is provided in Paragraph B, which states, \"The Orion",
+   "ground_truths": [
+    "Geneva"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 2048,
+   "query_id": "multihop_2048_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2178,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 124895232,
+   "method_kv_bytes": 124895232,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 7.0603919999994105,
+   "peak_bytes": 7715731456,
+   "prediction": "\nassistant\nThe institution directed by Prof. Marcus Thorne, the Helios Laboratory, is located in Stockholm. This information is explicitly stated in Paragraph B: \"The Hel",
+   "ground_truths": [
+    "Stockholm"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 2048,
+   "query_id": "multihop_2048_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 2177,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 124837888,
+   "method_kv_bytes": 124837888,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 0.0,
+    "compressed_blocks": 0,
+    "dense_blocks": 0,
+    "residual_tokens": 0
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 16.0,
+   "seconds": 7.065494300000864,
+   "peak_bytes": 7715731456,
+   "prediction": "\nassistant\nThe institution directed by Dr. Amara Patel is located in Toronto. This can be inferred from the information provided in Paragraph B, which states, \"The Apex",
+   "ground_truths": [
+    "Toronto"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 4096,
+   "query_id": "multihop_4096_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4256,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 244056064,
+   "method_kv_bytes": 73687040.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 73687040.0,
+    "compressed_blocks": 140,
+    "dense_blocks": 0,
+    "residual_tokens": 17920
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.830827067669173,
+   "seconds": 9.276997199998732,
+   "peak_bytes": 7323852800,
+   "prediction": "\nassistant\nThe institution directed by Dr. Elena Vance is located in Geneva. This information is provided in Paragraph B, which states that the Orion Institute is located in Geneva and",
+   "ground_truths": [
+    "Geneva"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 4096,
+   "query_id": "multihop_4096_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4261,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 244342784,
+   "method_kv_bytes": 73687040.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 73687040.0,
+    "compressed_blocks": 140,
+    "dense_blocks": 0,
+    "residual_tokens": 17920
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.825158413517953,
+   "seconds": 9.368748199998663,
+   "peak_bytes": 7324218880,
+   "prediction": "\nassistant\nThe institution directed by Prof. Marcus Thorne, the Helios Laboratory, is located in Stockholm. This information is provided in Paragraph B, which states that the",
+   "ground_truths": [
+    "Stockholm"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 4096,
+   "query_id": "multihop_4096_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 4260,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 244285440,
+   "method_kv_bytes": 73687040.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 73687040.0,
+    "compressed_blocks": 140,
+    "dense_blocks": 0,
+    "residual_tokens": 17920
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.826291079812207,
+   "seconds": 9.340383100001418,
+   "peak_bytes": 7324146176,
+   "prediction": "\nassistant\nThe institution directed by Dr. Amara Patel is located in Toronto. The Apex Research Facility was officially established in 1999 to advance groundbreaking scientific discoveries",
+   "ground_truths": [
+    "Toronto"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 8192,
+   "query_id": "multihop_8192_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8525,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 488857600,
+   "method_kv_bytes": 132636672.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 132636672.0,
+    "compressed_blocks": 252,
+    "dense_blocks": 0,
+    "residual_tokens": 32256
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.341114369501466,
+   "seconds": 11.673377200000687,
+   "peak_bytes": 7715967488,
+   "prediction": "\nassistant\nBased on the information provided in Document 41 and Document 42, the institution directed by Dr. Elena Vance is the Orion Institute, which is located",
+   "ground_truths": [
+    "Geneva"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 8192,
+   "query_id": "multihop_8192_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8530,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 489144320,
+   "method_kv_bytes": 132636672.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 132636672.0,
+    "compressed_blocks": 252,
+    "dense_blocks": 0,
+    "residual_tokens": 32256
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.3385697538100825,
+   "seconds": 11.737850100000287,
+   "peak_bytes": 7716523008,
+   "prediction": "\nassistant\nBased on the information provided in Document 41 and Document 42, the institution directed by Prof. Marcus Thorne is located in Stockholm. Document ",
+   "ground_truths": [
+    "Stockholm"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 8192,
+   "query_id": "multihop_8192_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8529,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 489086976,
+   "method_kv_bytes": 132636672.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 132636672.0,
+    "compressed_blocks": 252,
+    "dense_blocks": 0,
+    "residual_tokens": 32256
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.339078438269434,
+   "seconds": 11.722982999999658,
+   "peak_bytes": 7716254208,
+   "prediction": "\nassistant\nThe institution directed by Dr. Amara Patel is located in Toronto. This information is provided in the document titled \"Paragraph 42\" which states \"The",
+   "ground_truths": [
+    "Toronto"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 16384,
+   "query_id": "multihop_16384_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 17094,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 980238336,
+   "method_kv_bytes": 250535936.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 250535936.0,
+    "compressed_blocks": 476,
+    "dense_blocks": 0,
+    "residual_tokens": 60928
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.089388089388089,
+   "seconds": 18.62288399999852,
+   "peak_bytes": 8461106176,
+   "prediction": "\nassistant\nBased on the information provided in Document 81 and Document 82:\n\nDocument 81: Dr. Elena Vance is a world-renowned astrobi",
+   "ground_truths": [
+    "Geneva"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 16384,
+   "query_id": "multihop_16384_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 17099,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 980525056,
+   "method_kv_bytes": 250535936.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 250535936.0,
+    "compressed_blocks": 476,
+    "dense_blocks": 0,
+    "residual_tokens": 60928
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.088192291946897,
+   "seconds": 18.57739389999915,
+   "peak_bytes": 8461469696,
+   "prediction": "\nassistant\nBased on the information provided in Document 81 and Document 82, the institution directed by Prof. Marcus Thorne is Hel Lab (Hel Laboratory),",
+   "ground_truths": [
+    "Stockholm"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 16384,
+   "query_id": "multihop_16384_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 17098,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 0.0,
+   "dense_kv_bytes": 980467712,
+   "method_kv_bytes": 250535936.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 250535936.0,
+    "compressed_blocks": 476,
+    "dense_blocks": 0,
+    "residual_tokens": 60928
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.088431395484852,
+   "seconds": 18.563603599999624,
+   "peak_bytes": 8461398016,
+   "prediction": "\nassistant\nBased on the information provided in Document 81 and Document 82, the institution directed by Dr. Amara Patel is the Apex Facility, which is",
+   "ground_truths": [
+    "Toronto"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 32768,
+   "query_id": "multihop_32768_0",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 34232,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1962999808,
+   "method_kv_bytes": 589037568.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 589037568.0,
+    "compressed_blocks": 896,
+    "dense_blocks": 56,
+    "residual_tokens": 114688
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.801121757419958,
+   "seconds": 30.579096299999946,
+   "peak_bytes": 9126323712,
+   "prediction": "\nassistant\nAccording to Document 164, the institution directed by Dr. Elena Vance is the Orion Institute, which is located in Geneva.",
+   "ground_truths": [
+    "Geneva"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 32768,
+   "query_id": "multihop_32768_1",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 34237,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1963286528,
+   "method_kv_bytes": 504213504.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 504213504.0,
+    "compressed_blocks": 950,
+    "dense_blocks": 2,
+    "residual_tokens": 121600
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.109138400811153,
+   "seconds": 31.908674000000246,
+   "peak_bytes": 9144964096,
+   "prediction": "\nassistant\nBased on the information provided in Document 164, the institution directed by Prof. Marcus Thorne is located in Stockholm. Specifically, Document 16",
+   "ground_truths": [
+    "Stockholm"
+   ]
+  },
+  {
+   "task_name": "multihop_qa",
+   "context_length": 32768,
+   "query_id": "multihop_32768_2",
+   "method_name": "dkv_runtime_high",
+   "preset": "high",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 34236,
+   "dense_raw_score": 0.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 1963229184,
+   "method_kv_bytes": 501071872.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 501071872.0,
+    "compressed_blocks": 952,
+    "dense_blocks": 0,
+    "residual_tokens": 121856
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 4.083654632550531,
+   "seconds": 31.41619189999983,
+   "peak_bytes": 9129524224,
+   "prediction": "\nassistant\nAccording to Document 168, the institution directed by Dr. Amara Patel is located in Toronto. Specifically, Document 168 states, \"",
+   "ground_truths": [
+    "Toronto"
+   ]
+  }
+ ]
+}
