@@ -55,6 +55,22 @@ sys.path.insert(0, str(DKV_RUNTIME))
 # and 8.9 GiB reserved at 32k on a 12 GiB card.
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
+# Set before ANY wrapper is constructed, not per preset.
+#
+# hf_dkv_wrapper.py:617 does os.environ.setdefault("DKV_CAD_ALPHA", "0.5") when
+# the preset is high/quality/max, and setdefault mutates the process environment
+# permanently: building `high` before `mid` in one process leaves alpha at 0.5
+# for the `mid` run too. That is order-dependent, so it would present as noise
+# rather than as a bug.
+#
+# Context-Aware Decoding also gates on bool(query_text) at :1819, which is False
+# under this benchmark's equal-information rule, so CAD cannot engage either way.
+# Pinning the value to 0 makes that explicit instead of incidental, and setdefault
+# yields to an existing value. `high` is therefore measured on its compression
+# settings alone -- rank 128, svd_energy 0.99999, 128 residuals, 4096-token f16
+# window -- and must be labelled that way rather than as full `high`.
+os.environ.setdefault("DKV_CAD_ALPHA", "0")
+
 import torch  # noqa: E402
 
 from crbench.core.config import BenchmarkConfig  # noqa: E402
@@ -70,6 +86,23 @@ def build_prompt(tokenizer, sample, max_len: int) -> str:
             tokenize=False, add_generation_prompt=True,
         )
     return sample.full_prompt
+
+
+def extract_completion_by_tokens(tokenizer, raw, prompt: str) -> str:
+    """Strip the prompt by TOKEN COUNT, which is the only reliable way here.
+
+    generate() builds its output as `generated = prompt_ids.copy()` and decodes
+    the whole thing with skip_special_tokens=True, then passes it through
+    _normalize_references(), which rewrites citation lines. Both destroy an exact
+    string prefix, so text.startswith(prompt) silently fails -- and on a needle
+    task the prompt contains the needle, so the fallback scores a perfect answer
+    for a method that produced nothing.
+    """
+    ids = getattr(raw, "generated_ids", None)
+    if ids is not None:
+        n_prompt = len(tokenizer(prompt, add_special_tokens=False).input_ids)
+        return tokenizer.decode(list(ids)[n_prompt:], skip_special_tokens=True)
+    return None
 
 
 def extract_completion(text: str, prompt: str, sample) -> str:
@@ -231,7 +264,8 @@ def main() -> int:
                                                repetition_penalty=1.0)
                         elapsed = time.perf_counter() - t_start
                         text = str(raw)
-                        completion = extract_completion(text, prompt, sample)
+                        completion = (extract_completion_by_tokens(tok, raw, prompt)
+                                      or extract_completion(text, prompt, sample))
                         score = task.evaluate_prediction(completion, sample).score
                         status, err = "SUCCESS", None
                     except Exception as exc:                      # noqa: BLE001
