@@ -88,6 +88,29 @@ def build_prompt(tokenizer, sample, max_len: int) -> str:
     return sample.full_prompt
 
 
+def decoder_layer_probe(wrapper):
+    """A weight module whose class reveals whether quantization took effect."""
+    m = wrapper.model
+    for path in (("model", "layers"), ("model", "language_model", "layers"),
+                 ("language_model", "model", "layers"), ("layers",)):
+        node = m
+        for attr in path:
+            node = getattr(node, attr, None)
+            if node is None:
+                break
+        if node:
+            layer = node[0]
+            for name in ("mlp", "feed_forward"):
+                mlp = getattr(layer, name, None)
+                if mlp is not None:
+                    for proj in ("gate_proj", "up_proj", "w1"):
+                        q = getattr(mlp, proj, None)
+                        if q is not None:
+                            return q
+            return getattr(getattr(layer, "self_attn", layer), "q_proj", layer)
+    raise RuntimeError("could not locate a decoder weight module")
+
+
 def extract_completion_by_tokens(tokenizer, raw, prompt: str) -> str:
     """Strip the prompt by TOKEN COUNT, which is the only reliable way here.
 
@@ -201,12 +224,44 @@ def main() -> int:
         print(f"\n{'=' * 70}\n[*] DKV runtime, preset={preset}, model={model_id}\n{'=' * 70}", flush=True)
         gc.collect(); torch.cuda.empty_cache()
         t0 = time.perf_counter()
+        # Build the BitsAndBytesConfig and pass it as the separate
+        # `quantization_config=` argument, exactly as cli.py:869-919 does.
+        #
+        # The config dict's "quantization" key alone is not sufficient and does
+        # not fail loudly: this script previously passed only the dict, the
+        # wrapper's auto-load branch matched nothing, and the model loaded in
+        # fp16 with no message. Qwen2.5-7B is 7.62B parameters, so fp16 weights
+        # are 15.24 GB -- which is what the 15.49 GiB peak in the compile A/B
+        # actually was, and why it spilled on a 12 GiB card.
+        bnb = None
+        if quant:
+            from transformers import BitsAndBytesConfig
+            bnb = (BitsAndBytesConfig(load_in_4bit=True,
+                                      bnb_4bit_compute_dtype=torch.bfloat16,
+                                      bnb_4bit_quant_type="nf4",
+                                      bnb_4bit_use_double_quant=True)
+                   if quant == "int4" else BitsAndBytesConfig(load_in_8bit=True))
         wrapper = PyTorchDKVHFWrapper(
             model_id,
             config={"serving_mode": args.serving_mode, "mode": "fp16",
                     "quantization": quant, "preset": preset},
             device="cuda",
+            quantization_config=bnb,
         )
+        # Verify rather than trust: a silent fp16 fallback is exactly the failure
+        # this script already shipped once.
+        try:
+            first = decoder_layer_probe(wrapper)
+            kind = type(first).__name__
+            print(f"[*] weight module: {kind} "
+                  f"({'QUANTIZED' if 'bit' in kind.lower() else 'NOT QUANTIZED'})", flush=True)
+            if quant and "bit" not in kind.lower():
+                raise SystemExit(f"[!] Requested {quant} but weights are {kind}; refusing to "
+                                 f"report these as quantized results.")
+        except SystemExit:
+            raise
+        except Exception as exc:                                  # noqa: BLE001
+            print(f"[!] Could not verify quantization: {exc}", flush=True)
         tok = wrapper.tokenizer
         weights = torch.cuda.memory_allocated()
         print(f"[OK] Wrapper up in {time.perf_counter() - t0:.1f}s | weights {weights / 2**30:.2f} GiB | "

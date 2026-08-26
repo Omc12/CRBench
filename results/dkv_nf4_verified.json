@@ -1,0 +1,79 @@
+{
+ "model": "Qwen/Qwen2.5-7B-Instruct",
+ "records": [
+  {
+   "task_name": "single_niah",
+   "context_length": 8192,
+   "query_id": "niah_8192_0",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8094,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 464142336,
+   "method_kv_bytes": 175587328.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 175587328.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 56,
+    "residual_tokens": 6720
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 6.052878675562145,
+   "seconds": 7.161498299999948,
+   "peak_bytes": 6943604736,
+   "prediction": "\nassistant\nThe best thing to do in Zurich is eating gelato, and the passkey is 178454.",
+   "ground_truths": [
+    "eating gelato with passkey 178454",
+    "eating gelato",
+    "178454"
+   ]
+  },
+  {
+   "task_name": "single_niah",
+   "context_length": 8192,
+   "query_id": "niah_8192_1",
+   "method_name": "dkv_runtime_mid",
+   "preset": "mid",
+   "status": "SUCCESS",
+   "error_message": null,
+   "prompt_tokens": 8094,
+   "dense_raw_score": 1.0,
+   "method_raw_score": 1.0,
+   "dense_kv_bytes": 464142336,
+   "method_kv_bytes": 175587328.0,
+   "vram_saved_bytes": 0,
+   "compressions": 0,
+   "pool": {
+    "stored_bytes": 175587328.0,
+    "compressed_blocks": 168,
+    "dense_blocks": 56,
+    "residual_tokens": 6720
+   },
+   "runtime_summary_after": {
+    "total_compressions": 0,
+    "avg_cosine_sim": 0.0,
+    "vram_saved_mb": 0.0,
+    "rank_histogram": {}
+   },
+   "method_effective_bpt": 6.052878675562145,
+   "seconds": 6.45081349999964,
+   "peak_bytes": 6944122880,
+   "prediction": "\nassistant\nThe best thing to do in Tokyo, according to the special secret information provided, is drinking hot chocolate. The passkey is 218949",
+   "ground_truths": [
+    "drinking hot chocolate with passkey 218949",
+    "drinking hot chocolate",
+    "218949"
+   ]
+  }
+ ]
+}
