@@ -1,26 +1,44 @@
 Part 1 = 0.70*Q + 0.30*R.  Dense-failed queries excluded.
-Method rows aggregate only context lengths where the method engaged.
+Two aggregates per method: context lengths where it engaged, and the full grid.
 
-method                budget   b_eff    Q %    R %   Part1     n
-----------------------------------------------------------------
-kv_quant                 4.0    4.55   93.8   74.7    88.0    48
-snapkv                   4.0    4.01   91.7   75.0    86.7    48
-kv_quant                 8.0    8.53  100.0   49.8    84.9    48
-snapkv                   8.0    8.02   93.8   50.0    80.6    48
-dkv_mid                 16.0    7.63   81.1   60.2    74.8    48
-dkv_runtime_high      preset    6.89   79.5   56.9    72.7    38
-dense_fp16              16.0   16.00  100.0    0.0    70.0    96  <- baseline
-dkv_runtime_mid       preset    5.80   70.3   63.8    68.3    38
-dkv_high                16.0   15.41   87.3   15.2    65.7    48
-streaming_llm            8.0    8.02   67.9   50.0    62.6    48
-low_rank_kv              8.0    8.27   52.5   48.3    51.3    48
-streaming_llm            4.0    4.01   40.0   75.0    50.5    48
-low_rank_kv              4.0    4.19   35.1   73.8    46.7    48
-kv_merging               4.0    4.10   23.3   74.5    38.6    48
-kv_merging               8.0    8.09   27.8   49.6    34.3    48
+                                     --- engaged lengths ---     --- full grid ---
+method                budget   b_eff    Q %    R %   Part1     n    b_eff   Part1    n
+------------------------------------------------------------------------------------------------
+kv_quant                 4.0    4.55   93.8   74.7    88.0    48     4.55    88.0   48
+snapkv                   4.0    4.01   91.7   75.0    86.7    48     4.01    86.7   48
+kv_quant                 8.0    8.53  100.0   49.8    84.9    48     8.53    84.9   48
+snapkv                   8.0    8.02   93.8   50.0    80.6    48     8.02    80.6   48
+dkv_mid                 16.0    7.63   81.1   60.2    74.8    48     7.63    74.8   48
+dkv_runtime_high      preset    6.89   79.5   56.9    72.7    38     8.79    72.1   48  *
+dense_fp16              16.0   16.00  100.0    0.0    70.0    96    16.00    70.0   96  <- baseline
+dkv_runtime_mid       preset    5.80   70.3   63.8    68.3    38     7.92    67.2   48  *
+dkv_high                16.0   15.41   87.3   15.2    65.7    48    15.41    65.7   48
+streaming_llm            8.0    8.02   67.9   50.0    62.6    48     8.02    62.6   48
+low_rank_kv              8.0    8.27   52.5   48.3    51.3    48     8.27    51.3   48
+streaming_llm            4.0    4.01   40.0   75.0    50.5    48     4.01    50.5   48
+low_rank_kv              4.0    4.19   35.1   73.8    46.7    48     4.19    46.7   48
+kv_merging               4.0    4.10   23.3   74.5    38.6    48     4.10    38.6   48
+kv_merging               8.0    8.09   27.8   49.6    34.3    48     8.09    34.3   48
 
-  dkv_runtime_high @preset: did not engage at [2048] (DKV_ENGAGE_THRESHOLD=4096);
-      those are dense results and are excluded, not averaged in.
+* methods whose two columns differ declined to compress at some lengths:
+    dkv_runtime_high @preset: passed through at [2048] (DKV_ENGAGE_THRESHOLD=4096)
+    dkv_runtime_mid @preset: passed through at [2048] (DKV_ENGAGE_THRESHOLD=4096)
+  The engaged columns exclude those lengths; the full-grid columns
+  include them, where the method scores dense quality at dense cost.
 
-  dkv_runtime_mid @preset: did not engage at [2048] (DKV_ENGAGE_THRESHOLD=4096);
-      those are dense results and are excluded, not averaged in.
+Budget adherence -- b_eff spread across the grid, per method:
+    dense_fp16              16.0   16.00 .. 16.00  <- constant
+    dkv_high                16.0   14.64 .. 15.84
+    dkv_mid                 16.0    7.11 ..  8.26
+    dkv_runtime_high      preset    4.16 .. 16.00
+    dkv_runtime_mid       preset    2.79 .. 16.00
+    kv_merging               4.0    4.03 ..  4.23
+    kv_merging               8.0    8.04 ..  8.17
+    kv_quant                 4.0    4.51 ..  4.60
+    kv_quant                 8.0    8.51 ..  8.57
+    low_rank_kv              4.0    4.03 ..  4.45
+    low_rank_kv              8.0    8.04 ..  8.64
+    snapkv                   4.0    4.01 ..  4.01  <- constant
+    snapkv                   8.0    8.02 ..  8.02  <- constant
+    streaming_llm            4.0    4.01 ..  4.01  <- constant
+    streaming_llm            8.0    8.02 ..  8.02  <- constant

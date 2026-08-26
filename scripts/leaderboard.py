@@ -28,6 +28,22 @@ def mean(xs):
     return sum(xs) / len(xs) if xs else float("nan")
 
 
+def per_method_spread(per):
+    """Min and max achieved b_eff per method across context lengths.
+
+    A method that lands on the same b_eff at every context length is honouring
+    the budget it was given regardless of how much context it is handed. One
+    whose b_eff moves is letting context length decide its operating point,
+    which matters for anyone sizing a deployment from a single measurement.
+    """
+    out = {}
+    for (m, b, c), v in per.items():
+        cur = out.setdefault((m, b), [float("inf"), float("-inf")])
+        x = mean(v["b"])
+        cur[0], cur[1] = min(cur[0], x), max(cur[1], x)
+    return out
+
+
 def load(paths, runtime_paths):
     per = defaultdict(lambda: defaultdict(list))
     for path in paths:
@@ -70,24 +86,50 @@ def main():
         for f in ("Q", "R", "b"):
             agg[(m, b)][f].extend(v[f])
 
+    # Full-grid aggregate: every context length, including any where a method
+    # declined to compress. Reported alongside the engaged-only figure rather
+    # than instead of it -- dropping those rows hides that the method chose not
+    # to act, and keeping them unlabelled credits it with dense quality at a
+    # dense price. Both are the same measurements, aggregated over different sets.
+    full = defaultdict(lambda: defaultdict(list))
+    for (m, b, c), v in per.items():
+        for f in ("Q", "R", "b"):
+            full[(m, b)][f].extend(v[f])
+
     rows = []
     for (m, b), v in agg.items():
         Q, R = mean(v["Q"]), mean(v["R"])
-        rows.append((ALPHA * Q + (1 - ALPHA) * R, m, b, mean(v["b"]), Q, R, len(v["Q"])))
+        fv = full[(m, b)]
+        fQ, fR, fb = mean(fv["Q"]), mean(fv["R"]), mean(fv["b"])
+        rows.append((ALPHA * Q + (1 - ALPHA) * R, m, b, mean(v["b"]), Q, R, len(v["Q"]),
+                     fb, ALPHA * fQ + (1 - ALPHA) * fR, len(fv["Q"])))
     rows.sort(reverse=True)
 
     print("Part 1 = 0.70*Q + 0.30*R.  Dense-failed queries excluded.")
-    print("Method rows aggregate only context lengths where the method engaged.")
+    print("Two aggregates per method: context lengths where it engaged, and the full grid.")
     print()
-    print(f"{'method':<20}{'budget':>8}{'b_eff':>8}{'Q %':>7}{'R %':>7}{'Part1':>8}{'n':>6}")
-    print("-" * 64)
-    for p1, m, b, be, Q, R, n in rows:
-        mark = "  <- baseline" if m in DENSE else ""
-        print(f"{m:<20}{str(b):>8}{be:>8.2f}{Q:>7.1f}{R:>7.1f}{p1:>8.1f}{n:>6}{mark}")
-    for (m, b), cs in sorted(bypassed.items()):
+    print(f"{'':<20}{'':>8}{'--- engaged lengths ---':>32}{'--- full grid ---':>22}")
+    print(f"{'method':<20}{'budget':>8}{'b_eff':>8}{'Q %':>7}{'R %':>7}{'Part1':>8}{'n':>6}"
+          f"{'b_eff':>9}{'Part1':>8}{'n':>5}")
+    print("-" * 96)
+    for p1, m, b, be, Q, R, n, fb, fp1, fn in rows:
+        mark = "  <- baseline" if m in DENSE else ("  *" if n != fn else "")
+        print(f"{m:<20}{str(b):>8}{be:>8.2f}{Q:>7.1f}{R:>7.1f}{p1:>8.1f}{n:>6}"
+              f"{fb:>9.2f}{fp1:>8.1f}{fn:>5}{mark}")
+    if bypassed:
         print()
-        print(f"  {m} @{b}: did not engage at {sorted(cs)} (DKV_ENGAGE_THRESHOLD=4096);")
-        print(f"      those are dense results and are excluded, not averaged in.")
+        print("* methods whose two columns differ declined to compress at some lengths:")
+        for (m, b), cs in sorted(bypassed.items()):
+            print(f"    {m} @{b}: passed through at {sorted(cs)} "
+                  f"(DKV_ENGAGE_THRESHOLD=4096)")
+        print("  The engaged columns exclude those lengths; the full-grid columns")
+        print("  include them, where the method scores dense quality at dense cost.")
+    print()
+    print("Budget adherence -- b_eff spread across the grid, per method:")
+    for (m, b), v in sorted(per_method_spread(per).items()):
+        lo, hi = v
+        flag = "  <- constant" if hi - lo < 0.05 else ""
+        print(f"    {m:<20}{str(b):>8}   {lo:5.2f} .. {hi:5.2f}{flag}")
 
 
 if __name__ == "__main__":
