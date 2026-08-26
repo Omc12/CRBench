@@ -273,6 +273,11 @@ class BenchmarkRunner:
                 group_measurements_start = len(raw_measurements)
                 
                 # Generate samples
+                # One budget for this task, used by the dense reference and every
+                # method on the same query, so the pairing stays valid.
+                task_budget = (task_cfg.max_new_tokens
+                               if task_cfg.max_new_tokens is not None
+                               else self.config.profiler.max_new_tokens)
                 samples = task_inst.generate_samples(
                     context_length=ctx_len,
                     num_samples=task_cfg.num_samples,
@@ -294,7 +299,7 @@ class BenchmarkRunner:
                 dense_traces: List[GenerationTrace] = []
                 try:
                     dense_task_score, dense_traces = self._evaluate_adapter_on_samples(
-                        dense_adapter, task_inst, samples, ctx_len
+                        dense_adapter, task_inst, samples, ctx_len, task_budget
                     )
                     dense_ref_val = dense_task_score.mean_score
                     dense_scores_by_task_len[(task_inst.name, ctx_len)] = dense_ref_val
@@ -376,7 +381,7 @@ class BenchmarkRunner:
                                 task_res, traces = dense_task_score, dense_traces
                             else:
                                 task_res, traces = self._evaluate_adapter_on_samples(
-                                    ad_inst, task_inst, samples, ctx_len
+                                    ad_inst, task_inst, samples, ctx_len, task_budget
                                 )
                             lat_res = self._latency_from_traces(traces)
 
@@ -413,7 +418,8 @@ class BenchmarkRunner:
                                 p1_s = compute_utility(q_norm, r_eff, alpha=self.config.scoring.utility_alpha, formula=self.config.scoring.utility_formula)
 
                                 q_meta: Dict[str, Any] = {
-                                    "kv_state_metadata": kv_meta.custom_metrics,
+                                    "max_new_tokens": task_budget,
+                                "kv_state_metadata": kv_meta.custom_metrics,
                                     "algorithmic_bytes": float(kv_meta.algorithmic_bytes),
                                     "metadata_overhead_bytes": float(kv_meta.metadata_overhead_bytes),
                                 }
@@ -990,6 +996,7 @@ class BenchmarkRunner:
         adapter: BaseContextAdapter,
         sample: EvaluationSample,
         context_length: int,
+        max_new_tokens: Optional[int] = None,
     ) -> Tuple[str, GenerationTrace]:
         """Run one query end to end under one method, and measure it.
 
@@ -1006,7 +1013,8 @@ class BenchmarkRunner:
             trace = chunked_prefill_generate(
                 self.model,
                 input_ids,
-                max_new_tokens=prof.max_new_tokens,
+                max_new_tokens=(max_new_tokens if max_new_tokens is not None
+                                else prof.max_new_tokens),
                 chunk_size=prof.prefill_chunk_size,
                 eos_token_id=getattr(self.tokenizer, "eos_token_id", None),
                 on_chunk_end=adapter.on_chunk_stored if adapter.streaming_transform else None,
@@ -1039,12 +1047,18 @@ class BenchmarkRunner:
         task: BaseTask,
         samples: List[EvaluationSample],
         context_length: int,
+        max_new_tokens: Optional[int] = None,
     ) -> Tuple[TaskResult, List[GenerationTrace]]:
-        """Run every sample under one method; returns scores plus per-query traces."""
+        """Run every sample under one method; returns scores plus per-query traces.
+
+        ``max_new_tokens`` is the task's budget when it declares one. The dense
+        reference and every method on a given query always receive the same
+        value, so the comparison stays paired.
+        """
         predictions: List[str] = []
         traces: List[GenerationTrace] = []
         for sample in samples:
-            text, trace = self._run_query(adapter, sample, context_length)
+            text, trace = self._run_query(adapter, sample, context_length, max_new_tokens)
             predictions.append(text)
             traces.append(trace)
         return task.evaluate_batch(predictions, samples), traces

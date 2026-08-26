@@ -54,6 +54,19 @@ class TaskConfig:
     num_samples: int = 10
     seed: int = 42
     task_kwargs: Dict[str, Any] = field(default_factory=dict)
+    # Generation budget for this task, overriding ProfilerConfig.max_new_tokens.
+    #
+    # One global value cannot serve every task. A passkey lookup answers in a
+    # few tokens; multi-step variable tracking reasons before it answers. At the
+    # global 32, Qwen2.5-7B's dense output on ruler_variable_tracking was cut off
+    # mid-sentence at every one of 15 queries -- "we need to follow the sequence
+    # of assignments step by step and keep track of the value of `var_r" -- so
+    # the task scored 0 for the dense reference and every method alike, and was
+    # recorded as "the model cannot do this". It was never allowed to finish.
+    #
+    # None means "use the profiler value", which keeps existing configs and their
+    # results exactly as they were.
+    max_new_tokens: Optional[int] = None
 
 
 @dataclass
