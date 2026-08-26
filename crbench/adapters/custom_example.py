@@ -155,6 +155,21 @@ class DKVContextAdapter(BaseContextAdapter):
             "in place, which measures the representation's fidelity and size but not the "
             "runtime's sparse-decode speedup."
         )
+        record["query_pinning"] = "not_supplied"
+        record["query_pinning_note"] = (
+            "Upstream's residual reservation defaults to DKV_RESIDUAL_RUN_RESERVE="
+            "'query_first', which scopes exact residuals to a question pinned by the "
+            "serving layer through KVRuntimeManager._pending_query. CRBench does not "
+            "supply it, so DKV runs its no-query fallback and reserves residuals by "
+            "reconstruction error; run-atomic selection still applies. "
+            "This is a fairness decision, not an oversight: every method here sees the "
+            "same prompt and nothing else. Handing one method a separate, structured "
+            "'here is the question' signal that the others never receive would measure "
+            "how well the harness was tuned for it rather than how the representation "
+            "performs. SnapKV's observation window is not an exception -- it reads the "
+            "last tokens of the prompt the model was already given, which is the "
+            "method's own mechanism operating on ordinary input."
+        )
         record["measured_memory"] = True
         record["preset"] = self.preset
         record["preset_source"] = (
