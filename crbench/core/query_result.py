@@ -76,6 +76,14 @@ class QueryEvaluationResult:
     # Status & Predictions
     status: str = "SUCCESS"              # "SUCCESS", "OOM", "RUNTIME_ERROR", "UNSUPPORTED"
     error_message: Optional[str] = None
+
+    # Evaluation coverage (see crbench/scoring/coverage.py).  Recorded per query
+    # so C can be recomputed from a results file without rerunning inference.
+    # None means "not recorded"; readers derive it from dense_raw_score and
+    # status, which keeps files written before this metric existed readable.
+    dense_success: Optional[bool] = None     # dense produced a usable anchor
+    method_success: Optional[bool] = None    # method produced a valid result
+    paired_success: Optional[bool] = None    # both, i.e. eligible for Q
     dense_prediction: str = ""
     method_prediction: str = ""
     ground_truths: List[str] = field(default_factory=list)
@@ -111,7 +119,15 @@ class QueryEvaluationResult:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> QueryEvaluationResult:
-        return cls(**data)
+        """Build from a serialised row, tolerating schema drift.
+
+        Unknown keys are dropped rather than raising, so a file written by a
+        newer version still loads here, and fields added later default rather
+        than being required -- which is what keeps existing raw_results_v1.json
+        files readable after coverage was added.
+        """
+        allowed = set(cls.__dataclass_fields__)          # noqa: SLF001
+        return cls(**{k: v for k, v in data.items() if k in allowed})
 
 
 class QueryEvaluator:

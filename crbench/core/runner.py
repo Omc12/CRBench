@@ -27,6 +27,9 @@ from crbench.scoring.normalizer import QualityNormalizer
 from crbench.scoring.pareto import OperatingPoint
 from crbench.scoring.resource_score import CRBenchResourceScorer, CRBenchResourceScoreResult
 from crbench.scoring.system_score import CRBenchSystemScorer, CRBenchSystemScoreResult, SystemRuntimeMetrics
+from crbench.scoring.coverage import (
+    CoverageRecord, coverage_by_cell, dense_anchor_usable, roll_up,
+)
 from crbench.scoring.utility import (
     CRBENCH_ALPHA,
     CRBENCH_FORMULA_NAME,
@@ -357,6 +360,9 @@ class BenchmarkRunner:
                                 "error_message": support_reason
                             })
                             print(f"      [{ad_inst.name} | Budget={b_val}] UNSUPPORTED: {support_reason}", flush=True)
+                            self._record_failed_queries(
+                                query_eval_results, samples, task_inst, ctx_len,
+                                ad_inst, b_val, dense_sample_map, "UNSUPPORTED", support_reason)
                             continue
 
                         # Evaluate Task Quality & Profile Latency
@@ -459,6 +465,9 @@ class BenchmarkRunner:
                                     formula_name=self.config.scoring.utility_formula,
                                     alpha=self.config.scoring.utility_alpha,
                                     metadata=q_meta,
+                                    dense_success=dense_anchor_usable(d_raw, task_inst.floor_score),
+                                    method_success=True,
+                                    paired_success=dense_anchor_usable(d_raw, task_inst.floor_score),
                                 )
                                 query_eval_results.append(query_eval)
 
@@ -527,6 +536,9 @@ class BenchmarkRunner:
                             })
                             print(f"      [{ad_inst.name} | Budget={b_val}] FAILED: Out of Memory (OOM)", flush=True)
                             self._release_memory()
+                            self._record_failed_queries(
+                                query_eval_results, samples, task_inst, ctx_len,
+                                ad_inst, b_val, dense_sample_map, "OOM", str(e))
                         except Exception as e:
                             raw_measurements.append({
                                 "task_name": task_inst.name,
@@ -539,6 +551,9 @@ class BenchmarkRunner:
                             print(f"      [{ad_inst.name} | Budget={b_val}] FAILED: Runtime Error ({e})", flush=True)
 
                 # This (task, context length) group is complete, dense anchor and
+                self._record_failed_queries(
+                    query_eval_results, samples, task_inst, ctx_len,
+                    ad_inst, b_val, dense_sample_map, "RUNTIME_ERROR", str(e))
                 # all methods together. Flush it to disk before starting the next
                 # one so an interruption costs this group and nothing earlier.
                 self._append_checkpoint(
@@ -564,6 +579,27 @@ class BenchmarkRunner:
             for m_name, q_list in method_groups.items():
                 agg = QueryAggregationEngine.aggregate(q_list, dataset_name=self.config.benchmark_name)
                 dataset_aggregates.append(agg.to_dict() if hasattr(agg, "to_dict") else asdict(agg))
+
+        # ---- Evaluation coverage (C), reported separately from Q and R_mem ----
+        # N_total comes from the task config, i.e. what the grid assigned, so a
+        # method that produced no rows for a cell is still charged for them.
+        expected_per_cell: Dict[Tuple[str, int], int] = {}
+        for t_cfg in self.config.tasks:
+            for c_len in t_cfg.context_lengths:
+                expected_per_cell[(t_cfg.task_name, int(c_len))] = int(t_cfg.num_samples)
+
+        cell_coverage = coverage_by_cell(query_eval_results, expected_per_cell)
+        coverage_manifest = {
+            "definition": ("C = paired_success / total_queries, where paired_success "
+                           "requires a usable dense anchor AND a valid method result. "
+                           "Reported separately from Q, R_mem and S_res; none of those "
+                           "are affected by it."),
+            "by_task_method_context": [r.to_dict() for r in cell_coverage],
+            "by_method_context": [r.to_dict() for r in roll_up(
+                cell_coverage, by=("method_name", "budget_spec", "context_length"))],
+            "by_method": [r.to_dict() for r in roll_up(
+                cell_coverage, by=("method_name", "budget_spec"))],
+        }
 
         # Save Raw Measurements JSON Schema v2.0.0 (Atomic Query Level)
         import platform
@@ -617,6 +653,7 @@ class BenchmarkRunner:
             },
             "query_results": [q.to_dict() for q in query_eval_results],
             "dataset_aggregates": dataset_aggregates,
+            "coverage": coverage_manifest,
             "raw_measurements": raw_measurements
         }
         raw_json_path = out_dir / "raw_results_v1.json"
@@ -869,6 +906,53 @@ class BenchmarkRunner:
             ))
             if m.get("peak_vram_above_weights_mb") is not None:
                 peak_vram[(name, ctx)] = float(m["peak_vram_above_weights_mb"])
+
+    def _record_failed_queries(
+        self,
+        sink: List[QueryEvaluationResult],
+        samples: List[EvaluationSample],
+        task: BaseTask,
+        ctx_len: int,
+        adapter: BaseContextAdapter,
+        budget_spec: Any,
+        dense_sample_map: Dict[str, Any],
+        status: str,
+        error_message: str,
+    ) -> None:
+        """Emit a query row per sample when a method produced no result.
+
+        Without this a failed method contributes no rows at all, and coverage --
+        paired successes over the queries the cell was assigned -- would read
+        100% for a method that crashed on every one of them. These rows carry
+        method_success=False and normalized_quality=0.0 but are never eligible
+        for Q, which continues to be computed only over paired successes, so
+        quality scoring is unaffected.
+        """
+        for sample in samples:
+            d_res = dense_sample_map.get(sample.sample_id)
+            d_raw = float(d_res.score) if d_res is not None else 0.0
+            sink.append(QueryEvaluationResult(
+                query_id=sample.sample_id,
+                task_name=task.name,
+                context_length=ctx_len,
+                model_name=self.config.model.model_name_or_path,
+                method_name=adapter.name,
+                budget_spec=budget_spec,
+                dense_raw_score=d_raw,
+                method_raw_score=0.0,
+                task_floor=task.floor_score,
+                normalized_quality=0.0,
+                quality_retained_pct=0.0,
+                status=status,
+                error_message=error_message,
+                ground_truths=list(sample.ground_truths),
+                formula_name=self.config.scoring.utility_formula,
+                alpha=self.config.scoring.utility_alpha,
+                provenance="method_failure",
+                dense_success=dense_anchor_usable(d_raw, task.floor_score),
+                method_success=False,
+                paired_success=False,
+            ))
 
     def _encode_sample(self, sample: EvaluationSample, context_length: int) -> torch.Tensor:
         """Tokenise one sample's prompt, applying the model's chat template."""

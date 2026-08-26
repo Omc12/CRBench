@@ -328,3 +328,55 @@ is the spread of intervals that were actually observed. `MEASURED` here means an
 instrument read the value; anything reconstructed from a formula is labelled
 `DERIVED`, including cases where a plausible-looking number could have been
 produced by scaling a different metric.
+
+## Evaluation coverage (C)
+
+CRBench Part 1 reports three independent dimensions. Only the first two combine:
+
+    Q      quality retention, conditional on a paired dense-anchored comparison
+    R_mem  memory savings against the dense FP16 reference
+    S_res  = 0.70 * Q + 0.30 * R_mem      (unchanged; C is not folded in)
+    C      evaluation coverage, reported alongside
+
+**Why C is separate.** Q presupposes that a comparison was possible. A query is
+excluded from Q when the dense reference produced no usable anchor, or when the
+method produced no result at all. Both cases silently shrink Q's denominator, so
+these two print identically without C:
+
+    Q = 95.0 over 2 of 6 queries
+    Q = 95.0 over 6 of 6 queries
+
+The first supports a claim about a third of the grid. The second supports a claim
+about the grid. Folding C into a single number would destroy that distinction
+rather than expose it, which is why it is reported beside Q and not inside it.
+
+**Definitions.**
+
+    N_total         queries assigned to the (task, context length) cell
+    dense_success   dense_raw_score > task_floor, i.e. a usable anchor
+    method_success  the method ran to completion (status SUCCESS)
+    paired_success  dense_success AND method_success
+    C               paired_success_count / N_total
+    C_dense         dense_success_count  / N_total
+
+A method that ran and scored zero is a **success**: it produced a valid result
+and the result was bad. A method that hit OOM produced nothing. Conflating those
+would let a method raise its coverage by crashing instead of answering badly.
+
+**Why C_dense is reported too.** It separates two causes of a low C. Low C with
+low C_dense means the benchmark could not evaluate that context at all -- the
+model failed the task and no method could have been scored there. Low C with
+high C_dense means the method failed where dense succeeded, which is a property
+of the method.
+
+**Where it lives.** `crbench/scoring/coverage.py`. Results carry a `coverage`
+block with per-(task, method, context) records plus method x context and
+per-method roll-ups, so C can be recomputed without rerunning inference. Query
+rows carry `dense_success`, `method_success` and `paired_success`; when absent
+(files written before this metric existed) they are derived from
+`dense_raw_score` and `status`, so old result files remain readable and
+recomputable.
+
+Methods that fail now emit a query row per sample with `method_success=False`.
+Without those rows a failed method contributes no rows at all and C would read
+100% for a method that crashed on every query.
