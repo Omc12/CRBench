@@ -554,23 +554,37 @@ class QueryAggregationEngine:
                 alpha=alpha,
             )
 
-        p1_scores = np.array([q.part1_score for q in successful])
-        q_scores = np.array([q.normalized_quality for q in successful])
-        r_scores = np.array([q.resource_efficiency for q in successful])
-        bpt_scores = np.array([q.method_effective_bpt for q in successful])
+        # Option B: Physical aggregation of memory bytes across queries
+        def get_d_bytes(x):
+            b = float(getattr(x, "dense_memory_bytes", 0.0) or 0.0)
+            return b if b > 0 else float(getattr(x, "context_length", 2048) * 57344)
 
-        mean_p1 = float(np.mean(p1_scores))
-        median_p1 = float(np.median(p1_scores))
-        std_p1 = float(np.std(p1_scores, ddof=1)) if len(p1_scores) > 1 else 0.0
+        def get_m_bytes(x):
+            b = float(getattr(x, "method_memory_bytes", 0.0) or 0.0)
+            if b > 0:
+                return b
+            d = get_d_bytes(x)
+            return float(d * (getattr(x, "method_effective_bpt", 16.0) / 16.0))
 
-        # Bootstrap 95% CI
-        if len(p1_scores) >= 3:
-            boot_means = [np.mean(np.random.choice(p1_scores, size=len(p1_scores), replace=True)) for _ in range(bootstrap_samples)]
-            alpha_tail = (1.0 - ci_level) / 2.0
-            ci_low = float(np.percentile(boot_means, 100.0 * alpha_tail))
-            ci_high = float(np.percentile(boot_means, 100.0 * (1.0 - alpha_tail)))
+        tot_d_bytes = float(sum(get_d_bytes(q) for q in query_results))
+        tot_m_bytes = float(sum(get_m_bytes(q) if q.status == "SUCCESS" else get_d_bytes(q) for q in query_results))
+
+        if tot_d_bytes > 0:
+            agg_bpt = float(16.0 * (tot_m_bytes / tot_d_bytes))
+            agg_r_eff = float(100.0 * max(0.0, (tot_d_bytes - tot_m_bytes) / tot_d_bytes))
         else:
-            ci_low, ci_high = mean_p1, mean_p1
+            agg_bpt = 16.0
+            agg_r_eff = 0.0
+
+        # Absolute Quality across all queries (N_total)
+        total_q_sum = sum(q.normalized_quality for q in successful)
+        mean_q = float(total_q_sum / total_count) if total_count > 0 else 0.0
+
+        # Aggregate Part 1 score: 0.70 * Q_abs + 0.30 * R_mem_agg
+        mean_p1 = float(0.70 * mean_q + 0.30 * agg_r_eff)
+        median_p1 = mean_p1
+        std_p1 = float(np.std([q.part1_score for q in successful], ddof=1)) if len(successful) > 1 else 0.0
+        ci_low, ci_high = mean_p1, mean_p1
 
         # Part 2 Aggregation (if present)
         p2_vals = [q.part2_score for q in successful if q.part2_score is not None]
@@ -585,33 +599,45 @@ class QueryAggregationEngine:
             else:
                 ci95_p2 = (mean_p2, mean_p2)
 
-        # Context length breakdowns
+        # Context length breakdowns (physically aggregated per context length)
         ctx_breakdowns = {}
         ctx_groups: Dict[int, List[QueryEvaluationResult]] = {}
-        for q in successful:
+        for q in query_results:
             ctx_groups.setdefault(q.context_length, []).append(q)
 
         for ctx, q_list in ctx_groups.items():
+            c_tot_d = float(sum(get_d_bytes(x) for x in q_list))
+            c_tot_m = float(sum(get_m_bytes(x) if x.status == "SUCCESS" else get_d_bytes(x) for x in q_list))
+            c_bpt = float(16.0 * (c_tot_m / c_tot_d)) if c_tot_d > 0 else 16.0
+            c_r = float(100.0 * max(0.0, (c_tot_d - c_tot_m) / c_tot_d)) if c_tot_d > 0 else 0.0
+            c_q = float(sum(x.normalized_quality for x in q_list if x.status == "SUCCESS") / len(q_list)) if q_list else 0.0
+            c_p1 = float(0.70 * c_q + 0.30 * c_r)
             ctx_breakdowns[ctx] = {
-                "part1_score": float(np.mean([x.part1_score for x in q_list])),
-                "normalized_quality": float(np.mean([x.normalized_quality for x in q_list])),
-                "resource_efficiency": float(np.mean([x.resource_efficiency for x in q_list])),
-                "effective_bpt": float(np.mean([x.method_effective_bpt for x in q_list])),
+                "part1_score": c_p1,
+                "normalized_quality": c_q,
+                "resource_efficiency": c_r,
+                "effective_bpt": c_bpt,
                 "count": len(q_list),
             }
 
         # Task breakdowns
         task_breakdowns = {}
         task_groups: Dict[str, List[QueryEvaluationResult]] = {}
-        for q in successful:
+        for q in query_results:
             task_groups.setdefault(q.task_name, []).append(q)
 
         for t_name, q_list in task_groups.items():
+            t_tot_d = float(sum(get_d_bytes(x) for x in q_list))
+            t_tot_m = float(sum(get_m_bytes(x) if x.status == "SUCCESS" else get_d_bytes(x) for x in q_list))
+            t_bpt = float(16.0 * (t_tot_m / t_tot_d)) if t_tot_d > 0 else 16.0
+            t_r = float(100.0 * max(0.0, (t_tot_d - t_tot_m) / t_tot_d)) if t_tot_d > 0 else 0.0
+            t_q = float(sum(x.normalized_quality for x in q_list if x.status == "SUCCESS") / len(q_list)) if q_list else 0.0
+            t_p1 = float(0.70 * t_q + 0.30 * t_r)
             task_breakdowns[t_name] = {
-                "part1_score": float(np.mean([x.part1_score for x in q_list])),
-                "normalized_quality": float(np.mean([x.normalized_quality for x in q_list])),
-                "resource_efficiency": float(np.mean([x.resource_efficiency for x in q_list])),
-                "effective_bpt": float(np.mean([x.method_effective_bpt for x in q_list])),
+                "part1_score": t_p1,
+                "normalized_quality": t_q,
+                "resource_efficiency": t_r,
+                "effective_bpt": t_bpt,
                 "count": len(q_list),
             }
 
@@ -626,11 +652,11 @@ class QueryAggregationEngine:
             median_part1_score=median_p1,
             std_part1_score=std_p1,
             ci95_part1_score=(ci_low, ci_high),
-            mean_normalized_quality=float(np.mean(q_scores)),
-            median_normalized_quality=float(np.median(q_scores)),
-            mean_resource_efficiency=float(np.mean(r_scores)),
-            median_resource_efficiency=float(np.median(r_scores)),
-            mean_effective_bpt=float(np.mean(bpt_scores)),
+            mean_normalized_quality=mean_q,
+            median_normalized_quality=mean_q,
+            mean_resource_efficiency=agg_r_eff,
+            median_resource_efficiency=agg_r_eff,
+            mean_effective_bpt=agg_bpt,
             mean_part2_score=mean_p2,
             median_part2_score=median_p2,
             ci95_part2_score=ci95_p2,

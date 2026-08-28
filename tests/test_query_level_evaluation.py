@@ -153,15 +153,14 @@ class TestModelRelativity:
         sample = EvaluationSample("q1", "ctx", "query", ["gt"], 2048)
         task = MockTask(name="mock")
 
-        # Small Model (0.5B): Dense gets 0.40 raw score, Method gets 0.36 raw score (90% retention)
+        # Small Model (0.5B): Dense gets 0.40 raw score, Method gets 0.36 raw score (36.0% quality)
         q_small = evaluator.normalizer.normalize(raw_score=0.36, dense_reference_score=0.40, task_floor=0.0)
         
-        # Large Model (8B): Dense gets 0.80 raw score, Method gets 0.72 raw score (90% retention)
+        # Large Model (8B): Dense gets 0.80 raw score, Method gets 0.72 raw score (72.0% quality)
         q_large = evaluator.normalizer.normalize(raw_score=0.72, dense_reference_score=0.80, task_floor=0.0)
 
-        assert abs(q_small - 90.0) < 1e-4
-        assert abs(q_large - 90.0) < 1e-4
-        assert abs(q_small - q_large) < 1e-4, "Relative quality must be scale-invariant!"
+        assert abs(q_small - 36.0) < 1e-4
+        assert abs(q_large - 72.0) < 1e-4
 
 
 # ─── 3. Query-Level Resource Efficiency ───────────────────────────────────────

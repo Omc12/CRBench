@@ -1,0 +1,186 @@
+================================================================================
+CRBench Modifications & Token Budget Alignment Record
+Folder: benchmarks
+================================================================================
+
+1. Token Budget Allocations (Resolved from previous global max_new_tokens=32):
+--------------------------------------------------------------------------------
+- single_niah:
+    max_new_tokens: 32
+    Rationale: Single passkey/needle retrieval. 32 tokens sufficient.
+    
+- multi_niah:
+    max_new_tokens: 96
+    Rationale: Three distinct needles/passkeys plus formatting to retrieve.
+    At 32 tokens, dense baseline was truncated mid-answer (C_dense dropped to 33-66%).
+    At 96 tokens, C_dense recovered to 100.0% (3/3) across 2K to 32K.
+
+- ruler_kv:
+    max_new_tokens: 32
+    Rationale: Single key-value string lookup. 32 tokens sufficient.
+
+- multihop_qa:
+    max_new_tokens: 128
+    Rationale: Multi-document synthesis where model cites context before entity name.
+    At 32 tokens, dense spent its budget citing documents and lost anchors.
+    At 128 tokens, dense anchor C_dense recovered to 100.0% (3/3) across 2K-16K.
+
+- ruler_variable_tracking:
+    max_new_tokens: 256
+    Rationale: Requires sequential variable assignment resolution (A=1, B=A...).
+    Evaluated with 256 tokens on Qwen2.5-7B: dense baseline still scored 0.0% across
+    all context lengths (2K-32K). This confirms true model algorithmic incapacity /
+    prompting format mismatch for Qwen2.5-7B, rather than token truncation.
+
+2. Naming Standardizations:
+--------------------------------------------------------------------------------
+- kv_quant -> kivi_style_kv_quant (or kv_quant_kivi)
+    Rationale: The implementation is an asymmetric min-max grouped quantizer with
+    per-channel keys and per-token values (following KIVI grouping), not the
+    original published KVQuant algorithm.
+
+3. Configuration & Script Enhancements:
+--------------------------------------------------------------------------------
+- benchmarks/bench_gemma4_e2b_budget.yaml:
+    Created standalone config for Gemma 4 E2B sweep (2K-128K) incorporating:
+    * Per-task token budgets (32/96/32/256/128)
+    * Updated adapter naming: kivi_style_kv_quant
+    * Output routing to: benchmarks/bench_gemma4_e2b_budget/
+    * Checkpoint/progress saved after every (task, context_length) group
+
+- benchmarks/bench_dkv_runtime_budget.py:
+    Created standalone DKV serving runtime evaluator with dynamic token budget
+    inheritance:
+    * Dynamically reads task_cfg.max_new_tokens from the CRBench configuration
+    * Guarantees DKV runtime is evaluated under the identical per-task token
+      allowances as CRBench methods (96 for multi_niah, 128 for multihop_qa, etc.)
+
+4. Core CRBench Part 1 Quality Formula Migration to Absolute Quality (Q_abs):
+--------------------------------------------------------------------------------
+- crbench/scoring/normalizer.py:
+    * Replaced relative division (Q_method - Q_floor) / max(Delta, Q_dense - Q_floor)
+      with absolute task-success capability: Q_abs = 100.0 * max(0.0, min(1.0, raw_score)).
+    * Evaluates uncompressed Dense baseline and all compression adapters under the
+      identical absolute standard.
+    * Eliminates cohort collapse and artificial 100% scores when dense also underperforms.
+
+- scripts/leaderboard.py, scripts/context_table.py, scripts/full_matrix.py:
+    * Updated load() and collect() routines so queries where dense_raw_score <= 0.0
+      are NOT dropped from N_total.
+    * N_total is strictly preserved as the canonical query count (75 across the 7B grid;
+      15 per context length).
+    * Retains task evaluator's continuous partial credit (e.g. multi_niah fractional scores).
+    * Method execution failures (OOM, ERROR, TIMEOUT) receive score 0 and are tracked
+      orthogonally via Evaluation Coverage (C).
+
+- tests/test_scoring.py & tests/test_scientific_axioms.py:
+    * Updated unit tests to validate absolute quality scaling. All 94 test cases pass cleanly.
+
+- REPRODUCIBILITY.md:
+    * Documented Absolute Task Quality (Q_i) in Section 7 (Metric Provenance Classification).
+
+5. Official Implementation of Option B (Physical Memory Aggregation):
+--------------------------------------------------------------------------------
+- Formulation:
+    b_eff_agg = 16.0 * (sum_i M_method_i) / (sum_i M_dense_i)
+    R_mem_agg = 100.0 * sum_i (M_dense_i - M_method_i) / (sum_i M_dense_i)
+    S_res = 0.70 * Q_abs + 0.30 * R_mem_agg
+
+- crbench/core/query_result.py:
+    * Updated QueryAggregationEngine.aggregate to physically aggregate memory bytes
+      across queries and context lengths rather than taking the arithmetic mean of
+      per-query b_eff ratios.
+    * Context lengths are naturally and physically weighted by their true KV footprint
+      (e.g., 32K contributes 16x more memory weight than 2K).
+    * Context-length and task-level breakdowns are also physically aggregated.
+
+- scripts/leaderboard.py:
+    * Updated load() and main() to compute physical byte-weighted b_eff and R_mem
+      across both engaged context lengths and the full grid.
+    * Displays realized aggregate b_eff alongside nominal budget specs.
+
+- scripts/context_table.py:
+    * Updated method_agg() to calculate physical byte-weighted b_eff and R_mem
+      across the sequence lengths, labeling the aggregate column "agg".
+
+- tests/test_scoring.py:
+    * Added test_option_b_physical_memory_aggregation validating that a 2K uncompressed
+      query (117 MB) and a 32K compressed query (328 MB) aggregate to 3.57 bpt (77.7% R_mem)
+      rather than the simple ratio mean of 9.40 bpt (41.3% R_mem).
+    * All 95 unit tests pass cleanly in 4.88s.
+
+6. DKV Serving Runtime Doubled Residuals Support:
+--------------------------------------------------------------------------------
+- benchmarks/bench_dkv_runtime_budget.py:
+    * Added `--double-residuals` CLI argument.
+    * Dynamically doubles `max_residual_tokens`:
+        preset="mid"  -> max_residual_tokens=80 (doubled from 40)
+        preset="high" -> max_residual_tokens=256 (doubled from 128)
+    * Sets both `os.environ["DKV_MAX_RESIDUAL_TOKENS"]` and `wrapper_cfg["max_residual_tokens"]`
+      to guarantee the C++/CUDA NativeBlockPool in `third_party/Differential-KV` allocates
+      the expanded residual capacity.
+    * Strictly targets the standalone C++/CUDA Serving Runtime (`PyTorchDKVHFWrapper`),
+      not the PyTorch in-tree adapter, as requested.
+
+7. Gemma 4 Architecture Compatibility in DKV Serving Runtime:
+--------------------------------------------------------------------------------
+- third_party/Differential-KV/ACTIVE_RUNTIME/serving/hf_dkv_wrapper.py:
+    * Replaced unicode arrow characters (charmap encoding crash on Windows stdout).
+    * Added `text_config` resolution in JIT decode warmup loop.
+
+8. Gemma 4 E4B Benchmark Execution & Dynamic Reshape Patches:
+--------------------------------------------------------------------------------
+- third_party/Differential-KV/ACTIVE_RUNTIME/runtime/dkv_attention.py:
+    * Replaced static `reshape(bsz, q_len, hidden_size)` with dynamic `reshape(bsz, q_len, -1)`
+      on lines 2864, 5299, and 5820 so non-standard projection widths (such as Gemma's 8*256=2048
+      vs hidden_size=1536) project cleanly into `o_proj`.
+    * Added shape-mismatch fallback for chunked prefill attention masks on lines 2483-2500.
+    * Documented that Gemma 4's heterogeneous per-layer head dimension (layers 4, 9, 14, 19, 24, 29, 34
+      having head_dim=512 while all other layers have head_dim=256) requires dynamic tensor adapters
+      (like CRBench's DKVContextAdapter), whereas the C++ NativeBlockPool allocates fixed-width slots.
+- benchmarks/run_gemma4_e4b_budget.py:
+    * Created unbuffered subprocess runner for Gemma 4 E4B full adapter sweep (2K-32K)
+      piping stdout to `run_gemma4_e4b_budget.log` with utf-8 encoding.
+
+9. Gemma 4 E2B Doubled Residuals Experiment Configuration:
+--------------------------------------------------------------------------------
+- benchmarks/bench_gemma4_e2b_doubled_residuals.yaml:
+    * Created focused benchmark specification evaluating DKV with doubled residual budgets
+      (mid @ 80 tokens, high @ 256 tokens) alongside dense baseline across all 5 tasks
+      and 5 context lengths (2K, 8K, 32K, 64K, 128K) with per-task generation budgets.
+    * Executes via CRBench's dynamic `DKVContextAdapter` to support heterogeneous layers.
+- benchmarks/run_gemma4_e2b_doubled_residuals.py:
+    * Dedicated single-process runner script ensuring strict single-job execution on GPU.
+
+10. Gemma 4 E2B Doubled Residuals Benchmark Completion & Analysis:
+--------------------------------------------------------------------------------
+- benchmarks/analyze_doubled_residuals.py:
+    * Computed official Option B Physical Memory Leaderboard & Context-Wise Accuracy / Bitrate.
+    * Empirical Finding: Doubling residual capacity from 40 to 80 on `mid` surged task accuracy
+      from 33.3% to 44.9% (+11.6% absolute gain) while maintaining 61.7% VRAM reduction (6.13 bpt),
+      elevating DKV Mid from Rank 6 to Rank 3 on the overall E2B leaderboard.
+    * `dkv_high_doubled` (256 residuals) achieved exact 1:1 parity with Dense FP16 across all 128K tokens.
+
+11. Refreshed Upstream DKV Re-clone & Multi-Model Evaluation Suite (E2B, E4B, 7B):
+--------------------------------------------------------------------------------
+- Re-cloned `third_party/Differential-KV` cleanly from `https://github.com/Omc12/Differential-KV.git`
+  incorporating latest upstream commits (46737636).
+- Created focused benchmark configurations for all 3 models testing normal standard DKV presets
+  (`mid` and `high`) alongside `dense_fp16` baseline under per-task generation budgets:
+    * benchmarks/bench_gemma4_e2b_dkv_refreshed.yaml (2K - 128K)
+    * benchmarks/bench_gemma4_e4b_dkv_refreshed.yaml (2K - 32K)
+    * benchmarks/bench_7b_dkv_refreshed.yaml (2K - 32K)
+- Created master queue runner `benchmarks/run_all_models_dkv_refreshed.py` ensuring
+  strictly sequential single-job execution on GPU across all 3 models.
+
+12. Upstream DKV Standard INT4 4-Bit Residuals & Updated Preset Ladder (64, 128, 256):
+--------------------------------------------------------------------------------
+- Aligned CRBench `DKVContextAdapter` in `crbench/adapters/custom_example.py` with latest upstream
+  Differential-KV standards:
+    * Updated preset residual ladder: `low` = 64 tokens, `mid` = 128 tokens, `high` = 256 tokens.
+    * Integrated 4-bit asymmetric group quantization (`quantize_residuals_group_asymmetric` and
+      `dequantize_residuals_group_asymmetric` with `group_size=64`, `bits=4`) from
+      `native_core.compression.residual_quant`.
+    * Updated memory accounting: INT4 residuals charged at 4.5 bits/element (0.5625 bytes/val),
+      delivering a 3.56x physical memory reduction on residual storage.
+

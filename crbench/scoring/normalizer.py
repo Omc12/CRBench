@@ -28,14 +28,13 @@ class QualityNormalizer:
 
     Mathematical Definition:
     -----------------------
-    q_relative = (Q_method - Q_floor) / max(Delta_min, Q_dense - Q_floor)
-
-    If (Q_dense - Q_floor) < Delta_min:
-        The task at this context length exceeds the base model's uncompressed capability envelope.
-        Unless Q_method outperforms Q_dense + Delta_min, normalized retention is 0.0.
+    Q_abs = 100.0 * max(0.0, min(1.0, raw_score))
+    
+    Both compressed methods and uncompressed dense baseline are evaluated
+    under the identical absolute task-success standard.
     """
     floor_score: float = 0.0
-    min_dynamic_range: float = 0.05   # Delta_min = 5% minimum dynamic range threshold
+    min_dynamic_range: float = 0.05
     epsilon: float = 1e-6
 
     def normalize_detailed(
@@ -45,35 +44,18 @@ class QualityNormalizer:
         task_floor: Optional[float] = None
     ) -> NormalizationResult:
         """
-        Computes detailed model-relative normalization with dynamic range gating.
+        Computes absolute task-success quality score in [0.0, 100.0].
         """
         floor = task_floor if task_floor is not None else self.floor_score
-        
-        dense_gain = dense_reference_score - floor
-        method_gain = raw_score - floor
-
-        is_dense_valid = dense_gain >= self.min_dynamic_range
-        effective_dr = max(self.min_dynamic_range, dense_gain)
-
-        if not is_dense_valid:
-            # Dense baseline is at or near floor (model cannot do the task even with FP16 KV cache)
-            if raw_score <= dense_reference_score + self.epsilon:
-                norm_q = 0.0
-            else:
-                # Compression method somehow outperforms dense (e.g. slight denoising effect)
-                norm_q = max(0.0, min(100.0, (method_gain / self.min_dynamic_range) * 100.0))
-        else:
-            # Standard model-relative capability retention
-            fraction = method_gain / effective_dr
-            norm_q = max(0.0, min(100.0, fraction * 100.0))
+        norm_q = max(0.0, min(100.0, float(raw_score) * 100.0))
 
         return NormalizationResult(
             raw_score=float(raw_score),
             dense_reference_score=float(dense_reference_score),
             task_floor=float(floor),
             normalized_quality=float(norm_q),
-            is_dense_valid=bool(is_dense_valid),
-            effective_dynamic_range=float(effective_dr)
+            is_dense_valid=True,
+            effective_dynamic_range=1.0
         )
 
     def normalize(
@@ -83,7 +65,7 @@ class QualityNormalizer:
         task_floor: Optional[float] = None
     ) -> float:
         """
-        Returns the scalar normalized quality score in [0.0, 100.0].
+        Returns the scalar absolute quality score in [0.0, 100.0].
         """
         res = self.normalize_detailed(raw_score, dense_reference_score, task_floor)
         return res.normalized_quality

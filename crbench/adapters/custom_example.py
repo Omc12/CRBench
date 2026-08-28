@@ -59,12 +59,12 @@ from crbench.adapters import upstream
 #: ``kv_quant`` is the precision that window is held at -- both are charged in
 #: ``get_kv_metadata``.
 DKV_PRESETS: Dict[str, Dict[str, Any]] = {
-    "low":  {"rank": 32,  "svd_energy": 0.999,   "max_residual_tokens": 40,
-             "max_active_dense_tokens": 1024, "kv_quant": "q4_0"},
-    "mid":  {"rank": 64,  "svd_energy": 0.9999,  "max_residual_tokens": 40,
-             "max_active_dense_tokens": 2048, "kv_quant": "q8_0"},
-    "high": {"rank": 128, "svd_energy": 0.99999, "max_residual_tokens": 128,
-             "max_active_dense_tokens": 4096, "kv_quant": "f16"},
+    "low":  {"rank": 32,  "svd_energy": 0.999,   "max_residual_tokens": 64,
+             "max_active_dense_tokens": 1024, "kv_quant": "q4_0", "residual_quant": "int4"},
+    "mid":  {"rank": 64,  "svd_energy": 0.9999,  "max_residual_tokens": 128,
+             "max_active_dense_tokens": 2048, "kv_quant": "q8_0", "residual_quant": "int4"},
+    "high": {"rank": 128, "svd_energy": 0.99999, "max_residual_tokens": 256,
+             "max_active_dense_tokens": 4096, "kv_quant": "f16", "residual_quant": "int4"},
 }
 
 #: Effective bits per element of the quantized formats the presets name for the
@@ -137,6 +137,7 @@ class DKVContextAdapter(BaseContextAdapter):
         self.residual_budget = int(self.config.get("residual_budget", p["max_residual_tokens"]))
         self.recent_window = int(self.config.get("recent_window", p["max_active_dense_tokens"]))
         self.kv_quant = str(self.config.get("kv_quant", p["kv_quant"]))
+        self.residual_quant = str(self.config.get("residual_quant", os.environ.get("DKV_RESIDUAL_QUANT", p.get("residual_quant", "int4")))).strip().lower()
         # Filled in by transform_cache; get_kv_metadata reports what was counted.
         self._measured: Dict[str, float] = {}
 
@@ -290,7 +291,7 @@ class DKVContextAdapter(BaseContextAdapter):
                     lr = compress(deltas, rank, max_residual=self.residual_budget)
 
                     recon = (lr.U.float() @ lr.V.float() * lr.scale).to(deltas.device)
-                    self._apply_residuals(lr, recon, half, exact_keys)
+                    self._apply_residuals(lr, recon, half, exact_keys, self.residual_quant)
                     feats[start + 1:end] = anchor + recon
 
                     n_blocks += 1
@@ -300,8 +301,13 @@ class DKVContextAdapter(BaseContextAdapter):
                     if lr.residual_K_positions is not None and lr.residual_K_positions.numel():
                         npos = int(lr.residual_K_positions.numel())
                         n_residuals += npos
-                        # values (fp16, both halves) + positions (int16)
-                        residual_bytes += npos * feat_dim * 2 + npos * 2
+                        if self.residual_quant in ("int4", "q4", "4bit"):
+                            # INT4 asymmetric group quantization: 4 bits/val + fp16 scale/64 + fp16 bias/64 = 4.5 bits/val = 0.5625 bytes/val
+                            # Both K and V halves (feat_dim total values) + int16 position (2 bytes)
+                            residual_bytes += npos * (feat_dim * 0.5625 + 2)
+                        else:
+                            # values (fp16, both halves) + positions (int16)
+                            residual_bytes += npos * feat_dim * 2 + npos * 2
 
                     del lr, recon, deltas
 
@@ -354,7 +360,7 @@ class DKVContextAdapter(BaseContextAdapter):
         }
 
     @staticmethod
-    def _apply_residuals(lr: Any, recon: torch.Tensor, half: int, exact_keys: bool) -> None:
+    def _apply_residuals(lr: Any, recon: torch.Tensor, half: int, exact_keys: bool, residual_quant: str = "int4") -> None:
         """Fold DKV's exact residual rows back into the reconstruction.
 
         ``residual_{K,V}_positions`` index rows of the delta matrix; the K and V
@@ -366,7 +372,19 @@ class DKVContextAdapter(BaseContextAdapter):
             return
         idx = posk.long().to(recon.device)
         if lr.residual_K_values is not None:
-            vals = lr.residual_K_values.float().to(recon.device)
+            vals = lr.residual_K_values.to(recon.device)
+            if residual_quant in ("int4", "q4", "4bit") and half % 64 == 0:
+                try:
+                    from native_core.compression.residual_quant import (
+                        quantize_residuals_group_asymmetric,
+                        dequantize_residuals_group_asymmetric,
+                    )
+                    pq, sc, bs = quantize_residuals_group_asymmetric(vals.float(), group_size=64, bits=4)
+                    vals = dequantize_residuals_group_asymmetric(pq, sc, bs, head_dim=half, group_size=64, bits=4).float()
+                except Exception:
+                    vals = vals.float()
+            else:
+                vals = vals.float()
             if exact_keys:
                 recon[idx, :half] = vals
             else:
@@ -374,7 +392,19 @@ class DKVContextAdapter(BaseContextAdapter):
         posv = lr.residual_V_positions
         if posv is not None and lr.residual_V_values is not None and posv.numel():
             idxv = posv.long().to(recon.device)
-            valsv = lr.residual_V_values.float().to(recon.device)
+            valsv = lr.residual_V_values.to(recon.device)
+            if residual_quant in ("int4", "q4", "4bit") and half % 64 == 0:
+                try:
+                    from native_core.compression.residual_quant import (
+                        quantize_residuals_group_asymmetric,
+                        dequantize_residuals_group_asymmetric,
+                    )
+                    pq, sc, bs = quantize_residuals_group_asymmetric(valsv.float(), group_size=64, bits=4)
+                    valsv = dequantize_residuals_group_asymmetric(pq, sc, bs, head_dim=half, group_size=64, bits=4).float()
+                except Exception:
+                    valsv = valsv.float()
+            else:
+                valsv = valsv.float()
             if exact_keys:
                 recon[idxv, half:] = valsv
             else:
@@ -423,13 +453,13 @@ class DKVContextAdapter(BaseContextAdapter):
                 blocks * feat_dim * 2                                   # anchors
                 + max(0, compressible - blocks) * self.base_rank * 2    # U rows
                 + blocks * self.base_rank * feat_dim * 2                # V factors
-                + residuals * (feat_dim * 2 + 2)                        # exact residual tokens
+                + residuals * (feat_dim * 0.5625 + 2 if self.residual_quant in ("int4", "q4", "4bit") else feat_dim * 2 + 2)  # exact residual tokens
                 + window * feat_dim * _KV_QUANT_BITS.get(self.kv_quant, 16.0) / 8.0
             )
             algorithmic_bytes = float(per_layer * num_layers)
             metadata_bytes = 0.0
             custom = {"source": "estimated", "base_rank": self.base_rank,
-                      "residual_budget": self.residual_budget}
+                      "residual_budget": self.residual_budget, "residual_quant": self.residual_quant}
 
         effective_bpe = (algorithmic_bytes + metadata_bytes) * 8.0 / max(1, dense_elems)
 

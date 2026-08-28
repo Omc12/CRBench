@@ -68,22 +68,48 @@ Preliminary validation on `Qwen/Qwen2.5-1.5B-Instruct` across 5 contextual tasks
   <p><em>Figure 2: Empirical Quality–Memory Pareto Frontier. Non-dominated methods form the frontier: Dense Baseline &rarr; DKV (High Preset) &rarr; DKV (Mid Preset) &rarr; Low-Rank KV (SVD) &rarr; SnapKV &rarr; INT2 Quantization.</em></p>
 </div>
 
-### Benchmark Leaderboard (1.5B Suite & Cloned Upstream Repositories)
+### Multi-Model Canonical Publication Leaderboards (NVIDIA RTX GPU)
 
-| Adapter Method | Paradigm | Effective $b_{\text{eff}}$ | Quality $\bar{Q}$ (%) | Part 1 $\mathcal{S}_{\text{res}}$ | AUQC (2K) | AUQC (4K) | TTFT (ms)$^\dagger$ | Thru (tok/s)$^\dagger$ | Part 2 $\mathcal{S}_{\text{sys}}$ (Prov.) |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **`dkv_high`** | Differential KV (High) | $5.80\,\text{bits/elem}$ | 98.6 | **88.2** | 99.0 | 98.2 | 1,820.0 | 340.2 | **92.4** |
-| **`dkv_mid`** | Differential KV (Mid) | $4.25\,\text{bits/elem}$ | 94.2 | **88.0** | 96.0 | 92.4 | 1,650.0 | 360.5 | **91.6** |
-| **`low_rank_kv`** | Low-Rank Subspace | $4.12\,\text{bits/elem}$ | 88.5 | **84.2** | 90.0 | 87.0 | 1,710.0 | 355.0 | **87.6** |
-| **`kv_quant_int8`** | Quantization | $8.25\,\text{bits/elem}$ | 92.0 | **78.9** | 94.0 | 90.0 | 3,339.6 | 201.7 | **79.5** |
-| **`dense_fp16`** | Dense Baseline | $16.00\,\text{bits/elem}$ | 100.0 | **70.0** | 75.0 | 65.0 | 3,424.1 | 189.3 | **77.5** |
-| **`kv_quant_int4`** | Quantization | $4.25\,\text{bits/elem}$ | 55.0 | **60.5** | 60.0 | 50.0 | 3,491.0 | 240.1 | **58.0** |
-| **`snapkv`** | Eviction (Heavy Hitter) | $4.05\,\text{bits/elem}$ | 42.5 | **52.2** | 50.0 | 35.0 | 1,862.4 | 385.0 | **55.3** |
-| **`streaming_llm`** | Eviction (Sink+Window) | $4.05\,\text{bits/elem}$ | 32.0 | **44.8** | 38.0 | 26.0 | 1,784.3 | 397.0 | **48.3** |
-| **`kv_merging`** | Merging / Pooling | $4.10\,\text{bits/elem}$ | 28.0 | **41.9** | 32.0 | 24.0 | 1,861.6 | 368.2 | **44.9** |
-| **`kv_quant_int2`** | Quantization | $2.25\,\text{bits/elem}$ | 8.2 | **31.5** | 10.0 | 6.5 | 3,666.3 | 184.0 | **25.8** |
+*Evaluated under **Option B Physical Memory Aggregation** ($\mathcal{S}_{\text{res}} = 0.70 \cdot Q_{\text{abs}} + 0.30 \cdot \mathcal{R}_{\text{mem}}^{\text{agg}}$) and Canonical Part 2 Hardware Serving Utility ($\mathcal{S}_{\text{sys}}$)*:
 
-<small><em>&dagger;Note: Runtime latency and decode throughput reflect the execution path on Apple Silicon MPS with cloned upstream repositories; standardized CUDA event synchronization on 8B+ cluster nodes will provide the definitive system benchmark.</em></small>
+#### 1. Gemma 4 E2B (Full 2,048 to 131,072 Token Context Ladder)
+
+| Rank | Method | Accuracy ($Q_{\text{abs}}$) | Realized $b_{\text{eff}}^{\text{agg}}$ | Physical VRAM Saved | Part 1 Score ($\mathcal{S}_{\text{res}}$) | Part 2 Score ($\mathcal{S}_{\text{sys}}$) |
+| :---: | :--- | :---: | :---: | :---: | :---: | :---: |
+| **1** | **`snapkv`** | 46.8% | 6.00 bpt | 62.5% saved | **51.5** | **60.6** |
+| **2** | **`kivi_style_kv_quant`** | 46.4% | 6.01 bpt | 62.4% saved | **51.2** | **64.6** |
+| **3** | **`dkv_mid` (128 INT4)** | **44.7%** | **5.46 bpt** | **65.9% saved** | **51.0** | **59.1** |
+| **4** | **`dkv_high` (256 INT4)** | **46.7%** | **10.78 bpt** | **32.6% saved** | **42.5** | **52.7** |
+| **5** | **`low_rank_kv`** | 31.2% | 6.07 bpt | 62.1% saved | **40.5** | **57.4** |
+| **6** | **`streaming_llm`** | 22.9% | 6.00 bpt | 62.5% saved | **34.8** | **54.3** |
+| **7** | **`dense_fp16` (Reference)** | **46.4%** | 16.00 bpt | 0.0% saved | **32.5** | **52.8** |
+| **8** | **`kv_merging`** | 13.3% | 6.01 bpt | 62.5% saved | **28.0** | **49.6** |
+
+#### 2. Gemma 4 E4B (2,048 to 32,768 Context Window)
+
+| Rank | Method | Accuracy ($Q_{\text{abs}}$) | Realized $b_{\text{eff}}^{\text{agg}}$ | Physical VRAM Saved | Part 1 Score ($\mathcal{S}_{\text{res}}$) | Part 2 Score ($\mathcal{S}_{\text{sys}}$) |
+| :---: | :--- | :---: | :---: | :---: | :---: | :---: |
+| **1** | **`kivi_style_kv_quant`** | 62.0% | 6.04 bpt | 62.2% saved | **62.1** | **73.4** |
+| **2** | **`snapkv`** | 60.0% | 6.00 bpt | 62.5% saved | **60.8** | **48.6** |
+| **3** | **`dkv_mid` (128 INT4)** | **55.3%** | **5.00 bpt** | **68.7% saved** | **59.4** | **66.3** |
+| **4** | **`dkv_high` (256 INT4)** | **61.3%** | **10.68 bpt** | **33.3% saved** | **52.9** | **60.0** |
+| **5** | **`low_rank_kv`** | 48.8% | 6.27 bpt | 60.8% saved | **52.4** | **65.9** |
+| **6** | **`dense_fp16` (Reference)** | **64.0%** | 16.00 bpt | 0.0% saved | **44.8** | **61.4** |
+| **7** | **`streaming_llm`** | 25.5% | 6.00 bpt | 62.5% saved | **36.6** | **55.6** |
+| **8** | **`kv_merging`** | 25.3% | 6.03 bpt | 62.3% saved | **36.4** | **55.5** |
+
+#### 3. Qwen2.5 7B (2,048 to 32,768 Context Window)
+
+| Rank | Method | Accuracy ($Q_{\text{abs}}$) | Realized $b_{\text{eff}}^{\text{agg}}$ | Physical VRAM Saved | Part 1 Score ($\mathcal{S}_{\text{res}}$) | Part 2 Score ($\mathcal{S}_{\text{sys}}$) |
+| :---: | :--- | :---: | :---: | :---: | :---: | :---: |
+| **1** | **`kv_quant` (KIVI)** | 60.7% | 6.04 bpt | 62.2% saved | **61.1** | **72.8** |
+| **2** | **`snapkv`** | 58.2% | 6.00 bpt | 62.5% saved | **59.5** | **53.7** |
+| **3** | **`dkv_mid` (128 INT4)** | **53.3%** | **5.84 bpt** | **63.5% saved** | **56.3** | **54.2** |
+| **4** | **`dkv_high` (256 INT4)** | **59.1%** | **12.14 bpt** | **24.1% saved** | **48.6** | **48.5** |
+| **5** | **`streaming_llm`** | 36.5% | 6.00 bpt | 62.5% saved | **44.3** | **61.0** |
+| **6** | **`dense_fp16` (Reference)** | **60.0%** | 16.00 bpt | 0.0% saved | **42.0** | **59.4** |
+| **7** | **`low_rank_kv`** | 28.6% | 6.09 bpt | 62.0% saved | **38.6** | **54.9** |
+| **8** | **`kv_merging`** | 19.9% | 6.03 bpt | 62.3% saved | **32.6** | **52.8** |
 
 ---
 

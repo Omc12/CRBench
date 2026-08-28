@@ -147,23 +147,19 @@ def test_axiom_score_boundedness():
     assert 0.0 <= sys_res_max.system_score <= 100.0
 
 
-def test_axiom_model_relative_normalization():
-    """Axiom 6: Model-relative normalization preserves scale invariance and enforces dynamic range gating."""
+def test_axiom_absolute_quality_scoring():
+    """Axiom 6: Absolute task-success quality scales monotonically with raw evaluator score."""
     norm = QualityNormalizer(floor_score=0.0, min_dynamic_range=0.05)
 
-    # 1. Full capability retention
-    assert norm.normalize(raw_score=0.75, dense_reference_score=0.75) == 100.0
+    # 1. Absolute linear scaling
+    assert norm.normalize(raw_score=0.75, dense_reference_score=0.75) == 75.0
+    assert norm.normalize(raw_score=1.0, dense_reference_score=0.50) == 100.0
+    assert norm.normalize(raw_score=0.0, dense_reference_score=0.80) == 0.0
 
-    # 2. Scale Invariance: A 0.5B model scoring 40%/80% has identical retention to a 70B model scoring 45%/90%
-    retention_small = norm.normalize(raw_score=0.40, dense_reference_score=0.80)
-    retention_large = norm.normalize(raw_score=0.45, dense_reference_score=0.90)
-    assert pytest.approx(retention_small, 1e-5) == retention_large == 50.0
-
-    # 3. Dynamic Range Gating
-    # When base model fails task (raw dense is near floor, e.g. 0.02)
-    gated_res = norm.normalize_detailed(raw_score=0.02, dense_reference_score=0.02)
-    assert gated_res.normalized_quality == 0.0
-    assert not gated_res.is_dense_valid
+    # 2. Rescuing dense failures: method succeeds when dense fails
+    res = norm.normalize_detailed(raw_score=1.0, dense_reference_score=0.0)
+    assert res.normalized_quality == 100.0
+    assert res.is_dense_valid
 
 
 def test_axiom_auqc_interpolation_stability():

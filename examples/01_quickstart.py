@@ -27,7 +27,7 @@ def main():
     runner.load_model()
     results = runner.run()
 
-    print("\n[✓] Quickstart completed! Results available in results/quickstart_demo/")
+    print("\n[OK] Quickstart completed! Results available in results/quickstart_demo/")
 
 
 if __name__ == "__main__":

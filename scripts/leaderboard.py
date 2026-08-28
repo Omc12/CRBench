@@ -1,135 +1,107 @@
-"""CRBench leaderboard, scored by the formula the paper documents.
-
-`score_method` reports a context-weighted mean of AUQC, and AUQC with fewer than
-two budget points returns the quality itself -- so for a method measured at a
-single budget its S_res carries no resource term at all. The per-query
-`part1_score` is the documented formula, alpha*Q + (1-alpha)*R, and that is what
-this table uses.
-
-Two exclusions, both stated in the output rather than applied silently:
-
-* Queries the dense baseline itself failed. There is no retained capability to
-  measure where the model never had the capability, and the normaliser's
-  dynamic-range floor turns those into an arbitrary number.
-* Context lengths where a method did not engage. DKV bypasses to dense below
-  DKV_ENGAGE_THRESHOLD (4096), so those rows are dense results wearing a
-  method's name. The dense baseline itself is of course not "bypassing" and is
-  always reported.
+﻿"""
+CRBench Canonical Leaderboard Generator.
+Evaluates algorithmic resource fidelity (Part 1, S_res) and hardware serving utility (Part 2, S_sys)
+under Option B Physical Memory Aggregation.
 """
-import json
+
+import os
 import sys
+import json
+import argparse
 from collections import defaultdict
 
 ALPHA = 0.70
-DENSE = ("dense_fp16", "dense")
 
 
-def mean(xs):
-    return sum(xs) / len(xs) if xs else float("nan")
+def parse_args():
+    parser = argparse.ArgumentParser(description="Generate CRBench Leaderboard from evaluation progress files.")
+    parser.add_argument("input_files", nargs="*", default=["results/gemma4_e2b/progress.jsonl"], help="Path(s) to progress.jsonl or raw results json file(s).")
+    parser.add_argument("--alpha", type=float, default=0.70, help="Weighting factor alpha for quality vs memory (default: 0.70)")
+    parser.add_argument("--format", choices=["table", "markdown", "csv"], default="table", help="Output display format.")
+    return parser.parse_args()
 
 
-def per_method_spread(per):
-    """Min and max achieved b_eff per method across context lengths.
-
-    A method that lands on the same b_eff at every context length is honouring
-    the budget it was given regardless of how much context it is handed. One
-    whose b_eff moves is letting context length decide its operating point,
-    which matters for anyone sizing a deployment from a single measurement.
-    """
-    out = {}
-    for (m, b, c), v in per.items():
-        cur = out.setdefault((m, b), [float("inf"), float("-inf")])
-        x = mean(v["b"])
-        cur[0], cur[1] = min(cur[0], x), max(cur[1], x)
-    return out
-
-
-def load(paths, runtime_paths):
-    per = defaultdict(lambda: defaultdict(list))
-    for path in paths:
-        for q in json.load(open(path, encoding="utf-8"))["query_results"]:
-            if q["method_name"] == "dkv":          # superseded pre-preset rows
-                continue
-            if q["dense_raw_score"] <= 0.0:
-                continue
-            k = (q["method_name"], q["budget_spec"], q["context_length"])
-            per[k]["Q"].append(q["quality_retained_pct"])
-            per[k]["R"].append(q["resource_efficiency"])
-            per[k]["b"].append(q["method_effective_bpt"])
-    for path in runtime_paths:
-        for r in json.load(open(path, encoding="utf-8"))["records"]:
-            if r["status"] != "SUCCESS" or r["dense_raw_score"] <= 0.0:
-                continue
-            k = (r["method_name"], "preset", r["context_length"])
-            per[k]["Q"].append(100.0 * min(1.0, r["method_raw_score"] / r["dense_raw_score"]))
-            per[k]["R"].append(100.0 * max(0.0, 1.0 - r["method_effective_bpt"] / 16.0))
-            per[k]["b"].append(r["method_effective_bpt"])
-    return per
+def load_queries(paths):
+    queries = []
+    for p in paths:
+        if not os.path.exists(p):
+            print(f"[!] Warning: Path not found: {p}", file=sys.stderr)
+            continue
+        if p.endswith(".jsonl"):
+            for line in open(p, encoding="utf-8"):
+                if line.strip():
+                    data = json.loads(line)
+                    if "query_results" in data:
+                        queries.extend(data["query_results"])
+                    elif "method_name" in data:
+                        queries.append(data)
+        elif p.endswith(".json"):
+            data = json.load(open(p, encoding="utf-8"))
+            if "query_results" in data:
+                queries.extend(data["query_results"])
+            elif "records" in data:
+                queries.extend(data["records"])
+    return queries
 
 
 def main():
-    args = sys.argv[1:]
-    runtime = [a for a in args if "runtime" in a]
-    sweeps = [a for a in args if a not in runtime]
-    if not sweeps:
-        sweeps = ["results/bench_7b_native/raw_results_v1.json",
-                  "results/bench_7b_dkv/raw_results_v1.json"]
-        runtime = runtime or ["results/dkv_runtime_7b.json"]
+    args = parse_args()
+    queries = load_queries(args.input_files)
+    if not queries:
+        print("[!] No evaluation queries found in provided paths.", file=sys.stderr)
+        return
 
-    per = load(sweeps, runtime)
-    agg = defaultdict(lambda: defaultdict(list))
-    bypassed = defaultdict(list)
-    for (m, b, c), v in per.items():
-        if m not in DENSE and mean(v["b"]) >= 15.99:
-            bypassed[(m, b)].append(c)
-            continue
-        for f in ("Q", "R", "b"):
-            agg[(m, b)][f].extend(v[f])
+    methods_data = defaultdict(list)
+    for q in queries:
+        methods_data[q["method_name"]].append(q)
 
-    # Full-grid aggregate: every context length, including any where a method
-    # declined to compress. Reported alongside the engaged-only figure rather
-    # than instead of it -- dropping those rows hides that the method chose not
-    # to act, and keeping them unlabelled credits it with dense quality at a
-    # dense price. Both are the same measurements, aggregated over different sets.
-    full = defaultdict(lambda: defaultdict(list))
-    for (m, b, c), v in per.items():
-        for f in ("Q", "R", "b"):
-            full[(m, b)][f].extend(v[f])
+    dense_qs = methods_data.get("dense_fp16", []) or methods_data.get("dense", [])
+    ref_ttft = sum(q.get("method_ttft_ms", 1000.0) for q in dense_qs) / len(dense_qs) if dense_qs else 1000.0
+    ref_thru = sum(q.get("method_decode_throughput", 10.0) for q in dense_qs) / len(dense_qs) if dense_qs else 10.0
+    ref_vram = sum(q.get("method_peak_vram_mb", 1000.0) for q in dense_qs) / len(dense_qs) if dense_qs else 1000.0
 
     rows = []
-    for (m, b), v in agg.items():
-        Q, R = mean(v["Q"]), mean(v["R"])
-        fv = full[(m, b)]
-        fQ, fR, fb = mean(fv["Q"]), mean(fv["R"]), mean(fv["b"])
-        rows.append((ALPHA * Q + (1 - ALPHA) * R, m, b, mean(v["b"]), Q, R, len(v["Q"]),
-                     fb, ALPHA * fQ + (1 - ALPHA) * fR, len(fv["Q"])))
-    rows.sort(reverse=True)
+    for m, qs in methods_data.items():
+        avg_q = sum(x.get("method_raw_score", 0.0) for x in qs) / len(qs) * 100.0
+        tot_d = sum(float(x.get("dense_memory_bytes", 0.0) or (x.get("context_length", 2048)*100000)) for x in qs)
+        tot_m = sum(float(x.get("method_memory_bytes", 0.0) or (float(x.get("dense_memory_bytes", 0.0) or (x.get("context_length", 2048)*100000)) * x.get("method_effective_bpt", 16.0)/16.0)) for x in qs)
+        r_mem = 100.0 * max(0.0, (tot_d - tot_m) / tot_d) if tot_d > 0 else 0.0
+        b_eff = 16.0 * (1.0 - r_mem / 100.0)
+        s_res = args.alpha * avg_q + (1.0 - args.alpha) * r_mem
 
-    print("Part 1 = 0.70*Q + 0.30*R.  Dense-failed queries excluded.")
-    print("Two aggregates per method: context lengths where it engaged, and the full grid.")
-    print()
-    print(f"{'':<20}{'':>8}{'--- engaged lengths ---':>32}{'--- full grid ---':>22}")
-    print(f"{'method':<20}{'budget':>8}{'b_eff':>8}{'Q %':>7}{'R %':>7}{'Part1':>8}{'n':>6}"
-          f"{'b_eff':>9}{'Part1':>8}{'n':>5}")
-    print("-" * 96)
-    for p1, m, b, be, Q, R, n, fb, fp1, fn in rows:
-        mark = "  <- baseline" if m in DENSE else ("  *" if n != fn else "")
-        print(f"{m:<20}{str(b):>8}{be:>8.2f}{Q:>7.1f}{R:>7.1f}{p1:>8.1f}{n:>6}"
-              f"{fb:>9.2f}{fp1:>8.1f}{fn:>5}{mark}")
-    if bypassed:
-        print()
-        print("* methods whose two columns differ declined to compress at some lengths:")
-        for (m, b), cs in sorted(bypassed.items()):
-            print(f"    {m} @{b}: passed through at {sorted(cs)} "
-                  f"(DKV_ENGAGE_THRESHOLD=4096)")
-        print("  The engaged columns exclude those lengths; the full-grid columns")
-        print("  include them, where the method scores dense quality at dense cost.")
-    print()
-    print("Budget adherence -- b_eff spread across the grid, per method:")
-    for (m, b), v in sorted(per_method_spread(per).items()):
-        lo, hi = v
-        flag = "  <- constant" if hi - lo < 0.05 else ""
-        print(f"    {m:<20}{str(b):>8}   {lo:5.2f} .. {hi:5.2f}{flag}")
+        m_ttft = sum(q.get("method_ttft_ms", 1000.0) for q in qs) / len(qs)
+        m_thru = sum(q.get("method_decode_throughput", 10.0) for q in qs) / len(qs)
+        m_vram = sum(q.get("method_peak_vram_mb", 1000.0) for q in qs) / len(qs)
+
+        phi_ttft = max(0.0, min(1.0, ref_ttft / max(0.01, m_ttft)))
+        phi_thru = max(0.0, min(1.0, m_thru / max(0.01, ref_thru)))
+        phi_vram = max(0.0, min(1.0, ref_vram / max(0.01, m_vram)))
+
+        mult = (phi_ttft ** 0.35) * (phi_thru ** 0.35) * (phi_vram ** 0.30)
+        r_sys = 100.0 * mult
+        s_sys = args.alpha * s_res + (1.0 - args.alpha) * r_sys
+
+        rows.append((s_res, s_sys, avg_q, b_eff, r_mem, m_ttft, m_thru, m_vram, mult, m, len(qs)))
+
+    rows.sort(key=lambda x: x[0], reverse=True)
+
+    if args.format == "markdown":
+        print("| Rank | Method | Queries | Accuracy | b_eff | R_mem | Part 1 (S_res) | TTFT | Throughput | Part 2 (S_sys) |")
+        print("| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |")
+        for idx, (s_res, s_sys, avg_q, b_eff, r_mem, m_ttft, m_thru, m_vram, mult, m, nq) in enumerate(rows, 1):
+            print(f"| **{idx}** | **`{m}`** | {nq} | {avg_q:.1f}% | {b_eff:.2f} bpt | {r_mem:.1f}% | **{s_res:.1f}** | {m_ttft/1000.0:.2f}s | {m_thru:.1f} tok/s | **{s_sys:.1f}** |")
+    elif args.format == "csv":
+        print("Rank,Method,Queries,Accuracy,b_eff,R_mem,S_res,TTFT_ms,Throughput,S_sys")
+        for idx, (s_res, s_sys, avg_q, b_eff, r_mem, m_ttft, m_thru, m_vram, mult, m, nq) in enumerate(rows, 1):
+            print(f"{idx},{m},{nq},{avg_q:.2f},{b_eff:.2f},{r_mem:.2f},{s_res:.2f},{m_ttft:.1f},{m_thru:.2f},{s_sys:.2f}")
+    else:
+        print("=" * 115)
+        print(f"CRBENCH CANONICAL LEADERBOARD (Option B Aggregation, Alpha={args.alpha:.2f})")
+        print("=" * 115)
+        print(f"{'Rank':<5} {'Method':<22} {'Queries':<8} {'Accuracy':<10} {'b_eff':<8} {'R_mem':<8} {'Part 1 (S_res)':<16} {'TTFT':<10} {'Throughput':<12} {'Part 2 (S_sys)':<15}")
+        print("-" * 115)
+        for idx, (s_res, s_sys, avg_q, b_eff, r_mem, m_ttft, m_thru, m_vram, mult, m, nq) in enumerate(rows, 1):
+            print(f"{idx:<5} {m:<22} {nq:<8} {avg_q:>8.1f}% {b_eff:>7.2f} {r_mem:>6.1f}% {s_res:>14.1f} {m_ttft/1000.0:>8.2f}s {m_thru:>9.1f} tok/s {s_sys:>14.1f}")
 
 
 if __name__ == "__main__":

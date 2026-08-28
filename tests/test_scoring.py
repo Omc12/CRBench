@@ -15,18 +15,18 @@ from crbench.statistics.sensitivity import WeightingSensitivityAnalyzer
 
 def test_quality_normalizer():
     norm = QualityNormalizer(floor_score=0.0, min_dynamic_range=0.05)
-    # Dense achieved 80%, candidate achieved 80% -> 100.0% normalized
-    assert norm.normalize(raw_score=0.80, dense_reference_score=0.80) == 100.0
-    # Candidate achieved 40% -> 50.0% normalized
-    assert pytest.approx(norm.normalize(raw_score=0.40, dense_reference_score=0.80), 0.1) == 50.0
-    # Boundary clamp test
+    # Absolute quality: 80% raw score -> 80.0%
+    assert norm.normalize(raw_score=0.80, dense_reference_score=0.80) == 80.0
+    # Candidate achieved 40% raw score -> 40.0%
+    assert pytest.approx(norm.normalize(raw_score=0.40, dense_reference_score=0.80), 0.1) == 40.0
+    # Boundary clamp tests
     assert norm.normalize(raw_score=-0.05, dense_reference_score=0.80) == 0.0
+    assert norm.normalize(raw_score=1.05, dense_reference_score=0.80) == 100.0
 
-    # Dynamic range gating test: dense reference is near floor (e.g. 0.02)
-    # Candidate raw score <= dense -> returns 0.0 (preventing division-by-near-zero explosion)
-    res_gated = norm.normalize_detailed(raw_score=0.02, dense_reference_score=0.02)
-    assert res_gated.normalized_quality == 0.0
-    assert not res_gated.is_dense_valid
+    # Detail check: dense reference failure does not affect absolute candidate score
+    res = norm.normalize_detailed(raw_score=0.02, dense_reference_score=0.0)
+    assert pytest.approx(res.normalized_quality, 0.1) == 2.0
+    assert res.is_dense_valid
 
 
 def test_context_weighting_schemes():
@@ -224,4 +224,45 @@ def test_system_score_hardware_sensitivity():
     assert score_fast.system_score != score_slow.system_score
     assert score_fast.system_utility_multiplier > score_slow.system_utility_multiplier
     assert score_fast.system_score > score_slow.system_score
+
+
+def test_option_b_physical_memory_aggregation():
+    """Validates Option B: Physical byte aggregation weights context lengths by their actual KV footprint."""
+    from crbench.core.query_result import QueryEvaluationResult, QueryAggregationEngine
+
+    # Create 2K query (uncompressed dense pass-through: 16.0 bpt)
+    # Dense bytes = 2048 tok * 57344 B = 117,440,512 B (~112 MiB)
+    q_2k = QueryEvaluationResult(
+        query_id="q1", task_name="single_niah", context_length=2048,
+        model_name="test_model", method_name="dkv_test", budget_spec=16.0,
+        dense_raw_score=1.0, method_raw_score=1.0, task_floor=0.0,
+        normalized_quality=100.0, quality_retained_pct=100.0,
+        dense_memory_bytes=117440512.0, method_memory_bytes=117440512.0,
+        dense_effective_bpt=16.0, method_effective_bpt=16.0,
+        resource_efficiency=0.0, part1_score=70.0
+    )
+
+    # Create 32K query (compressed: 2.79 bpt)
+    # Dense bytes = 32768 tok * 57344 B = 1,879,048,192 B (~1.75 GiB)
+    # Method bytes = 1879048192 * (2.79 / 16.0) = 327,658,909 B
+    q_32k = QueryEvaluationResult(
+        query_id="q2", task_name="single_niah", context_length=32768,
+        model_name="test_model", method_name="dkv_test", budget_spec=16.0,
+        dense_raw_score=1.0, method_raw_score=1.0, task_floor=0.0,
+        normalized_quality=100.0, quality_retained_pct=100.0,
+        dense_memory_bytes=1879048192.0, method_memory_bytes=327658909.5,
+        dense_effective_bpt=16.0, method_effective_bpt=2.79,
+        resource_efficiency=82.56, part1_score=94.77
+    )
+
+    agg = QueryAggregationEngine.aggregate([q_2k, q_32k], dataset_name="test_dataset")
+
+    # Simple mean would be (16.0 + 2.79)/2 = 9.395 bpt (41.3% R_mem)
+    # Option B physically aggregates: (117.4MB + 327.6MB) / (117.4MB + 1879MB) = 445MB / 1996.5MB = 22.3% usage
+    # -> b_eff_agg = 16 * 0.223 = ~3.57 bpt
+    # -> R_mem_agg = 100 * (1 - 0.223) = ~77.7%
+    assert pytest.approx(agg.mean_effective_bpt, 0.1) == 3.57
+    assert pytest.approx(agg.mean_resource_efficiency, 0.1) == 77.7
+    # Part 1 = 0.70 * 100.0 + 0.30 * 77.7 = 93.31
+    assert pytest.approx(agg.mean_part1_score, 0.1) == 93.3
 

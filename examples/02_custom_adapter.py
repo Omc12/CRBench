@@ -86,12 +86,12 @@ class MyCustomKVMethod(BaseContextAdapter):
 def main():
     print("[*] Testing custom adapter interface skeleton...")
     adapter_cls = Registry.get_adapter("my_custom_kv_method")
-    print(f"[✓] Retrieved registered adapter class: {adapter_cls.__name__}")
+    print(f"[OK] Retrieved registered adapter class: {adapter_cls.__name__}")
 
     inst = adapter_cls(name="my_custom_kv_method")
     inst.apply_budget(ContextBudget.from_bits_per_token(4.0), context_length=4096)
     meta = inst.get_kv_metadata(4096)
-    print(f"[✓] Algorithmic Bytes: {meta.algorithmic_bytes:,.0f} B | Metadata: {meta.metadata_overhead_bytes:,.0f} B | Eff BPT: {meta.effective_bits_per_element:.2f} bpt")
+    print(f"[OK] Algorithmic Bytes: {meta.algorithmic_bytes:,.0f} B | Metadata: {meta.metadata_overhead_bytes:,.0f} B | Eff BPT: {meta.effective_bits_per_element:.2f} bpt")
 
 
 if __name__ == "__main__":

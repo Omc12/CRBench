@@ -204,7 +204,7 @@ def test_quality_and_resource_scoring_are_unchanged_by_coverage():
     from crbench.scoring.normalizer import QualityNormalizer
 
     norm = QualityNormalizer(floor_score=0.0, min_dynamic_range=0.05)
-    Q = norm.normalize(raw_score=80.0, dense_reference_score=100.0, task_floor=0.0)
+    Q = norm.normalize(raw_score=0.80, dense_reference_score=1.0, task_floor=0.0)
     R = 75.0
     assert Q == pytest.approx(80.0)
     assert compute_utility(Q, R, alpha=0.70, formula="linear") == pytest.approx(
