@@ -125,8 +125,8 @@ Preliminary validation on `Qwen/Qwen2.5-1.5B-Instruct` across 5 contextual tasks
 ## Installation
 
 ```bash
-# Clone repository
-git clone https://github.com/Omc12/CRBench.git
+# Unpack provided code archive or clone repository
+# git clone <anonymized-repository-url>
 cd CRBench
 
 # Setup Python environment
@@ -294,16 +294,15 @@ class MyCustomKVMethod(BaseContextAdapter):
 For methodological derivations, desiderata proofs, and complete analysis, see the academic preprint:
 
 > **CRBench: A Method-Agnostic, Resource-Aware Evaluation Framework for Long-Context Large Language Models**  
-> *Om Chimurkar*  
-> Research Preprint (Version 0.2.0) — [PDF Available Here](paper/CRBench_Preprint_v0.2.0.pdf)
+> *Anonymous Authors*  
+> Under review as a submission to Transactions on Machine Learning Research (TMLR)
 
 ```bibtex
-@article{chimurkar2026crbench,
+@article{crbench2026,
   title={CRBench: A Method-Agnostic, Resource-Aware Evaluation Framework for Long-Context Large Language Models},
-  author={Chimurkar, Om},
-  journal={arXiv preprint (Research Preview v0.2.0)},
-  year={2026},
-  url={https://github.com/Omc12/CRBench}
+  author={Anonymous Authors},
+  journal={Under review at Transactions on Machine Learning Research (TMLR)},
+  year={2026}
 }
 ```
 

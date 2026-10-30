@@ -17,8 +17,8 @@ This guide details the exact environment setup, hardware recommendations, benchm
 
 ### Clean Installation
 ```bash
-# Clone repository
-git clone https://github.com/Omc12/CRBench.git
+# Unpack the provided code archive or clone repository
+# git clone <anonymized-repository-url>
 cd CRBench
 
 # Create and activate virtual environment

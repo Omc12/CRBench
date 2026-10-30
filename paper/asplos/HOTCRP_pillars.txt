@@ -1,0 +1,54 @@
+ASPLOS PILLARS — SELECTION
+==========================
+
+Tick:  [x] Advances Operating Systems research
+
+Leave unticked: Computer Architecture, Programming Languages,
+                Introducing an Entirely New Area.
+
+Reasoning: the paper proposes no architecture, no language or compiler, and
+claiming an "entirely new area" would overstate a measurement study. One
+well-defended pillar beats three thin ones in the rapid round.
+
+
+PILLARS JUSTIFICATION — PASTE THIS (≈250 words)
+===============================================
+Paste the four paragraphs below, keeping the blank lines between them. Do not
+re-wrap the lines; each paragraph is a single unbroken line so it survives
+both the Markdown preview and any plain-text rendering.
+
+--- begin ---
+
+This paper advances operating systems research. Its subject is the resource that dominates long-context LLM serving — the KV cache — and the runtime mechanisms that manage it. Cache footprint sets the batch size a server sustains and the context length it admits; it is the binding resource that paged allocation, continuous batching, prefill/decode disaggregation and chunked prefill were all built to manage.
+
+Compression mechanisms are offered to those runtimes as two numbers: a compression ratio and a task score. A serving system consumes neither — it consumes prefill latency, decode throughput and resident device memory. Across 3,150 paired query executions, each compressed run matched to an uncompressed run of the same model on the identical prompt, we measure that the two reported numbers do not determine the three a runtime pays. At an identical 4-bit budget, task accuracy spans 18.7×. Two methods matched on *both* reported numbers differ by 30.3× in time-to-first-token and 3.46× in peak VRAM. Over 36 operating points, footprint carries no detectable signal about realised hardware efficiency. Charging each representation for the metadata that makes it decodable raises its footprint by 6–23% and reorders the rankings.
+
+Each of these breaks a decision the operating system actually makes: capacity and admission are sized from resident memory, and latency objectives are set on TTFT, which prefill-side transformation work inflates invisibly. The penalty is also model-dependent — 30.3×, 11.8× and 1.04× for the same integration across three models — so a single-model systems measurement does not transfer.
+
+The contribution is a corrected understanding of an existing serving mechanism, together with the paired-execution measurement methodology and metadata-charged memory accounting that make the effect observable and reproducible.
+
+--- end ---
+
+
+TOPICS — RECOMMENDED (choose up to three)
+=========================================
+
+1.  ML  >  systems for ML
+        The paper's subject: mechanisms inside an LLM serving runtime.
+
+2.  Techniques/aspects  >  performance modeling, evaluation methodology
+        The paper's actual contribution: a measurement design (paired
+        per-query execution, effective-bits accounting, separated axes).
+
+3.  ML  >  deep learning systems
+        Broadens ML-systems reviewer coverage.
+
+Alternative for slot 3, if you would rather draw a memory/compression expert
+than a second ML-systems reviewer:
+    Storage/memory  >  compression, deduplication, erasure
+Be aware that topic usually routes to storage-compression reviewers, who may
+not be the right readers for KV-cache representations.
+
+Do NOT select: caching, main memory, datacenter, cloud. The paper measures on
+a single GPU at batch size one and does not innovate on any of them; the form
+explicitly warns against selecting a topic you only use trivially.

@@ -1,0 +1,298 @@
+% ===========================================================================
+% References for the ASPLOS submission.
+%
+% Every author list below was taken verbatim from an authoritative record --
+% the arXiv API entry for that exact identifier, the USENIX proceedings page,
+% or the ACM Digital Library record -- and none was reconstructed from memory.
+% No entry uses "et al."; where a work has a corporate author (Gemini 1.5 has
+% 1,137 listed authors, headed by "Gemini Team"), the corporate author is
+% given, which is how that record itself is credited.
+% ===========================================================================
+
+% --- LLM serving systems ---------------------------------------------------
+
+@inproceedings{kwon2023pagedattention,
+  author    = {Kwon, Woosuk and Li, Zhuohan and Zhuang, Siyuan and
+               Sheng, Ying and Zheng, Lianmin and Yu, Cody Hao and
+               Gonzalez, Joseph E. and Zhang, Hao and Stoica, Ion},
+  title     = {Efficient Memory Management for Large Language Model Serving
+               with {PagedAttention}},
+  booktitle = {Proceedings of the 29th Symposium on Operating Systems
+               Principles (SOSP)},
+  pages     = {611--626},
+  year      = {2023},
+  publisher = {ACM},
+  doi       = {10.1145/3600006.3613165},
+}
+
+@inproceedings{yu2022orca,
+  author    = {Yu, Gyeong-In and Jeong, Joo Seong and Kim, Geon-Woo and
+               Kim, Soojeong and Chun, Byung-Gon},
+  title     = {{Orca}: A Distributed Serving System for Transformer-Based
+               Generative Models},
+  booktitle = {16th USENIX Symposium on Operating Systems Design and
+               Implementation (OSDI)},
+  pages     = {521--538},
+  year      = {2022},
+  url       = {https://www.usenix.org/conference/osdi22/presentation/yu},
+}
+
+@inproceedings{zhong2024distserve,
+  author    = {Zhong, Yinmin and Liu, Shengyu and Chen, Junda and Hu, Jianbo
+               and Zhu, Yibo and Liu, Xuanzhe and Jin, Xin and Zhang, Hao},
+  title     = {{DistServe}: Disaggregating Prefill and Decoding for
+               Goodput-optimized Large Language Model Serving},
+  booktitle = {18th USENIX Symposium on Operating Systems Design and
+               Implementation (OSDI)},
+  pages     = {193--210},
+  year      = {2024},
+  url       = {https://www.usenix.org/conference/osdi24/presentation/zhong-yinmin},
+}
+
+@inproceedings{agrawal2024sarathi,
+  author    = {Agrawal, Amey and Kedia, Nitin and Panwar, Ashish and
+               Mohan, Jayashree and Kwatra, Nipun and Gulavani, Bhargav S.
+               and Tumanov, Alexey and Ramjee, Ramachandran},
+  title     = {Taming Throughput-Latency Tradeoff in {LLM} Inference with
+               {Sarathi-Serve}},
+  booktitle = {18th USENIX Symposium on Operating Systems Design and
+               Implementation (OSDI)},
+  year      = {2024},
+  note      = {arXiv:2403.02310},
+  url       = {https://www.usenix.org/conference/osdi24/presentation/agrawal},
+}
+
+@inproceedings{dao2022flashattention,
+  author    = {Dao, Tri and Fu, Daniel Y. and Ermon, Stefano and
+               Rudra, Atri and R{\'e}, Christopher},
+  title     = {{FlashAttention}: Fast and Memory-Efficient Exact Attention
+               with {IO}-Awareness},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2022},
+  url       = {https://arxiv.org/abs/2205.14135},
+}
+
+@inproceedings{fan2026zipserv,
+  author    = {Fan, Ruibo and Yu, Xiangrui and Pan, Xinglin and Li, Zeyu and
+               Luo, Weile and Wang, Qiang and Wang, Wei and Chu, Xiaowen},
+  title     = {{ZipServ}: Fast and Memory-Efficient {LLM} Inference with
+               Hardware-Aware Lossless Compression},
+  booktitle = {Proceedings of the 31st ACM International Conference on
+               Architectural Support for Programming Languages and Operating
+               Systems (ASPLOS)},
+  year      = {2026},
+  publisher = {ACM},
+  doi       = {10.1145/3779212.3790250},
+}
+
+@inproceedings{liu2024cachegen,
+  author    = {Liu, Yuhan and Li, Hanchen and Cheng, Yihua and Ray, Siddhant
+               and Huang, Yuyang and Zhang, Qizheng and Du, Kuntai and
+               Yao, Jiayi and Lu, Shan and Ananthanarayanan, Ganesh and
+               Maire, Michael and Hoffmann, Henry and Holtzman, Ari and
+               Jiang, Junchen},
+  title     = {{CacheGen}: {KV} Cache Compression and Streaming for Fast
+               Large Language Model Serving},
+  booktitle = {Proceedings of the ACM SIGCOMM 2024 Conference},
+  year      = {2024},
+  publisher = {ACM},
+  doi       = {10.1145/3651890.3672274},
+}
+
+% --- KV-cache compression methods -----------------------------------------
+
+@inproceedings{liu2024kivi,
+  author    = {Liu, Zirui and Yuan, Jiayi and Jin, Hongye and
+               Zhong, Shaochen and Xu, Zhaozhuo and Braverman, Vladimir and
+               Chen, Beidi and Hu, Xia},
+  title     = {{KIVI}: A Tuning-Free Asymmetric 2bit Quantization for {KV}
+               Cache},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2402.02750},
+}
+
+@inproceedings{li2024snapkv,
+  author    = {Li, Yuhong and Huang, Yingbing and Yang, Bowen and
+               Venkitesh, Bharat and Locatelli, Acyr and Ye, Hanchen and
+               Cai, Tianle and Lewis, Patrick and Chen, Deming},
+  title     = {{SnapKV}: {LLM} Knows What You are Looking for Before
+               Generation},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2404.14469},
+}
+
+@inproceedings{xiao2023streamingllm,
+  author    = {Xiao, Guangxuan and Tian, Yuandong and Chen, Beidi and
+               Han, Song and Lewis, Mike},
+  title     = {Efficient Streaming Language Models with Attention Sinks},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2309.17453},
+}
+
+@inproceedings{zhang2023h2o,
+  author    = {Zhang, Zhenyu and Sheng, Ying and Zhou, Tianyi and
+               Chen, Tianlong and Zheng, Lianmin and Cai, Ruisi and
+               Song, Zhao and Tian, Yuandong and R{\'e}, Christopher and
+               Barrett, Clark and Wang, Zhangyang and Chen, Beidi},
+  title     = {{H2O}: Heavy-Hitter Oracle for Efficient Generative Inference
+               of Large Language Models},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2306.14048},
+}
+
+@inproceedings{liu2023scissorhands,
+  author    = {Liu, Zichang and Desai, Aditya and Liao, Fangshuo and
+               Wang, Weitao and Xie, Victor and Xu, Zhaozhuo and
+               Kyrillidis, Anastasios and Shrivastava, Anshumali},
+  title     = {{Scissorhands}: Exploiting the Persistence of Importance
+               Hypothesis for {LLM} {KV} Cache Compression at Test Time},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2023},
+  url       = {https://arxiv.org/abs/2305.17118},
+}
+
+@inproceedings{hooper2024kvquant,
+  author    = {Hooper, Coleman and Kim, Sehoon and Mohammadzadeh, Hiva and
+               Mahoney, Michael W. and Shao, Yakun Sophia and Keutzer, Kurt
+               and Gholami, Amir},
+  title     = {{KVQuant}: Towards 10 Million Context Length {LLM} Inference
+               with {KV} Cache Quantization},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2401.18079},
+}
+
+@inproceedings{dettmers2022llmint8,
+  author    = {Dettmers, Tim and Lewis, Mike and Belkada, Younes and
+               Zettlemoyer, Luke},
+  title     = {{LLM.int8()}: 8-bit Matrix Multiplication for Transformers
+               at Scale},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2022},
+  url       = {https://arxiv.org/abs/2208.07339},
+}
+
+@article{ge2023model,
+  author  = {Ge, Suyu and Zhang, Yunan and Liu, Liyuan and Zhang, Minjia and
+             Han, Jiawei and Gao, Jianfeng},
+  title   = {Model Tells You What to Discard: Adaptive {KV} Cache Compression
+             for {LLMs}},
+  journal = {arXiv preprint arXiv:2310.01801},
+  year    = {2023},
+  url       = {https://arxiv.org/abs/2310.01801},
+}
+
+% NOTE: the first author of PyramidKV is Zefan Cai, not Yichi Zhang; the
+% citation key is retained only as an internal label and is not rendered.
+@article{zhang2024pyramidkv,
+  author  = {Cai, Zefan and Zhang, Yichi and Gao, Bofei and Liu, Yuliang and
+             Li, Yucheng and Liu, Tianyu and Lu, Keming and Xiong, Wayne and
+             Dong, Yue and Hu, Junjie and Xiao, Wen},
+  title   = {{PyramidKV}: Dynamic {KV} Cache Compression based on Pyramidal
+             Information Funneling},
+  journal = {arXiv preprint arXiv:2406.02069},
+  year    = {2024},
+  url       = {https://arxiv.org/abs/2406.02069},
+}
+
+@inproceedings{sharma2023truth,
+  author    = {Sharma, Pratyusha and Ash, Jordan T. and Misra, Dipendra},
+  title     = {The Truth is in There: Improving Reasoning in Language Models
+               with Layer-Selective Rank Reduction},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2312.13558},
+}
+
+% Cited in the third person as an artifact of the project that released it.
+% The record is a self-archived preprint whose personal author line and
+% archive URL are not reproduced here, because this submission is under
+% double-blind review and that record is attributable to an author of this
+% paper.  Full bibliographic details will be restored in the camera-ready.
+@misc{dkvpreprint,
+  author       = {{DKV Project}},
+  title        = {{DKV}: Anchor + Low-Rank Differential {KV}-Cache
+                  Compression for Scalable Long-Context Inference},
+  year         = {2026},
+  howpublished = {Preprint},
+}
+
+% --- Long-context evaluation ----------------------------------------------
+
+@article{hsieh2024ruler,
+  author  = {Hsieh, Cheng-Ping and Sun, Simeng and Kriman, Samuel and
+             Acharya, Shantanu and Rekesh, Dima and Jia, Fei and Zhang, Yang
+             and Ginsburg, Boris},
+  title   = {{RULER}: What's the Real Context Size of Your Long-Context
+             Language Models?},
+  journal = {arXiv preprint arXiv:2404.06654},
+  year    = {2024},
+  url       = {https://arxiv.org/abs/2404.06654},
+}
+
+@inproceedings{bai2023longbench,
+  author    = {Bai, Yushi and Lv, Xin and Zhang, Jiajie and Lyu, Hongchang
+               and Tang, Jiankai and Huang, Zhidian and Du, Zhengxiao and
+               Liu, Xiao and Zeng, Aohan and Hou, Lei and Dong, Yuxiao and
+               Tang, Jie and Li, Juanzi},
+  title     = {{LongBench}: A Bilingual, Multitask Benchmark for Long Context
+               Understanding},
+  booktitle = {Proceedings of the 62nd Annual Meeting of the Association for
+               Computational Linguistics (ACL)},
+  year      = {2024},
+  doi       = {10.18653/v1/2024.acl-long.172},
+}
+
+@article{an2023leval,
+  author  = {An, Chenxin and Gong, Shansan and Zhong, Ming and Zhao, Xingjian
+             and Li, Mukai and Zhang, Jun and Kong, Lingpeng and Qiu, Xipeng},
+  title   = {{L-Eval}: Instituting Standardized Evaluation for Long Context
+             Language Models},
+  journal = {arXiv preprint arXiv:2307.11088},
+  year    = {2023},
+  doi       = {10.18653/v1/2024.acl-long.776},
+}
+
+@article{zhang2024infinitebench,
+  author  = {Zhang, Xinrong and Chen, Yingfa and Hu, Shengding and Xu, Zihang
+             and Chen, Junhao and Hao, Moo Khai and Han, Xu and
+             Thai, Zhen Leng and Wang, Shuo and Liu, Zhiyuan and Sun, Maosong},
+  title   = {$\infty$-{Bench}: Extending Long Context Evaluation Beyond
+             100K Tokens},
+  journal = {arXiv preprint arXiv:2402.13718},
+  year    = {2024},
+  doi       = {10.18653/v1/2024.acl-long.814},
+}
+
+@misc{kamradt2023needle,
+  author       = {Kamradt, Greg},
+  title        = {Needle in a Haystack --- Pressure Testing {LLMs}},
+  year         = {2023},
+  howpublished = {\url{https://github.com/gkamradt/LLMTest_NeedleInAHaystack}},
+}
+
+% The Gemini 1.5 record lists 1,137 authors headed by the corporate author
+% "Gemini Team"; the corporate author is given, as the record itself credits.
+@article{reid2024gemini,
+  author  = {{Gemini Team}},
+  title   = {Gemini 1.5: Unlocking Multimodal Understanding Across Millions
+             of Tokens of Context},
+  journal = {arXiv preprint arXiv:2403.05530},
+  year    = {2024},
+  url       = {https://arxiv.org/abs/2403.05530},
+}
+
+% --- Evaluation of KV-cache compression (closest related work) ------------
+
+@article{agrawal2026benchmarking,
+  author  = {Agrawal, Nikita and Mayer, Ruben},
+  title   = {Benchmarking {KV}-Cache Optimizations across Task Quality and
+             System Performance for Long-Context Serving},
+  journal = {arXiv preprint arXiv:2607.05399},
+  year    = {2026},
+  url       = {https://arxiv.org/abs/2607.05399},
+}

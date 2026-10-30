@@ -1,0 +1,31 @@
+To: asplos27pcchairs@googlegroups.com
+Subject: ASPLOS'27 September cycle, submission #[PAPER NUMBER]: reserve reviewer and self-citation disclosure
+
+Dear ASPLOS'27 Program Chairs,
+
+I have submitted paper #[PAPER NUMBER], "Compression Ratio Is Not a Serving Metric: A Measurement Study of KV-Cache Compression for Long-Context LLM Serving", to the September cycle. I would like to raise four points that the submission form had no field for.
+
+1. Reserve reviewer
+
+The form asks for a senior author holding a PhD or equivalent seniority to serve as reserve reviewer. This paper is single-authored work carried out as an undergraduate student, so no author meets that requirement. In the required field I entered [WHAT YOU ENTERED IN THE RESERVE REVIEWER FIELD]. I did not want to add a co-author who had not made a substantial intellectual contribution, as that would conflict with the ACM authorship policy. Please let me know how you would like this handled.
+
+2. Self-citation disclosure
+
+One of the seven KV-cache compression methods evaluated in the paper (DKV) is a publicly released method that I authored. For double-blind review it is cited without its author line or archive DOI, and the full reference will be restored in the camera-ready. The method name still appears in the paper's figures and tables, so the de-identification is partial; renaming it would have meant altering how the measured data is presented.
+
+3. Previous submissions
+
+The change note states that the prior TMLR submission identifiers are available on request. They are 11745 and 12029. Both were desk-rejected without external review, and no reviewer reports were produced.
+
+4. Format-checker warnings
+
+The submission checker reported two warnings that I believe are false positives:
+
+- Margins: text height exceeding 9in by up to 4% on odd-numbered pages. The text block is 646pt (8.94in) and begins 1.00in from the top of the page. The excess matches acmart's header box (headheight 13pt + headsep 14pt = 27pt), and a stock acmart file with the same class options measures the same.
+
+- Body font: 9.3pt text on pages 7-8. Body text is 10pt throughout; the flagged text is two tables set at 9pt, which the CFP permits for tables. When I set them at 10pt, LaTeX could no longer place two of the four tables.
+
+I am happy to make any change you would prefer on any of these points.
+
+Best regards,
+Om Chimurkar

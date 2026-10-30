@@ -1,0 +1,21 @@
+\begin{tabular}{l ccc ccc}
+\toprule
+\textbf{Method} & \textbf{E2B} & \textbf{E4B} & \textbf{7B} & $b_{\text{eff}}$ & \textbf{TTFT $\times$dense} & $\phi$ \\
+\midrule
+\multicolumn{7}{l}{\textit{Nominal budget: 4~bits/element}} \\
+\midrule
+KIVI (INT4/INT8) & 46.7\% & 61.3\% & 60.4\% & 4.54 & 1.00$\times$ & 0.98 \\
+SnapKV & 47.3\% & 59.3\% & 56.9\% & 4.01 & 14.36$\times$ & 0.66 \\
+Low-Rank KV & 18.9\% & 37.5\% & 20.2\% & 4.11 & 1.10$\times$ & 0.92 \\
+StreamingLLM & 9.6\% & 9.5\% & 28.3\% & 4.01 & 1.01$\times$ & 0.97 \\
+KV-Merging & 2.5\% & 5.3\% & 16.2\% & 4.04 & 1.01$\times$ & 0.97 \\
+\midrule
+\multicolumn{7}{l}{\textit{Nominal budget: 8~bits/element}} \\
+\midrule
+KIVI (INT4/INT8) & 46.2\% & 62.7\% & 60.9\% & 8.52 & 1.00$\times$ & 0.98 \\
+SnapKV & 46.2\% & 60.7\% & 59.6\% & 8.01 & 13.08$\times$ & 0.65 \\
+Low-Rank KV & 43.6\% & 60.0\% & 36.9\% & 8.18 & 1.16$\times$ & 0.90 \\
+StreamingLLM & 36.1\% & 41.4\% & 44.8\% & 8.01 & 1.01$\times$ & 0.97 \\
+KV-Merging & 24.0\% & 45.3\% & 23.5\% & 8.04 & 1.01$\times$ & 0.97 \\
+\bottomrule
+\end{tabular}

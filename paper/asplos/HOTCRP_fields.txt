@@ -1,0 +1,11 @@
+TITLE
+=====
+Compression Ratio Is Not a Serving Metric: A Measurement Study of KV-Cache Compression for Long-Context LLM Serving
+
+ABSTRACT
+========
+Long-context LLM serving is bounded by the key–value (KV) cache, and a large literature compresses it. Almost all of that literature summarises a method to a prospective adopter with two numbers: a compression ratio and a task score. A serving system consumes neither; it consumes prefill latency, decode throughput and resident device memory. We ask whether the two reported numbers predict the three consumed ones, and measure that in our study they do not.
+
+Across 3,150 paired query executions — each compressed run matched to an uncompressed run of the same model on the identical prompt — spanning seven compression methods, three open-weight models, five long-context tasks and contexts from 2K to 128K tokens, we find: (i) at an identical nominal budget of 4 bits per KV element, with realised payloads within 0.19 bits of one another, task accuracy ranges from 2.5% to 47.3% on one model, an 18.7× spread; (ii) two methods matched to within 0.55 effective bits per element and 2.0 accuracy points, on the same model and the same prompts, differ by 30.3× in time-to-first-token and 3.46× in peak VRAM; and (iii) over 36 operating points we detect no rank relationship between the memory a representation saves and the hardware efficiency it realises (ρ = +0.04, p = 0.84), nor between its effective footprint and its prefill cost (ρ = +0.01, p = 0.98). The reported footprint is itself systematically understated: charging a representation for the metadata that makes it decodable adds 6–23% depending on method family, and reorders the resulting ranking.
+
+We describe TriAxis, the measurement methodology these findings required: query-level pairing against a dense reference, an effective-bits accounting that charges for mandatory metadata, and a report that keeps representation utility and measured serving efficiency on separate axes instead of merging them. We give per-method provenance, state for every method whether its saving was physically realised or analytically accounted, and scope each conclusion to the implementations and hardware measured. The per-query records and the scripts that regenerate every number and figure are released.

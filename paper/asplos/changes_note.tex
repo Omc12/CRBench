@@ -1,0 +1,102 @@
+% ===========================================================================
+% ASPLOS 2027 -- separate note describing changes since previous submissions.
+% Uploaded to the submission site alongside the paper.  One page, per the CFP.
+% This document is reviewer-visible, so it is anonymous like the paper.
+% ===========================================================================
+\documentclass[10pt]{article}
+\usepackage[letterpaper,margin=0.9in]{geometry}
+\usepackage{enumitem}
+\usepackage{microtype}
+\setlist[itemize]{leftmargin=*,itemsep=1.0pt,topsep=2pt,parsep=0pt}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+{\large\textbf{Changes Since Previous Submissions}}\\[0.3em]
+\emph{Compression Ratio Is Not a Serving Metric: A Measurement Study of
+KV-Cache Compression for Long-Context LLM Serving}
+\end{center}
+\vspace{0.3em}
+
+\noindent\textbf{Previous submissions.}
+This work was submitted twice to \emph{Transactions on Machine Learning
+Research} (TMLR) during 2026. The first submission was titled after the
+evaluation harness itself; we do not reproduce that title here, because the
+harness is public under that name and quoting it would deanonymise this
+submission. The second was titled ``Beyond Compression Ratio: Evaluating the
+Algorithmic and Systems Utility of Long-Context KV-Cache Compression''.
+The submission identifiers are available to the chairs on request.
+Both were desk-rejected by the editors, and in neither case was the paper sent
+out for review: \textbf{no external reviewer reports were produced and no
+technical feedback of any kind was received.} The notices stated that the
+submission was judged unlikely to meet one or both of TMLR's criteria and could
+not be advanced given submission volume and limited reviewer and action-editor
+capacity.
+
+\smallskip
+\noindent We state this plainly because it determines how this document should
+be read: \textbf{none of the changes below responds to a review}, because there
+was none. They are our own reassessment of how the work should be framed and
+for which community. Both earlier versions were written as descriptions of an
+evaluation framework; we now think the framework was the least interesting
+thing about the results, and that the work belongs at a systems venue as a
+measurement study.
+
+\medskip
+\noindent\textbf{What changed.}
+\begin{itemize}
+\item \textbf{Re-centred from a benchmark to a systems finding}, with a new
+  title, abstract and contribution ordering. The paper leads with a measured
+  claim about serving --- that compression ratio and task score are not
+  sufficient to predict prefill latency, decode throughput and resident memory
+  --- and introduces the methodology only after that claim is established;
+  both earlier versions introduced the framework first. The contributions now
+  lead with the empirical characterisation rather than the composite scores.
+\item \textbf{The first two pages were rebuilt around that finding}, in
+  recognition of the rapid-review round: by the end of page~2 the reader has
+  the systems problem, why conventional reporting is insufficient for it, the
+  three quantitative findings, and their consequences for capacity planning
+  and latency objectives; the explicit contribution bullets follow immediately
+  on page~3.
+\item \textbf{A conceptual problem in the metric exposition was fixed.} The
+  earlier versions argued that representation utility and serving efficiency
+  are distinct axes while reporting a composite $\mathcal{S}_{\rm sys}$ that
+  contains $\mathcal{S}_{\rm res}$ by construction. The pure hardware term
+  $\phi$ is now the serving axis, $\mathcal{S}_{\rm sys}$ is stated to be a
+  presentational convenience and never evidence, and the reported rank
+  displacements are identified as a lower bound. No formula and no measured
+  value changed.
+\item \textbf{Statistical language was scoped to the evidence}: claims of the
+  form ``none predicts the others'' became statements about what is and is not
+  detectable at this sample size, while direct matched observations are stated
+  as the direct observations they are.
+\item \textbf{Related work was rewritten for a systems audience}, and now
+  engages concurrent work that reaches a compatible headline conclusion from a
+  different measurement design, stating what our design adds to it.
+\item \textbf{Length was reduced to 11 pages by content editing}, not by
+  spacing or font changes: redundant exposition was cut and secondary material
+  (proofs, alternative formulations, per-task and per-context detail, protocol,
+  artifact appendix) moved to appendices.
+\item \textbf{Figures were regenerated at final printed size} so every label
+  renders at 8\,pt or larger without scaling, and captions now state the
+  systems takeaway rather than describe the axes.
+\item \textbf{An artifact appendix was added}, and the manuscript was
+  anonymised for double-blind review: the harness is referred to by a pseudonym
+  because it is public under its own name, and prior work by the authors is
+  cited in the third person.
+\end{itemize}
+
+\medskip
+\noindent\textbf{What did not change.}
+\textbf{No new experiments were run and no measured value was altered.} The
+study is the same 3{,}150 paired query executions over the same seven methods,
+three models, five tasks and context lengths to 128K. Every number, table and
+figure is regenerated from the same released per-query records, and a
+verification script re-derives each quantity quoted in the prose and fails if
+the manuscript has drifted from the data. The limitations --- single GPU, batch
+size one, 2B--7B models, and the implementation caveats for the two methods
+whose production kernels were unavailable on our platform --- are unchanged and
+remain stated in the body.
+
+\end{document}

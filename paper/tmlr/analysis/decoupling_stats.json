@@ -1,0 +1,368 @@
+{
+  "note": "re-analysis of already-collected runs; no new executions",
+  "per_model": {
+    "Gemma 4 E2B": {
+      "rho_rmem_acc": -0.283,
+      "p_rmem_acc": 0.372,
+      "n_points": 12,
+      "rho_sres_phi": -0.33,
+      "p_sres_phi": 0.2713,
+      "mean_rank_shift": 1.38,
+      "max_rank_shift": 3,
+      "max_rank_shift_point": "KIVI (INT4/INT8)@8",
+      "rho_beff_ttft": 0.063,
+      "p_beff_ttft": 0.8454
+    },
+    "Gemma 4 E4B": {
+      "rho_rmem_acc": -0.636,
+      "p_rmem_acc": 0.0261,
+      "n_points": 12,
+      "rho_sres_phi": -0.302,
+      "p_sres_phi": 0.3156,
+      "mean_rank_shift": 2.62,
+      "max_rank_shift": 8,
+      "max_rank_shift_point": "SnapKV@4",
+      "rho_beff_ttft": -0.063,
+      "p_beff_ttft": 0.8454
+    },
+    "Qwen2.5 7B": {
+      "rho_rmem_acc": -0.393,
+      "p_rmem_acc": 0.2063,
+      "n_points": 12,
+      "rho_sres_phi": -0.495,
+      "p_sres_phi": 0.0858,
+      "mean_rank_shift": 1.38,
+      "max_rank_shift": 3,
+      "max_rank_shift_point": "Dense FP16",
+      "rho_beff_ttft": 0.021,
+      "p_beff_ttft": 0.9482
+    }
+  },
+  "pooled": {
+    "rho_r_mem_q_abs": -0.424,
+    "p_r_mem_q_abs": 0.01,
+    "rho_r_mem_phi": 0.035,
+    "p_r_mem_phi": 0.8392,
+    "rho_q_abs_phi": -0.289,
+    "p_q_abs_phi": 0.0869,
+    "rho_s_res_phi": -0.28,
+    "p_s_res_phi": 0.0987,
+    "rho_b_eff_ttft_x_dense": 0.005,
+    "p_b_eff_ttft_x_dense": 0.9792,
+    "rho_b_eff_vram_x_dense": -0.082,
+    "p_b_eff_vram_x_dense": 0.6341
+  },
+  "matched_bitrate_spread": {
+    "Gemma 4 E2B@4": {
+      "n": 5,
+      "b_min": 4.0,
+      "b_max": 4.05,
+      "b_eff_min": 4.01,
+      "b_eff_max": 4.51,
+      "b_eff_spread": 0.5,
+      "acc_lo": 2.5,
+      "method_lo": "KV-Merging",
+      "acc_hi": 47.3,
+      "method_hi": "SnapKV",
+      "span": 44.8,
+      "ratio": 18.7
+    },
+    "Gemma 4 E2B@8": {
+      "n": 5,
+      "b_min": 8.0,
+      "b_max": 8.09,
+      "b_eff_min": 8.02,
+      "b_eff_max": 8.51,
+      "b_eff_spread": 0.49,
+      "acc_lo": 24.0,
+      "method_lo": "KV-Merging",
+      "acc_hi": 46.2,
+      "method_hi": "SnapKV",
+      "span": 22.2,
+      "ratio": 1.9
+    },
+    "Gemma 4 E4B@4": {
+      "n": 5,
+      "b_min": 4.0,
+      "b_max": 4.19,
+      "b_eff_min": 4.0,
+      "b_eff_max": 4.55,
+      "b_eff_spread": 0.55,
+      "acc_lo": 5.3,
+      "method_lo": "KV-Merging",
+      "acc_hi": 61.3,
+      "method_hi": "KIVI (INT4/INT8)",
+      "span": 56.1,
+      "ratio": 11.6
+    },
+    "Gemma 4 E4B@8": {
+      "n": 5,
+      "b_min": 8.0,
+      "b_max": 8.34,
+      "b_eff_min": 8.01,
+      "b_eff_max": 8.53,
+      "b_eff_spread": 0.52,
+      "acc_lo": 41.4,
+      "method_lo": "StreamingLLM",
+      "acc_hi": 62.7,
+      "method_hi": "KIVI (INT4/INT8)",
+      "span": 21.2,
+      "ratio": 1.5
+    },
+    "Qwen2.5 7B@4": {
+      "n": 5,
+      "b_min": 4.0,
+      "b_max": 4.07,
+      "b_eff_min": 4.01,
+      "b_eff_max": 4.55,
+      "b_eff_spread": 0.54,
+      "acc_lo": 16.2,
+      "method_lo": "KV-Merging",
+      "acc_hi": 60.4,
+      "method_hi": "KIVI (INT4/INT8)",
+      "span": 44.2,
+      "ratio": 3.7
+    },
+    "Qwen2.5 7B@8": {
+      "n": 5,
+      "b_min": 8.0,
+      "b_max": 8.1,
+      "b_eff_min": 8.02,
+      "b_eff_max": 8.53,
+      "b_eff_spread": 0.52,
+      "acc_lo": 23.5,
+      "method_lo": "KV-Merging",
+      "acc_hi": 60.9,
+      "method_hi": "KIVI (INT4/INT8)",
+      "span": 37.4,
+      "ratio": 2.6
+    }
+  },
+  "matched_pairs": {
+    "Gemma 4 E2B": [
+      {
+        "a": "KIVI (INT4/INT8)@4",
+        "b": "SnapKV@4",
+        "d_beff": 0.5,
+        "d_acc": 0.7,
+        "ttft_ratio": 1.0,
+        "vram_ratio": 2.5,
+        "d_ssys": 6.9,
+        "slower": "SnapKV@4"
+      },
+      {
+        "a": "KIVI (INT4/INT8)@8",
+        "b": "SnapKV@8",
+        "d_beff": 0.49,
+        "d_acc": 0.0,
+        "ttft_ratio": 1.0,
+        "vram_ratio": 2.5,
+        "d_ssys": 6.8,
+        "slower": "SnapKV@8"
+      },
+      {
+        "a": "SnapKV@8",
+        "b": "Low-Rank KV@8",
+        "d_beff": 0.08,
+        "d_acc": 2.7,
+        "ttft_ratio": 1.0,
+        "vram_ratio": 2.5,
+        "d_ssys": 4.7,
+        "slower": "SnapKV@8"
+      }
+    ],
+    "Gemma 4 E4B": [
+      {
+        "a": "KIVI (INT4/INT8)@4",
+        "b": "SnapKV@4",
+        "d_beff": 0.55,
+        "d_acc": 2.0,
+        "ttft_ratio": 30.3,
+        "vram_ratio": 3.5,
+        "d_ssys": 15.6,
+        "slower": "SnapKV@4"
+      },
+      {
+        "a": "KIVI (INT4/INT8)@8",
+        "b": "SnapKV@8",
+        "d_beff": 0.52,
+        "d_acc": 2.0,
+        "ttft_ratio": 28.4,
+        "vram_ratio": 3.5,
+        "d_ssys": 15.7,
+        "slower": "SnapKV@8"
+      },
+      {
+        "a": "SnapKV@8",
+        "b": "Low-Rank KV@8",
+        "d_beff": 0.34,
+        "d_acc": 0.7,
+        "ttft_ratio": 24.8,
+        "vram_ratio": 3.5,
+        "d_ssys": 12.3,
+        "slower": "SnapKV@8"
+      }
+    ],
+    "Qwen2.5 7B": [
+      {
+        "a": "KIVI (INT4/INT8)@4",
+        "b": "SnapKV@4",
+        "d_beff": 0.54,
+        "d_acc": 3.6,
+        "ttft_ratio": 11.7,
+        "vram_ratio": 1.3,
+        "d_ssys": 6.8,
+        "slower": "SnapKV@4"
+      },
+      {
+        "a": "KIVI (INT4/INT8)@8",
+        "b": "SnapKV@8",
+        "d_beff": 0.52,
+        "d_acc": 1.3,
+        "ttft_ratio": 9.8,
+        "vram_ratio": 1.3,
+        "d_ssys": 6.5,
+        "slower": "SnapKV@8"
+      }
+    ]
+  },
+  "metadata": {
+    "Gemma 4 E2B": {
+      "DKV-Mid": {
+        "b_pay": 5.46,
+        "b_eff": 7.07,
+        "meta_share": 22.8
+      },
+      "DKV-High": {
+        "b_pay": 10.78,
+        "b_eff": 13.17,
+        "meta_share": 18.1
+      },
+      "KIVI (INT4/INT8)@4": {
+        "b_pay": 4.01,
+        "b_eff": 4.51,
+        "meta_share": 11.1
+      },
+      "KIVI (INT4/INT8)@8": {
+        "b_pay": 8.01,
+        "b_eff": 8.51,
+        "meta_share": 5.9
+      }
+    },
+    "Gemma 4 E4B": {
+      "DKV-Mid": {
+        "b_pay": 5.0,
+        "b_eff": 6.51,
+        "meta_share": 23.2
+      },
+      "DKV-High": {
+        "b_pay": 10.68,
+        "b_eff": 13.07,
+        "meta_share": 18.3
+      },
+      "KIVI (INT4/INT8)@4": {
+        "b_pay": 4.05,
+        "b_eff": 4.55,
+        "meta_share": 10.9
+      },
+      "KIVI (INT4/INT8)@8": {
+        "b_pay": 8.03,
+        "b_eff": 8.53,
+        "meta_share": 5.8
+      }
+    },
+    "Qwen2.5 7B": {
+      "DKV-Mid": {
+        "b_pay": 5.84,
+        "b_eff": 7.15,
+        "meta_share": 18.3
+      },
+      "KIVI (INT4/INT8)@4": {
+        "b_pay": 4.05,
+        "b_eff": 4.55,
+        "meta_share": 10.9
+      },
+      "DKV-High": {
+        "b_pay": 12.14,
+        "b_eff": 13.55,
+        "meta_share": 10.4
+      },
+      "KIVI (INT4/INT8)@8": {
+        "b_pay": 8.04,
+        "b_eff": 8.53,
+        "meta_share": 5.8
+      }
+    }
+  },
+  "metadata_reranking": {
+    "Gemma 4 E2B": [
+      {
+        "point": "StreamingLLM@8",
+        "rank_payload": 8,
+        "rank_effective": 7,
+        "s_res_payload": 40.3,
+        "s_res_effective": 40.2
+      },
+      {
+        "point": "DKV-High",
+        "rank_payload": 7,
+        "rank_effective": 8,
+        "s_res_payload": 42.5,
+        "s_res_effective": 38.0
+      }
+    ],
+    "Gemma 4 E4B": [
+      {
+        "point": "DKV-Mid",
+        "rank_payload": 3,
+        "rank_effective": 5,
+        "s_res_payload": 59.4,
+        "s_res_effective": 56.5
+      },
+      {
+        "point": "KIVI (INT4/INT8)@8",
+        "rank_payload": 4,
+        "rank_effective": 3,
+        "s_res_payload": 58.8,
+        "s_res_effective": 57.9
+      },
+      {
+        "point": "SnapKV@8",
+        "rank_payload": 5,
+        "rank_effective": 4,
+        "s_res_payload": 57.5,
+        "s_res_effective": 57.5
+      }
+    ],
+    "Qwen2.5 7B": [
+      {
+        "point": "KIVI (INT4/INT8)@8",
+        "rank_payload": 3,
+        "rank_effective": 4,
+        "s_res_payload": 57.6,
+        "s_res_effective": 56.6
+      },
+      {
+        "point": "SnapKV@8",
+        "rank_payload": 4,
+        "rank_effective": 3,
+        "s_res_payload": 56.7,
+        "s_res_effective": 56.7
+      },
+      {
+        "point": "StreamingLLM@8",
+        "rank_payload": 7,
+        "rank_effective": 6,
+        "s_res_payload": 46.4,
+        "s_res_effective": 46.3
+      },
+      {
+        "point": "DKV-High",
+        "rank_payload": 6,
+        "rank_effective": 7,
+        "s_res_payload": 48.6,
+        "s_res_effective": 46.0
+      }
+    ]
+  }
+}

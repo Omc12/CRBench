@@ -1,0 +1,456 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{25}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{#1}\fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[Agrawal et~al\mbox{.}(2024)]%
+        {agrawal2024sarathi}
+\bibfield{author}{\bibinfo{person}{Amey Agrawal}, \bibinfo{person}{Nitin
+  Kedia}, \bibinfo{person}{Ashish Panwar}, \bibinfo{person}{Jayashree Mohan},
+  \bibinfo{person}{Nipun Kwatra}, \bibinfo{person}{Bhargav~S. Gulavani},
+  \bibinfo{person}{Alexey Tumanov}, {and} \bibinfo{person}{Ramachandran
+  Ramjee}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Taming Throughput-Latency Tradeoff in {LLM}
+  Inference with {Sarathi-Serve}}. In \bibinfo{booktitle}{\emph{18th USENIX
+  Symposium on Operating Systems Design and Implementation (OSDI)}}.
+\newblock
+\urldef\tempurl%
+\url{https://www.usenix.org/conference/osdi24/presentation/agrawal}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{arXiv:2403.02310}.
+
+
+\bibitem[Agrawal and Mayer(2026)]%
+        {agrawal2026benchmarking}
+\bibfield{author}{\bibinfo{person}{Nikita Agrawal} {and} \bibinfo{person}{Ruben
+  Mayer}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Benchmarking {KV}-Cache Optimizations across Task
+  Quality and System Performance for Long-Context Serving}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2607.05399}}
+  (\bibinfo{year}{2026}).
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2607.05399}
+\showURL{%
+\tempurl}
+
+
+\bibitem[An et~al\mbox{.}(2023)]%
+        {an2023leval}
+\bibfield{author}{\bibinfo{person}{Chenxin An}, \bibinfo{person}{Shansan Gong},
+  \bibinfo{person}{Ming Zhong}, \bibinfo{person}{Xingjian Zhao},
+  \bibinfo{person}{Mukai Li}, \bibinfo{person}{Jun Zhang},
+  \bibinfo{person}{Lingpeng Kong}, {and} \bibinfo{person}{Xipeng Qiu}.}
+  \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{{L-Eval}: Instituting Standardized Evaluation for
+  Long Context Language Models}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2307.11088}}
+  (\bibinfo{year}{2023}).
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.18653/v1/2024.acl-long.776}
+\showDOI{\tempurl}
+
+
+\bibitem[Bai et~al\mbox{.}(2024)]%
+        {bai2023longbench}
+\bibfield{author}{\bibinfo{person}{Yushi Bai}, \bibinfo{person}{Xin Lv},
+  \bibinfo{person}{Jiajie Zhang}, \bibinfo{person}{Hongchang Lyu},
+  \bibinfo{person}{Jiankai Tang}, \bibinfo{person}{Zhidian Huang},
+  \bibinfo{person}{Zhengxiao Du}, \bibinfo{person}{Xiao Liu},
+  \bibinfo{person}{Aohan Zeng}, \bibinfo{person}{Lei Hou},
+  \bibinfo{person}{Yuxiao Dong}, \bibinfo{person}{Jie Tang}, {and}
+  \bibinfo{person}{Juanzi Li}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{LongBench}: A Bilingual, Multitask Benchmark for
+  Long Context Understanding}. In \bibinfo{booktitle}{\emph{Proceedings of the
+  62nd Annual Meeting of the Association for Computational Linguistics (ACL)}}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.18653/v1/2024.acl-long.172}
+\showDOI{\tempurl}
+
+
+\bibitem[Cai et~al\mbox{.}(2024)]%
+        {zhang2024pyramidkv}
+\bibfield{author}{\bibinfo{person}{Zefan Cai}, \bibinfo{person}{Yichi Zhang},
+  \bibinfo{person}{Bofei Gao}, \bibinfo{person}{Yuliang Liu},
+  \bibinfo{person}{Yucheng Li}, \bibinfo{person}{Tianyu Liu},
+  \bibinfo{person}{Keming Lu}, \bibinfo{person}{Wayne Xiong},
+  \bibinfo{person}{Yue Dong}, \bibinfo{person}{Junjie Hu}, {and}
+  \bibinfo{person}{Wen Xiao}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{PyramidKV}: Dynamic {KV} Cache Compression based
+  on Pyramidal Information Funneling}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2406.02069}}
+  (\bibinfo{year}{2024}).
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2406.02069}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Dao et~al\mbox{.}(2022)]%
+        {dao2022flashattention}
+\bibfield{author}{\bibinfo{person}{Tri Dao}, \bibinfo{person}{Daniel~Y. Fu},
+  \bibinfo{person}{Stefano Ermon}, \bibinfo{person}{Atri Rudra}, {and}
+  \bibinfo{person}{Christopher R{\'e}}.} \bibinfo{year}{2022}\natexlab{}.
+\newblock \showarticletitle{{FlashAttention}: Fast and Memory-Efficient Exact
+  Attention with {IO}-Awareness}. In \bibinfo{booktitle}{\emph{Advances in
+  Neural Information Processing Systems (NeurIPS)}}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2205.14135}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Dettmers et~al\mbox{.}(2022)]%
+        {dettmers2022llmint8}
+\bibfield{author}{\bibinfo{person}{Tim Dettmers}, \bibinfo{person}{Mike Lewis},
+  \bibinfo{person}{Younes Belkada}, {and} \bibinfo{person}{Luke Zettlemoyer}.}
+  \bibinfo{year}{2022}\natexlab{}.
+\newblock \showarticletitle{{LLM.int8()}: 8-bit Matrix Multiplication for
+  Transformers at Scale}. In \bibinfo{booktitle}{\emph{Advances in Neural
+  Information Processing Systems (NeurIPS)}}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2208.07339}
+\showURL{%
+\tempurl}
+
+
+\bibitem[{DKV Project}(2026)]%
+        {dkvpreprint}
+\bibfield{author}{\bibinfo{person}{{DKV Project}}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{title}{{DKV}: Anchor + Low-Rank Differential {KV}-Cache
+  Compression for Scalable Long-Context Inference}.
+\newblock \bibinfo{howpublished}{Preprint}.
+\newblock
+
+
+\bibitem[Fan et~al\mbox{.}(2026)]%
+        {fan2026zipserv}
+\bibfield{author}{\bibinfo{person}{Ruibo Fan}, \bibinfo{person}{Xiangrui Yu},
+  \bibinfo{person}{Xinglin Pan}, \bibinfo{person}{Zeyu Li},
+  \bibinfo{person}{Weile Luo}, \bibinfo{person}{Qiang Wang},
+  \bibinfo{person}{Wei Wang}, {and} \bibinfo{person}{Xiaowen Chu}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{{ZipServ}: Fast and Memory-Efficient {LLM}
+  Inference with Hardware-Aware Lossless Compression}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the 31st ACM International
+  Conference on Architectural Support for Programming Languages and Operating
+  Systems (ASPLOS)}}. \bibinfo{publisher}{ACM}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3779212.3790250}
+\showDOI{\tempurl}
+
+
+\bibitem[Ge et~al\mbox{.}(2023)]%
+        {ge2023model}
+\bibfield{author}{\bibinfo{person}{Suyu Ge}, \bibinfo{person}{Yunan Zhang},
+  \bibinfo{person}{Liyuan Liu}, \bibinfo{person}{Minjia Zhang},
+  \bibinfo{person}{Jiawei Han}, {and} \bibinfo{person}{Jianfeng Gao}.}
+  \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{Model Tells You What to Discard: Adaptive {KV}
+  Cache Compression for {LLMs}}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2310.01801}}
+  (\bibinfo{year}{2023}).
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2310.01801}
+\showURL{%
+\tempurl}
+
+
+\bibitem[{Gemini Team}(2024)]%
+        {reid2024gemini}
+\bibfield{author}{\bibinfo{person}{{Gemini Team}}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Gemini 1.5: Unlocking Multimodal Understanding
+  Across Millions of Tokens of Context}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2403.05530}}
+  (\bibinfo{year}{2024}).
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2403.05530}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Hooper et~al\mbox{.}(2024)]%
+        {hooper2024kvquant}
+\bibfield{author}{\bibinfo{person}{Coleman Hooper}, \bibinfo{person}{Sehoon
+  Kim}, \bibinfo{person}{Hiva Mohammadzadeh}, \bibinfo{person}{Michael~W.
+  Mahoney}, \bibinfo{person}{Yakun~Sophia Shao}, \bibinfo{person}{Kurt
+  Keutzer}, {and} \bibinfo{person}{Amir Gholami}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{KVQuant}: Towards 10 Million Context Length {LLM}
+  Inference with {KV} Cache Quantization}. In
+  \bibinfo{booktitle}{\emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2401.18079}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Hsieh et~al\mbox{.}(2024)]%
+        {hsieh2024ruler}
+\bibfield{author}{\bibinfo{person}{Cheng-Ping Hsieh}, \bibinfo{person}{Simeng
+  Sun}, \bibinfo{person}{Samuel Kriman}, \bibinfo{person}{Shantanu Acharya},
+  \bibinfo{person}{Dima Rekesh}, \bibinfo{person}{Fei Jia},
+  \bibinfo{person}{Yang Zhang}, {and} \bibinfo{person}{Boris Ginsburg}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{RULER}: What's the Real Context Size of Your
+  Long-Context Language Models?}
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2404.06654}}
+  (\bibinfo{year}{2024}).
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2404.06654}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Kamradt(2023)]%
+        {kamradt2023needle}
+\bibfield{author}{\bibinfo{person}{Greg Kamradt}.}
+  \bibinfo{year}{2023}\natexlab{}.
+\newblock \bibinfo{title}{Needle in a Haystack --- Pressure Testing {LLMs}}.
+\newblock
+  \bibinfo{howpublished}{\url{https://github.com/gkamradt/LLMTest_NeedleInAHaystack}}.
+\newblock
+
+
+\bibitem[Kwon et~al\mbox{.}(2023)]%
+        {kwon2023pagedattention}
+\bibfield{author}{\bibinfo{person}{Woosuk Kwon}, \bibinfo{person}{Zhuohan Li},
+  \bibinfo{person}{Siyuan Zhuang}, \bibinfo{person}{Ying Sheng},
+  \bibinfo{person}{Lianmin Zheng}, \bibinfo{person}{Cody~Hao Yu},
+  \bibinfo{person}{Joseph~E. Gonzalez}, \bibinfo{person}{Hao Zhang}, {and}
+  \bibinfo{person}{Ion Stoica}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{Efficient Memory Management for Large Language
+  Model Serving with {PagedAttention}}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the 29th Symposium on Operating
+  Systems Principles (SOSP)}}. \bibinfo{publisher}{ACM},
+  \bibinfo{pages}{611--626}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3600006.3613165}
+\showDOI{\tempurl}
+
+
+\bibitem[Li et~al\mbox{.}(2024)]%
+        {li2024snapkv}
+\bibfield{author}{\bibinfo{person}{Yuhong Li}, \bibinfo{person}{Yingbing
+  Huang}, \bibinfo{person}{Bowen Yang}, \bibinfo{person}{Bharat Venkitesh},
+  \bibinfo{person}{Acyr Locatelli}, \bibinfo{person}{Hanchen Ye},
+  \bibinfo{person}{Tianle Cai}, \bibinfo{person}{Patrick Lewis}, {and}
+  \bibinfo{person}{Deming Chen}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{SnapKV}: {LLM} Knows What You are Looking for
+  Before Generation}. In \bibinfo{booktitle}{\emph{Advances in Neural
+  Information Processing Systems (NeurIPS)}}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2404.14469}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Liu et~al\mbox{.}(2024a)]%
+        {liu2024cachegen}
+\bibfield{author}{\bibinfo{person}{Yuhan Liu}, \bibinfo{person}{Hanchen Li},
+  \bibinfo{person}{Yihua Cheng}, \bibinfo{person}{Siddhant Ray},
+  \bibinfo{person}{Yuyang Huang}, \bibinfo{person}{Qizheng Zhang},
+  \bibinfo{person}{Kuntai Du}, \bibinfo{person}{Jiayi Yao},
+  \bibinfo{person}{Shan Lu}, \bibinfo{person}{Ganesh Ananthanarayanan},
+  \bibinfo{person}{Michael Maire}, \bibinfo{person}{Henry Hoffmann},
+  \bibinfo{person}{Ari Holtzman}, {and} \bibinfo{person}{Junchen Jiang}.}
+  \bibinfo{year}{2024}\natexlab{a}.
+\newblock \showarticletitle{{CacheGen}: {KV} Cache Compression and Streaming
+  for Fast Large Language Model Serving}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the ACM SIGCOMM 2024 Conference}}.
+  \bibinfo{publisher}{ACM}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3651890.3672274}
+\showDOI{\tempurl}
+
+
+\bibitem[Liu et~al\mbox{.}(2023)]%
+        {liu2023scissorhands}
+\bibfield{author}{\bibinfo{person}{Zichang Liu}, \bibinfo{person}{Aditya
+  Desai}, \bibinfo{person}{Fangshuo Liao}, \bibinfo{person}{Weitao Wang},
+  \bibinfo{person}{Victor Xie}, \bibinfo{person}{Zhaozhuo Xu},
+  \bibinfo{person}{Anastasios Kyrillidis}, {and} \bibinfo{person}{Anshumali
+  Shrivastava}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{{Scissorhands}: Exploiting the Persistence of
+  Importance Hypothesis for {LLM} {KV} Cache Compression at Test Time}. In
+  \bibinfo{booktitle}{\emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2305.17118}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Liu et~al\mbox{.}(2024b)]%
+        {liu2024kivi}
+\bibfield{author}{\bibinfo{person}{Zirui Liu}, \bibinfo{person}{Jiayi Yuan},
+  \bibinfo{person}{Hongye Jin}, \bibinfo{person}{Shaochen Zhong},
+  \bibinfo{person}{Zhaozhuo Xu}, \bibinfo{person}{Vladimir Braverman},
+  \bibinfo{person}{Beidi Chen}, {and} \bibinfo{person}{Xia Hu}.}
+  \bibinfo{year}{2024}\natexlab{b}.
+\newblock \showarticletitle{{KIVI}: A Tuning-Free Asymmetric 2bit Quantization
+  for {KV} Cache}. In \bibinfo{booktitle}{\emph{International Conference on
+  Machine Learning (ICML)}}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2402.02750}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Sharma et~al\mbox{.}(2024)]%
+        {sharma2023truth}
+\bibfield{author}{\bibinfo{person}{Pratyusha Sharma},
+  \bibinfo{person}{Jordan~T. Ash}, {and} \bibinfo{person}{Dipendra Misra}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{The Truth is in There: Improving Reasoning in
+  Language Models with Layer-Selective Rank Reduction}. In
+  \bibinfo{booktitle}{\emph{International Conference on Learning
+  Representations (ICLR)}}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2312.13558}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Xiao et~al\mbox{.}(2024)]%
+        {xiao2023streamingllm}
+\bibfield{author}{\bibinfo{person}{Guangxuan Xiao}, \bibinfo{person}{Yuandong
+  Tian}, \bibinfo{person}{Beidi Chen}, \bibinfo{person}{Song Han}, {and}
+  \bibinfo{person}{Mike Lewis}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Efficient Streaming Language Models with Attention
+  Sinks}. In \bibinfo{booktitle}{\emph{International Conference on Learning
+  Representations (ICLR)}}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2309.17453}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Yu et~al\mbox{.}(2022)]%
+        {yu2022orca}
+\bibfield{author}{\bibinfo{person}{Gyeong-In Yu}, \bibinfo{person}{Joo~Seong
+  Jeong}, \bibinfo{person}{Geon-Woo Kim}, \bibinfo{person}{Soojeong Kim}, {and}
+  \bibinfo{person}{Byung-Gon Chun}.} \bibinfo{year}{2022}\natexlab{}.
+\newblock \showarticletitle{{Orca}: A Distributed Serving System for
+  Transformer-Based Generative Models}. In \bibinfo{booktitle}{\emph{16th
+  USENIX Symposium on Operating Systems Design and Implementation (OSDI)}}.
+  \bibinfo{pages}{521--538}.
+\newblock
+\urldef\tempurl%
+\url{https://www.usenix.org/conference/osdi22/presentation/yu}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Zhang et~al\mbox{.}(2024)]%
+        {zhang2024infinitebench}
+\bibfield{author}{\bibinfo{person}{Xinrong Zhang}, \bibinfo{person}{Yingfa
+  Chen}, \bibinfo{person}{Shengding Hu}, \bibinfo{person}{Zihang Xu},
+  \bibinfo{person}{Junhao Chen}, \bibinfo{person}{Moo~Khai Hao},
+  \bibinfo{person}{Xu Han}, \bibinfo{person}{Zhen~Leng Thai},
+  \bibinfo{person}{Shuo Wang}, \bibinfo{person}{Zhiyuan Liu}, {and}
+  \bibinfo{person}{Maosong Sun}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{$\infty$-{Bench}: Extending Long Context Evaluation
+  Beyond 100K Tokens}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2402.13718}}
+  (\bibinfo{year}{2024}).
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.18653/v1/2024.acl-long.814}
+\showDOI{\tempurl}
+
+
+\bibitem[Zhang et~al\mbox{.}(2023)]%
+        {zhang2023h2o}
+\bibfield{author}{\bibinfo{person}{Zhenyu Zhang}, \bibinfo{person}{Ying Sheng},
+  \bibinfo{person}{Tianyi Zhou}, \bibinfo{person}{Tianlong Chen},
+  \bibinfo{person}{Lianmin Zheng}, \bibinfo{person}{Ruisi Cai},
+  \bibinfo{person}{Zhao Song}, \bibinfo{person}{Yuandong Tian},
+  \bibinfo{person}{Christopher R{\'e}}, \bibinfo{person}{Clark Barrett},
+  \bibinfo{person}{Zhangyang Wang}, {and} \bibinfo{person}{Beidi Chen}.}
+  \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{{H2O}: Heavy-Hitter Oracle for Efficient Generative
+  Inference of Large Language Models}. In \bibinfo{booktitle}{\emph{Advances in
+  Neural Information Processing Systems (NeurIPS)}}.
+\newblock
+\urldef\tempurl%
+\url{https://arxiv.org/abs/2306.14048}
+\showURL{%
+\tempurl}
+
+
+\bibitem[Zhong et~al\mbox{.}(2024)]%
+        {zhong2024distserve}
+\bibfield{author}{\bibinfo{person}{Yinmin Zhong}, \bibinfo{person}{Shengyu
+  Liu}, \bibinfo{person}{Junda Chen}, \bibinfo{person}{Jianbo Hu},
+  \bibinfo{person}{Yibo Zhu}, \bibinfo{person}{Xuanzhe Liu},
+  \bibinfo{person}{Xin Jin}, {and} \bibinfo{person}{Hao Zhang}.}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{DistServe}: Disaggregating Prefill and Decoding
+  for Goodput-optimized Large Language Model Serving}. In
+  \bibinfo{booktitle}{\emph{18th USENIX Symposium on Operating Systems Design
+  and Implementation (OSDI)}}. \bibinfo{pages}{193--210}.
+\newblock
+\urldef\tempurl%
+\url{https://www.usenix.org/conference/osdi24/presentation/zhong-yinmin}
+\showURL{%
+\tempurl}
+
+
+\end{thebibliography}

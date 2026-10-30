@@ -1,0 +1,101 @@
+establishing links for 25 entries
+
+--- kwon2023pagedattention
+    DOI 10.1145/3600006.3613165  (title~1.00, year 2023)
+        -> Efficient Memory Management for Large Language Model Serving with PagedAttention
+--- yu2022orca
+    no confident Crossref DOI
+    proceedings https://www.usenix.org/conference/osdi22/presentation/yu -> HTTP 200, title present: True
+--- zhong2024distserve
+    no confident Crossref DOI
+    proceedings https://www.usenix.org/conference/osdi24/presentation/zhong-yinmin -> HTTP 200, title present: True
+--- agrawal2024sarathi
+    no confident Crossref DOI
+    proceedings https://www.usenix.org/conference/osdi24/presentation/agrawal -> HTTP 200, title present: True
+--- dao2022flashattention
+    no confident Crossref DOI
+    arXiv:2205.14135 (title~1.00) -> FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awar
+--- fan2026zipserv
+    already has DOI 10.1145/3779212.3790250
+--- liu2024cachegen
+    already has DOI 10.1145/3651890.3672274
+--- liu2024kivi
+    no confident Crossref DOI
+    arXiv:2402.02750 (title~0.95) -> KIVI: A Tuning-Free Asymmetric 2bit Quantization for KV Cache
+--- li2024snapkv
+    no confident Crossref DOI
+    arXiv:2404.14469 (title~1.00) -> SnapKV: LLM Knows What You are Looking for Before Generation
+--- xiao2023streamingllm
+    no confident Crossref DOI
+    arXiv:2309.17453 (title~1.00) -> Efficient Streaming Language Models with Attention Sinks
+--- zhang2023h2o
+    no confident Crossref DOI
+    arXiv:2306.14048 (title~0.99) -> H$_2$O: Heavy-Hitter Oracle for Efficient Generative Inference of Larg
+--- liu2023scissorhands
+    no confident Crossref DOI
+    arXiv:2305.17118 (title~1.00) -> Scissorhands: Exploiting the Persistence of Importance Hypothesis for 
+--- hooper2024kvquant
+    no confident Crossref DOI
+    arXiv:2401.18079 (title~1.00) -> KVQuant: Towards 10 Million Context Length LLM Inference with KV Cache
+--- dettmers2022llmint8
+    no confident Crossref DOI
+    arXiv:2208.07339 (title~1.00) -> LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale
+--- ge2023model
+    no confident Crossref DOI
+    arXiv:2310.01801 (title~1.00) -> Model Tells You What to Discard: Adaptive KV Cache Compression for LLM
+--- zhang2024pyramidkv
+    no confident Crossref DOI
+    arXiv:2406.02069 (title~1.00) -> PyramidKV: Dynamic KV Cache Compression based on Pyramidal Information
+--- sharma2023truth
+    no confident Crossref DOI
+    arXiv:2312.13558 (title~1.00) -> The Truth is in There: Improving Reasoning in Language Models with Lay
+--- dkvpreprint
+    SKIP: de-identified self-citation; any link deanonymises it
+--- hsieh2024ruler
+    no confident Crossref DOI
+    arXiv:2404.06654 (title~1.00) -> RULER: What's the Real Context Size of Your Long-Context Language Mode
+--- bai2023longbench
+    DOI 10.18653/v1/2024.acl-long.172  (title~1.00, year 2024)
+        -> LongBench: A Bilingual, Multitask Benchmark for Long Context Understanding
+--- an2023leval
+    DOI 10.18653/v1/2024.acl-long.776  (title~1.00, year 2024)
+        -> L-Eval: Instituting Standardized Evaluation for Long Context Language Models
+--- zhang2024infinitebench
+    DOI 10.18653/v1/2024.acl-long.814  (title~0.95, year 2024)
+        -> ∞Bench: Extending Long Context Evaluation Beyond 100K Tokens
+--- kamradt2023needle
+    already has URL in howpublished
+--- reid2024gemini
+    no confident Crossref DOI
+    arXiv:2403.05530 (title~1.00) -> Gemini 1.5: Unlocking multimodal understanding across millions of toke
+--- agrawal2026benchmarking
+    no confident Crossref DOI
+    arXiv:2607.05399 (title~1.00) -> Benchmarking KV-Cache Optimizations across Task Quality and System Per
+
+======================================================================
+PLAN
+  kwon2023pagedattention     ('doi', '10.1145/3600006.3613165')
+  yu2022orca                 ('url', 'https://www.usenix.org/conference/osdi22/presentation/yu')
+  zhong2024distserve         ('url', 'https://www.usenix.org/conference/osdi24/presentation/zhong-yinmin')
+  agrawal2024sarathi         ('url', 'https://www.usenix.org/conference/osdi24/presentation/agrawal')
+  dao2022flashattention      ('url', 'https://arxiv.org/abs/2205.14135')
+  fan2026zipserv             ('doi', '10.1145/3779212.3790250')
+  liu2024cachegen            ('doi', '10.1145/3651890.3672274')
+  liu2024kivi                ('url', 'https://arxiv.org/abs/2402.02750')
+  li2024snapkv               ('url', 'https://arxiv.org/abs/2404.14469')
+  xiao2023streamingllm       ('url', 'https://arxiv.org/abs/2309.17453')
+  zhang2023h2o               ('url', 'https://arxiv.org/abs/2306.14048')
+  liu2023scissorhands        ('url', 'https://arxiv.org/abs/2305.17118')
+  hooper2024kvquant          ('url', 'https://arxiv.org/abs/2401.18079')
+  dettmers2022llmint8        ('url', 'https://arxiv.org/abs/2208.07339')
+  ge2023model                ('url', 'https://arxiv.org/abs/2310.01801')
+  zhang2024pyramidkv         ('url', 'https://arxiv.org/abs/2406.02069')
+  sharma2023truth            ('url', 'https://arxiv.org/abs/2312.13558')
+  dkvpreprint                None
+  hsieh2024ruler             ('url', 'https://arxiv.org/abs/2404.06654')
+  bai2023longbench           ('doi', '10.18653/v1/2024.acl-long.172')
+  an2023leval                ('doi', '10.18653/v1/2024.acl-long.776')
+  zhang2024infinitebench     ('doi', '10.18653/v1/2024.acl-long.814')
+  kamradt2023needle          ('keep', '\\url{https://github.com/gkamradt/LLMTest_NeedleInAHaystack}')
+  reid2024gemini             ('url', 'https://arxiv.org/abs/2403.05530')
+  agrawal2026benchmarking    ('url', 'https://arxiv.org/abs/2607.05399')
